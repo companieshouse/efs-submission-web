@@ -1,13 +1,10 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import java.util.Objects;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
@@ -21,7 +18,7 @@ import uk.gov.companieshouse.logging.Logger;
 @Controller
 public class RegistrationsInfoControllerImpl extends BaseControllerImpl implements RegistrationsInfoController {
     @Value("${registrations.enabled:false}")
-    private boolean registrationEnabled;
+    private boolean registrationsEnabled;
 
 
 
@@ -45,7 +42,7 @@ public class RegistrationsInfoControllerImpl extends BaseControllerImpl implemen
     public String registrationsInfo(@PathVariable String id, @PathVariable String companyNumber,
         CategoryTemplateModel categoryTemplateAttribute, Model model, HttpServletRequest servletRequest) {
 
-        if (registrationEnabled) {
+        if (registrationsEnabled) {
             final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
             model.addAttribute("submissionId", submissionApi.getId());
 
