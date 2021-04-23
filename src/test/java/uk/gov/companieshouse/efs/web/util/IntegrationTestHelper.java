@@ -29,6 +29,7 @@ public class IntegrationTestHelper {
                 .and("OAUTH2_REDIRECT_URI", "http://chs.local/oauth2/user/callback")
                 .and("OAUTH2_REQUEST_KEY", "oauth2_request_key")
                 .and("PAYMENTS_API_URL", "http://api-payments.chs.local:4001")
+                .and("EFS_REGISTRATIONS_ENABLED", "false")
                 ;
     }
 }

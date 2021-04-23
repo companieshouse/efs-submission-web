@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 
@@ -22,12 +23,27 @@ class RegistrationsInfoControllerImplTest extends BaseControllerImplTest {
         testController = new RegistrationsInfoControllerImpl(logger, sessionService, apiClientService,
             formTemplateService, categoryTemplateService);
         ((RegistrationsInfoControllerImpl) testController).setChsUrl(CHS_URL);
+        // turn on feature flag
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
+
     }
 
     @Test
     void getViewName() {
         assertThat(((RegistrationsInfoControllerImpl) testController).getViewName(),
             is(ViewConstants.REGISTRATIONS_INFO.asView()));
+    }
+
+    @Test
+    void getRegistrationsInfoWhenFeatureDisabled() {
+        final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
+
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
+
+        final String result = testController.registrationsInfo(SUBMISSION_ID, COMPANY_NUMBER, categoryTemplateAttribute,
+            model, servletRequest);
+
+        assertThat(result, is(ViewConstants.MISSING.asView()));
     }
 
     @Test
