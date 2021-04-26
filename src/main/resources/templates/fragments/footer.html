@@ -30,8 +30,7 @@
                         </li>
                         <li>
                             <a id="developer-link" class="govuk-footer__link" target="_blank"
-                               th:href="@{{developerUrl}/api/docs/(developerUrl=
-                                    ${@environment.getProperty('developer.url')})}"
+                               th:href="@{{developerUrl}(developerUrl=${@environment.getProperty('developer.url')})}"
                                th:text="#{footer.developers}">
                             </a>
                         </li>
