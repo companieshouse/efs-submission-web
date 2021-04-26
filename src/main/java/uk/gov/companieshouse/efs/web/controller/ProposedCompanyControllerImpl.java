@@ -5,6 +5,7 @@ import static uk.gov.companieshouse.efs.web.controller.ProposedCompanyController
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.efs.web.model.ProposedCompanyModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
@@ -38,7 +40,7 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
     }
 
     @ModelAttribute(ATTRIBUTE_NAME)
-    public ProposedCompanyModel getModel() {
+    public ProposedCompanyModel getProposedCompanyAttribute() {
         return proposedCompanyAttribute;
     }
 
@@ -49,28 +51,40 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
 
     @Override
     public String prepare(@PathVariable final String id,
-        @ModelAttribute(ATTRIBUTE_NAME) ProposedCompanyModel proposedCompanyModel, Model model,
+        @ModelAttribute(ATTRIBUTE_NAME) ProposedCompanyModel proposedCompany, Model model,
         HttpServletRequest request) {
 
         // Assign our previously saved response to our model.
-        proposedCompanyModel.setSubmissionId(id);
-        proposedCompanyModel.setName(proposedCompanyAttribute.getName());
+        proposedCompany.setSubmissionId(id);
+        proposedCompany.setDetails(
+            new CompanyApi(TEMP_COMPANY_NUMBER, proposedCompanyAttribute.getName()));
+        proposedCompany.setNameRequired(null);
 
         return getViewName();
     }
 
     @Override
     public String process(@PathVariable final String id,
-        @Valid @ModelAttribute(ATTRIBUTE_NAME) ProposedCompanyModel proposedCompanyModel,
+        @Valid @ModelAttribute(ATTRIBUTE_NAME) ProposedCompanyModel proposedCompany,
         BindingResult binding, Model model, HttpServletRequest request, HttpSession session) {
 
         if (binding.hasErrors()) {
+            addTrackingAttributeToModel(model);
             return getViewName();
         }
 
         // Update our persistent model with the latest response.
-        proposedCompanyAttribute.setName(proposedCompanyModel.getName());
+        resetNameRequiredIfNotUsed(proposedCompany);
 
-        return ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id, TEMP_COMPANY_NUMBER);
+        return ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id, proposedCompany.getNumber());
     }
+
+    private void resetNameRequiredIfNotUsed(final ProposedCompanyModel proposedCompany) {
+        final Boolean nameRequired = proposedCompany.getNameRequired();
+        final String proposedName = Boolean.TRUE.equals(nameRequired) ? StringUtils.defaultIfBlank(
+            proposedCompany.getName(), "") : null;
+
+        proposedCompany.setName(proposedName);
+    }
+
 }

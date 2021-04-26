@@ -5,7 +5,7 @@
       layout:decorate="~{layouts/baseLayout}"
       lang="en">
 <head>
-    <title th:text="${#fields.hasErrors('${proposedCompany.*}')} ? #{error} + ' ' + #{proposedCompany.title}"></title>
+    <title th:text="${#fields.hasErrors('${proposedCompany.*}')} ? #{error} + ' ' + #{proposedCompany.title} : #{proposedCompany.title}"></title>
 </head>
 <body class="govuk-template__body" layout:fragment="content">
 
@@ -16,78 +16,78 @@
 
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-two-thirds-from-desktop">
                 <div th:replace="fragments/errorSummary :: errorSummary"></div>
-                <div id="content-wrapper" class="govuk-form-group" th:classappend="${#fields.hasErrors('name')} ? govuk-form-group--error : noerror">
-
+                <div id="content-wrapper" class="govuk-form-group" th:classappend="${#fields.hasErrors('*')} ? govuk-form-group--error : noerror">
+                    <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset" aria-describedby="page-heading">
                         <!-- Display Question -->
+
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 id="page-heading" class="govuk-fieldset__heading" th:text="#{proposedCompany.title}"></h1>
                         </legend>
-
-                        <div class="govuk-form-group"
-                             th:classappend="${#fields.hasErrors('nameRequired') || #fields.hasErrors('name')}
+                        <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"
+                                       id="name-required-conditional-1" name="nameRequired"
+                                       type="radio" value="yes"
+                                       th:field="*{nameRequired}"
+                                       data-aria-controls="hidden-proposed-name"
+                                       data-target-text-field="hidden-proposed-name"
+                                       role="button">
+                                <label class="govuk-label govuk-radios__label"
+                                       for="name-required-conditional-1" th:text="|#{boolean.yes}|"
+                                       aria-label="Yes, I am uploading a document to register a Scottish limited partnership or a Scottish qualifying partnership"
+                                       th:attr="aria-label=#{proposedCompany.query.name.yes}">
+                                </label>
+                            </div>
+                            <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="hidden-proposed-name">
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label" for="proposed-name"
+                                           th:text="#{proposedCompany.query.name.label}"></label>
+                                    <span id="proposed-name-error" class="govuk-error-message"
+                                          th:if="${#fields.hasErrors('name')}"
+                                          th:each="e: ${#fields.errors('name')}"
+                                          th:text="${e}"></span>
+                                    <div class="govuk-hint" id="proposed-name-hint" th:text="#{proposedCompany.query.name.hint}">
+                                        An examiner will check if the proposed name is acceptable. The name is still available for anyone to use until the registration document is accepted.
+                                    </div>
+                                    <input class="govuk-input govuk-!-width-three-quarters"
+                                           id="proposed-name"
+                                           th:classappend="${#fields.hasErrors('name')}
+                                            ? 'govuk-input--error' : ''"
+                                           name="name" type="text"
+                                           th:field="*{name}">
+                                </div>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input show-text aria-toggle"
+                                       id="name-required-conditional-2" name="nameRequired"
+                                       type="radio" value="no"
+                                       th:field="*{nameRequired}"
+                                       data-target-text-field="hidden-proposed-name">
+                                    <label class="govuk-label govuk-radios__label"
+                                           for="name-required-conditional-2" th:text="|#{boolean.no}|"
+                                           aria-label="No, I am not uploading a document to register a Scottish limited partnership or a Scottish qualifying partnership"
+                                           th:attr="aria-label=#{proposedCompany.query.name.no}">
+                                    </label>
+                                </div>
+                            </div>
+   
+<!--
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*')}
                       ? 'govuk-form-group--error' : ''">
                             <fieldset class="govuk-fieldset">
-                                <span id="name-error" class="govuk-error-message"
-                                      th:if="${#fields.hasErrors('name')}"
-                                      th:each="e: ${#fields.errors('name')}" th:text="${e}"></span>
-                                <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input"
-                                               id="name-required" name="nameRequired"
-                                               type="radio" value="yes"
-                                               th:field="*{nameRequired}"
-                                               data-aria-controls="proposed-name-conditional"
-                                               data-target-text-field="proposed-name-conditional"
-                                               role="button">
-                                        <label class="govuk-label govuk-radios__label"
-                                               for="proposed-name-conditional" th:text="|#{boolean.yes}|"
-                                               aria-label="Yes, I am uploading a document to register a Scottish limited partnership or a Scottish qualifying partnership"
-                                               th:attr="aria-label=#{proposedCompany.query.name.yes}">
-                                        </label>
-                                    </div>
-                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden"
-                                         id="proposed-name-conditional">
-                                        <div class="govuk-form-group">
-                                            <label class="govuk-label" for="proposed-name"
-                                                   th:text="#{proposedCompany.query.name.label}"></label>
-                                            <span id="proposed-name-error" class="govuk-error-message"
-                                                  th:if="${#fields.hasErrors('name')}"
-                                                  th:each="e: ${#fields.errors('name')}"
-                                                  th:text="${e}"></span>
-                                            <div class="govuk-hint govuk-radios__hint" id="proposed-name-hint" th:text="#{proposedCompany.query.name.hint}">
-                                                An examiner will check if the proposed name is acceptable. The name is still available for anyone to use until the registration document is accepted.
-                                            </div>
-                                            <input class="govuk-input govuk-!-width-three-quarters"
-                                                   id="proposed-name"
-                                                   th:classappend="${#fields.hasErrors('name')}
-                                            ? 'govuk-input--error' : ''"
-                                                   name="proposed-name" type="text"
-                                                   th:field="*{name}">
-                                        </div>
-                                    </div>
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input"
-                                               id="proposed-name-conditional-1" name="proposed-name"
-                                               type="radio" value="no"
-                                               th:field="*{nameRequired}"
-                                               data-aria-controls="proposed-name-conditional-1"
-                                               data-target-text-field="conditional-proposed-name-conditional-1">
-                                        <label class="govuk-label govuk-radios__label"
-                                               for="proposed-name-conditional-1" th:text="|#{boolean.no}|"
-                                               aria-label="No, I am not uploading a document to register a Scottish limited partnership or a Scottish qualifying partnership"
-                                               th:attr="aria-label=#{proposedCompany.query.name.no}">
-                                        </label>
-                                    </div>
-                                </div>
+                            <span id="name-error" class="govuk-error-message"
+                                      th:if="${#fields.hasErrors('nameRequired')}"
+                                      th:each="e: ${#fields.errors('nameRequired')}" th:text="${e}"></span>
                                 
                             </fieldset>
                         </div>
+-->                    
                     </fieldset>
+                    </div>
                 </div>
-
                 <div>
                     <button data-prevent-double-click="true" id="submit-all" type="submit" class="govuk-button" name="action" value="submit" th:text="#{button.continue}">Continue</button>
                 </div>

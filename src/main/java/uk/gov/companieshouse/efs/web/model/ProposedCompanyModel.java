@@ -7,29 +7,34 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 
 @Component
 @SessionScope
 public class ProposedCompanyModel {
 
     private String submissionId;
-    private String name;
-    @NotNull(message = "{proposedCompany.blank.error}")
     private Boolean nameRequired;
+    private CompanyApi details;
 
+    @SuppressWarnings("squid:S2637") // nameRequired initially null by design
     public ProposedCompanyModel() {
-        this.name = "";
     }
 
-    /**
-     * Constructor sets the required value from the {@link ProposedCompanyModel}
-     *
-     * @param original the {@link ProposedCompanyModel}
-     */
-    public ProposedCompanyModel(final ProposedCompanyModel original) {
-        this.submissionId = original.getSubmissionId();
-        this.name = original.getName();
-        this.nameRequired = original.getNameRequired();
+    @SuppressWarnings("squid:S2637") // nameRequired initially null by design
+    public ProposedCompanyModel(final CompanyApi details) {
+        this.details = details;
+    }
+
+    public ProposedCompanyModel(final CompanyApi details, final Boolean nameRequired) {
+        this.details = details;
+        this.nameRequired = nameRequired;
+    }
+
+    public ProposedCompanyModel(final ProposedCompanyModel other) {
+        this.submissionId = other.getSubmissionId();
+        this.details = other.getDetails();
+        this.nameRequired = other.getNameRequired();
     }
 
     public String getSubmissionId() {
@@ -40,15 +45,31 @@ public class ProposedCompanyModel {
         this.submissionId = submissionId;
     }
 
-    @NotBlank(message = "{proposedCompany.error}")
+    public CompanyApi getDetails() {
+        return details;
+    }
+
+    public void setDetails(final CompanyApi details) {
+        this.details = details;
+    }
+
     public String getName() {
-        return name;
+        return Boolean.TRUE.equals(nameRequired) ? details.getCompanyName() : null;
     }
 
     public void setName(final String name) {
-        this.name = name;
+        details.setCompanyName(name);
     }
 
+    public String getNumber() {
+        return details.getCompanyNumber();
+    }
+    
+    public void setNumber(final String number) {
+        details.setCompanyNumber(number);
+    }
+
+    @NotNull
     public Boolean getNameRequired() {
         return nameRequired;
     }
@@ -67,13 +88,13 @@ public class ProposedCompanyModel {
         }
         final ProposedCompanyModel that = (ProposedCompanyModel) o;
         return Objects.equals(getSubmissionId(), that.getSubmissionId()) && Objects.equals(
-            getName(), that.getName()) && Objects.equals(getNameRequired(),
-            that.getNameRequired());
+            getNameRequired(), that.getNameRequired()) && Objects.equals(getDetails(),
+            that.getDetails());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSubmissionId(), getName(), getNameRequired());
+        return Objects.hash(getSubmissionId(), getNameRequired(), getDetails());
     }
 
     @Override
