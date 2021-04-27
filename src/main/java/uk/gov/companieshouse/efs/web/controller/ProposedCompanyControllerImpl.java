@@ -62,9 +62,8 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
         }
         // Assign our previously saved response to our model.
         proposedCompany.setSubmissionId(id);
-        proposedCompany.setDetails(
-            new CompanyApi(TEMP_COMPANY_NUMBER, proposedCompanyAttribute.getName()));
-        proposedCompany.setNameRequired(null);
+        proposedCompany.setNumber(TEMP_COMPANY_NUMBER);
+        proposedCompany.setName(proposedCompanyAttribute.getName());
 
         return getViewName();
     }
@@ -85,7 +84,11 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
         // Update our persistent model with the latest response.
         resetNameRequiredIfNotUsed(proposedCompany);
 
-        return ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id, proposedCompany.getNumber());
+        return Boolean.TRUE.equals(proposedCompanyAttribute.getNameRequired())
+            ? ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id,
+            proposedCompany.getNumber())
+            : ViewConstants.REGISTRATIONS_INFO.asRedirectUri(chsUrl, id,
+                proposedCompany.getNumber());
     }
 
     private void resetNameRequiredIfNotUsed(final ProposedCompanyModel proposedCompany) {

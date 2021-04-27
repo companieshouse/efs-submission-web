@@ -19,6 +19,7 @@ public class ProposedCompanyModel {
 
     @SuppressWarnings("squid:S2637") // nameRequired initially null by design
     public ProposedCompanyModel() {
+        this.details = new CompanyApi();
     }
 
     @SuppressWarnings("squid:S2637") // nameRequired initially null by design
