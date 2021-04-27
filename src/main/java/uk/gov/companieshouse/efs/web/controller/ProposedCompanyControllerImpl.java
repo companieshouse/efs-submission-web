@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,8 @@ import uk.gov.companieshouse.logging.Logger;
 @Controller
 @SessionAttributes(ATTRIBUTE_NAME)
 public class ProposedCompanyControllerImpl extends BaseControllerImpl implements ProposedCompanyController {
+    @Value("${registrations.enabled:false}")
+    private boolean registrationsEnabled;
 
     /**
      * Define the model name for this action.
@@ -54,6 +57,9 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
         @ModelAttribute(ATTRIBUTE_NAME) ProposedCompanyModel proposedCompany, Model model,
         HttpServletRequest request) {
 
+        if (!registrationsEnabled) {
+            return ViewConstants.MISSING.asView();
+        }
         // Assign our previously saved response to our model.
         proposedCompany.setSubmissionId(id);
         proposedCompany.setDetails(
@@ -68,6 +74,9 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
         @Valid @ModelAttribute(ATTRIBUTE_NAME) ProposedCompanyModel proposedCompany,
         BindingResult binding, Model model, HttpServletRequest request, HttpSession session) {
 
+        if (!registrationsEnabled) {
+            return ViewConstants.MISSING.asView();
+        }
         if (binding.hasErrors()) {
             addTrackingAttributeToModel(model);
             return getViewName();
