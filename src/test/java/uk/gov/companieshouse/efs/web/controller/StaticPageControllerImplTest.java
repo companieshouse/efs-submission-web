@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
@@ -18,7 +19,7 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
 
     protected static final String COMPANY_SEARCH_REDIRECT =
         UrlBasedViewResolver.REDIRECT_URL_PREFIX + CHS_URL
-            + "/company-lookup/search?noCompanyOption=1";
+            + "/company-lookup/search";
     private StaticPageController testController;
 
     @Mock
@@ -29,6 +30,7 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
         setUpHeaders();
         testController = new StaticPageControllerImpl(logger);
         ((StaticPageControllerImpl) testController).setChsUrl(CHS_URL);
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
     }
 
     @Test
@@ -53,12 +55,23 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void companyLookup() {
+    void companyLookupWhenFeatureDisabled() {
         final String view = testController.companyLookup(SUBMISSION_ID, model, servletRequest, attributes);
 
         verify(attributes)
             .addAttribute("forward", "/efs-submission/" + SUBMISSION_ID + "/company/{companyNumber}/details");
         assertThat(view, is(COMPANY_SEARCH_REDIRECT));
+    }
+    
+    @Test
+    void companyLookupWhenFeatureEnabled() {
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
+
+        final String view = testController.companyLookup(SUBMISSION_ID, model, servletRequest, attributes);
+
+        verify(attributes)
+            .addAttribute("forward", "/efs-submission/" + SUBMISSION_ID + "/company/{companyNumber}/details");
+        assertThat(view, is(COMPANY_SEARCH_REDIRECT + "?noCompanyOption=1"));
     }
 
 }

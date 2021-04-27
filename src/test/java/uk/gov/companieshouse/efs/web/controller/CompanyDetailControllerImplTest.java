@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
@@ -43,6 +44,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
         testController = new CompanyDetailControllerImpl(companyService, sessionService, apiClientService, logger,
                 companyDetailAttribute);
         ((CompanyDetailControllerImpl) testController).setChsUrl(CHS_URL);
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
 
         mockMvc = MockMvcBuilders.standaloneSetup(testController)
                 .setControllerAdvice(new GlobalExceptionHandler(logger))
@@ -63,7 +65,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void getCompanyDetail() {
+    void getCompanyDetailWhenFeatureDisabled() {
         final String viewName = testController
             .getCompanyDetail(SUBMISSION_ID, COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
 
@@ -72,7 +74,9 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void getCompanyDetailWhenNoCompany() {
+    void getCompanyDetailWhenFeatureEnabledNoCompany() {
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
+        
         final String viewName = testController
             .getCompanyDetail(SUBMISSION_ID, "noCompany", companyDetailAttribute, model, servletRequest);
 
