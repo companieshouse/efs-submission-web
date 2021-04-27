@@ -17,7 +17,8 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 class StaticPageControllerImplTest extends BaseControllerImplTest {
 
     protected static final String COMPANY_SEARCH_REDIRECT =
-        UrlBasedViewResolver.REDIRECT_URL_PREFIX + CHS_URL + "/company-lookup/search";
+        UrlBasedViewResolver.REDIRECT_URL_PREFIX + CHS_URL
+            + "/company-lookup/search?noCompanyOption=1";
     private StaticPageController testController;
 
     @Mock

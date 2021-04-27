@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -68,6 +69,15 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
 
         verify(companyService).getCompanyDetail(companyDetailAttribute, COMPANY_NUMBER);
         assertThat(viewName, is(ViewConstants.COMPANY_DETAIL.asView()));
+    }
+
+    @Test
+    void getCompanyDetailWhenNoCompany() {
+        final String viewName = testController
+            .getCompanyDetail(SUBMISSION_ID, "noCompany", companyDetailAttribute, model, servletRequest);
+
+        verifyNoInteractions(companyService);
+        assertThat(viewName, is(ViewConstants.MISSING.asView()));
     }
 
     @Test
