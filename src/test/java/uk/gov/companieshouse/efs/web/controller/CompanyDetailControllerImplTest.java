@@ -1,18 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
-import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
-import uk.gov.companieshouse.efs.web.service.company.CompanyService;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,11 +7,26 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
+import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
+import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
+import uk.gov.companieshouse.efs.web.service.company.CompanyService;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +44,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
         testController = new CompanyDetailControllerImpl(companyService, sessionService, apiClientService, logger,
                 companyDetailAttribute);
         ((CompanyDetailControllerImpl) testController).setChsUrl(CHS_URL);
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
 
         mockMvc = MockMvcBuilders.standaloneSetup(testController)
                 .setControllerAdvice(new GlobalExceptionHandler(logger))
@@ -62,12 +65,45 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void getCompanyDetail() {
+    void getCompanyDetailWhenFeatureDisabled() {
         final String viewName = testController
             .getCompanyDetail(SUBMISSION_ID, COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
 
         verify(companyService).getCompanyDetail(companyDetailAttribute, COMPANY_NUMBER);
         assertThat(viewName, is(ViewConstants.COMPANY_DETAIL.asView()));
+    }
+
+    @Test
+    void getCompanyDetailWhenFeatureEnabled() {
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
+
+        final String viewName = testController
+            .getCompanyDetail(SUBMISSION_ID, COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
+
+        verify(companyService).getCompanyDetail(companyDetailAttribute, COMPANY_NUMBER);
+        assertThat(viewName, is(ViewConstants.COMPANY_DETAIL.asView()));
+    }
+
+    @Test
+    void getCompanyDetailWhenFeatureDisabledNoCompany() {
+        final String viewName = testController
+            .getCompanyDetail(SUBMISSION_ID, "noCompany", companyDetailAttribute, model, servletRequest);
+
+        verifyNoInteractions(companyService);
+        assertThat(viewName, is(ViewConstants.MISSING.asView()));
+    }
+
+    @Test
+    void getCompanyDetailWhenFeatureEnabledNoCompany() {
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
+
+        final String viewName =
+            testController.getCompanyDetail(SUBMISSION_ID, "noCompany", companyDetailAttribute,
+                model, servletRequest);
+
+        verifyNoInteractions(companyService);
+        assertThat(viewName,
+            is(ViewConstants.PROPOSED_COMPANY.asRedirectUri(CHS_URL, SUBMISSION_ID, "noCompany")));
     }
 
     @Test

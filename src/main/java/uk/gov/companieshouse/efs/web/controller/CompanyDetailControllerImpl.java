@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,6 +29,8 @@ import uk.gov.companieshouse.logging.Logger;
  * setComplete() is properly called in ConfirmationControllerImpl at the end of the submission journey.
  */
 public class CompanyDetailControllerImpl extends BaseControllerImpl implements CompanyDetailController {
+    @Value("${registrations.enabled:false}")
+    private boolean registrationsEnabled;
 
     private final CompanyService companyService;
     private final CompanyDetail companyDetailAttribute;
@@ -69,7 +72,8 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
         final CompanyDetail companyDetailAttribute, final Model model, final HttpServletRequest request) {
 
             if (StringUtils.equals(companyNumber, "noCompany")) {
-                return ViewConstants.PROPOSED_COMPANY.asRedirectUri(chsUrl, id, "noCompany");
+                return registrationsEnabled ? ViewConstants.PROPOSED_COMPANY.asRedirectUri(chsUrl,
+                    id, "noCompany") : ViewConstants.MISSING.asView();
             }
             companyDetailAttribute.setSubmissionId(id);
             companyService.getCompanyDetail(companyDetailAttribute, companyNumber);
