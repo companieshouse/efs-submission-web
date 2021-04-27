@@ -1,7 +1,9 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import java.text.MessageFormat;
 import javax.servlet.ServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +23,9 @@ import uk.gov.companieshouse.logging.Logger;
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
 @SessionAttributes(CategoryTemplateControllerImpl.ATTRIBUTE_NAME)
 public class StaticPageControllerImpl extends BaseControllerImpl implements StaticPageController {
+    public static final String COMPANY_LOOKUP_SEARCH = "/company-lookup/search";
+    @Value("${registrations.enabled:false}")
+    private boolean registrationsEnabled;
 
     /**
      * Constructor.
@@ -67,7 +72,8 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
         final RedirectAttributes attributes) {
         attributes.addAttribute("forward", String.format("/efs-submission/%s/company/{companyNumber}/details", id));
 
-        return UrlBasedViewResolver.REDIRECT_URL_PREFIX + chsUrl + "/company-lookup/search";
+        return MessageFormat.format("{0}{1}{2}{3}", UrlBasedViewResolver.REDIRECT_URL_PREFIX,
+            chsUrl, COMPANY_LOOKUP_SEARCH, registrationsEnabled ? "?noCompanyOption=1" : "");
     }
 
 }

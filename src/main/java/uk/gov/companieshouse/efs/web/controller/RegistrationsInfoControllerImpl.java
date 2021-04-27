@@ -20,8 +20,6 @@ public class RegistrationsInfoControllerImpl extends BaseControllerImpl implemen
     @Value("${registrations.enabled:false}")
     private boolean registrationsEnabled;
 
-
-
     /**
      * Constructor used by child controllers.
      *
