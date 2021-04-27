@@ -74,6 +74,26 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
+    void getCompanyDetailWhenFeatureEnabled() {
+        ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
+
+        final String viewName = testController
+            .getCompanyDetail(SUBMISSION_ID, COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
+
+        verify(companyService).getCompanyDetail(companyDetailAttribute, COMPANY_NUMBER);
+        assertThat(viewName, is(ViewConstants.COMPANY_DETAIL.asView()));
+    }
+
+    @Test
+    void getCompanyDetailWhenFeatureDisabledNoCompany() {
+        final String viewName = testController
+            .getCompanyDetail(SUBMISSION_ID, "noCompany", companyDetailAttribute, model, servletRequest);
+
+        verifyNoInteractions(companyService);
+        assertThat(viewName, is(ViewConstants.MISSING.asView()));
+    }
+
+    @Test
     void getCompanyDetailWhenFeatureEnabledNoCompany() {
         ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
         

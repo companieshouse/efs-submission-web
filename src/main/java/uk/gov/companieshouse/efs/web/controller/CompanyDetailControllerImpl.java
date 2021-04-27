@@ -71,7 +71,8 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
     public String getCompanyDetail(final String id, final String companyNumber,
         final CompanyDetail companyDetailAttribute, final Model model, final HttpServletRequest request) {
 
-        if (registrationsEnabled && StringUtils.equals(companyNumber, "noCompany")) {
+        if (StringUtils.equals(companyNumber, "noCompany")) {
+            // Same result regardless of registrationsEnabled value, until proposed name view is added
             return ViewConstants.MISSING.asView();
         }
         companyDetailAttribute.setSubmissionId(id);
