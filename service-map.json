@@ -10,6 +10,6 @@
   "users": "public - Web",
   "language": "Java",
   "integration_outgoing": [
-    "efs_submission_api,CALLS_API"
+    "efs-submission-api,CALLS_API"
   ]
 }
