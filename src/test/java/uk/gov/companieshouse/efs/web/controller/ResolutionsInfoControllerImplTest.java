@@ -4,20 +4,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
-import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateListApi;
-import uk.gov.companieshouse.api.model.efs.submissions.FormTypeApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 
 @ExtendWith(MockitoExtension.class)

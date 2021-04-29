@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.efs.web.model.ProposedCompanyModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
@@ -22,6 +21,12 @@ import uk.gov.companieshouse.logging.Logger;
 
 @Controller
 @SessionAttributes(ATTRIBUTE_NAME)
+@SuppressWarnings("squid:S3753")
+/* S3753: "@Controller" classes that use "@SessionAttributes" must call "setComplete" on their "SessionStatus" objects
+ *
+ * The nature of the web journey across several controllers means it's not appropriate to do this. However,
+ * setComplete() is properly called in ConfirmationControllerImpl at the end of the submission journey.
+ */
 public class ProposedCompanyControllerImpl extends BaseControllerImpl implements ProposedCompanyController {
     @Value("${registrations.enabled:false}")
     private boolean registrationsEnabled;
