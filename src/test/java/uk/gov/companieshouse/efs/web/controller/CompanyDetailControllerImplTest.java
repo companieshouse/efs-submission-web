@@ -1,19 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
-import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
-import uk.gov.companieshouse.efs.web.service.company.CompanyService;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,6 +13,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
+import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
+import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
+import uk.gov.companieshouse.efs.web.service.company.CompanyService;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -96,12 +96,14 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     @Test
     void getCompanyDetailWhenFeatureEnabledNoCompany() {
         ReflectionTestUtils.setField(testController, "registrationsEnabled", true);
-        
-        final String viewName = testController
-            .getCompanyDetail(SUBMISSION_ID, "noCompany", companyDetailAttribute, model, servletRequest);
+
+        final String viewName =
+            testController.getCompanyDetail(SUBMISSION_ID, "noCompany", companyDetailAttribute,
+                model, servletRequest);
 
         verifyNoInteractions(companyService);
-        assertThat(viewName, is(ViewConstants.MISSING.asView()));
+        assertThat(viewName,
+            is(ViewConstants.PROPOSED_COMPANY.asRedirectUri(CHS_URL, SUBMISSION_ID, "noCompany")));
     }
 
     @Test
