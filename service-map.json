@@ -12,6 +12,7 @@
   "test_automation_repo": "https://github.com/companieshouse/chs-test-automation",
   "language": "Java",
   "integration_outgoing": [
-    "efs-submission-api,CALLS_API"
+    "efs-submission-api,CALLS_API",
+    "payments.web.ch.gov.uk,INTEGRATES_WITH"
   ]
 }
