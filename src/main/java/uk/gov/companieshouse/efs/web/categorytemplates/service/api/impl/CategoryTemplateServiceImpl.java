@@ -56,6 +56,8 @@ public class CategoryTemplateServiceImpl extends BaseApiClientServiceImpl
 
         final String uri = BaseApiClientServiceImpl.ROOT_URI + CATEGORY_TEMPLATES_FRAGMENT;
 
+        logger.debug("Cache miss: fetching CategoryTemplates");
+
         return executeOp("getCategoryTemplates", uri,
                 getApiClient().privateEfsResourceHandler().categoryTemplates().categoryTemplates()
                         .get(uri));
@@ -67,6 +69,8 @@ public class CategoryTemplateServiceImpl extends BaseApiClientServiceImpl
 
         final String uri =
                 BaseApiClientServiceImpl.ROOT_URI + CATEGORY_TEMPLATE_FRAGMENT + "/" + id;
+
+        logger.debug(String.format("Cache miss: fetching CategoryTemplate [%s]", id));
 
         return executeOp("getCategoryTemplate", uri,
             getApiClient().privateEfsResourceHandler().categoryTemplates().categoryTemplate().get(uri));
@@ -82,6 +86,8 @@ public class CategoryTemplateServiceImpl extends BaseApiClientServiceImpl
 
         final String uri = components.toUriString();
 
+        logger.debug(String.format("Cache miss: fetching CategoryTemplate [%s]", id));
+
         return executeOp("getCategoryTemplateByParent", uri,
                 getApiClient().privateEfsResourceHandler().categoryTemplates()
                         .categoryTemplatesByParent().get(uri));
@@ -92,6 +98,8 @@ public class CategoryTemplateServiceImpl extends BaseApiClientServiceImpl
     public CategoryTypeConstants getTopLevelCategory(final String category) {
         CategoryTypeConstants result = CategoryTypeConstants.nameOf(category).orElse(OTHER);
         String currentCategory = category;
+
+        logger.debug(String.format("Cache miss: fetching top level category [%s]", category));
 
         while (true) {
             final ApiResponse<CategoryTemplateApi> categoryTemplateResponse = getCategoryTemplate(currentCategory);

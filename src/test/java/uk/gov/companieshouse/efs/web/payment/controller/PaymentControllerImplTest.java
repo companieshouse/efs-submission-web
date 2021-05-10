@@ -1,5 +1,13 @@
 package uk.gov.companieshouse.efs.web.payment.controller;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,15 +23,6 @@ import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.PaymentService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 
-import java.util.Collections;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class PaymentControllerImplTest extends BaseControllerImplTest {
     private static final String PAYMENT_SESSION_STATE =
@@ -31,6 +30,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
     private static final String PAYMENT_SESSION_ID = "yMxgdNVSdwyk7sN";
     private static final String PAYMENT_SESSION_URL = "http://localhost:5000/payments/" + PAYMENT_SESSION_ID + "/pay";
     private static final String PAYMENT_SESSION_URL_BAD = "http://localhost:5000/bad/" + PAYMENT_SESSION_ID + "/pay";
+    private static final String PAYMENT_STATE_PENDING = "pending";
 
     private PaymentController testController;
 
@@ -52,7 +52,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
         testController = new PaymentControllerImpl(apiClientService, paymentService, nonceService, logger);
         ((PaymentControllerImpl) testController).setChsUrl(CHS_URL);
         paymentSessions = new SessionListApi();
-        paySession = new SessionApi(PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE);
+        paySession = new SessionApi(PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE, PAYMENT_STATE_PENDING);
 
     }
 

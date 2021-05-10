@@ -88,7 +88,7 @@ public interface ApiClientService {
      * @param submissionId the submission ID
      * @return the api response
      */
-    ApiResponse<SubmissionResponseApi> putSubmissionSubmitted(final String submissionId);
+    ApiResponse<SubmissionResponseApi> putSubmissionCompleted(final String submissionId);
 
     /**
      * Checks if an email address is on the allow list.

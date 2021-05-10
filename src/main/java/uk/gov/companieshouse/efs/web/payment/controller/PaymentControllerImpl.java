@@ -75,7 +75,7 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
 
         SessionListApi paymentSessions = Objects.requireNonNull(response.getData()).getPaymentSessions();
 
-        if (StringUtils.equals(status, "paid")) {
+        if (SessionStatus.fromValue(status) == SessionStatus.PAID) { // provisionally paid
             if (paymentSessions.stream().anyMatch(s -> StringUtils.equals(s.getSessionState(), state))) {
                 return ViewConstants.CONFIRMATION.asRedirectUri(chsUrl, id, companyNumber);
             } else {
@@ -94,7 +94,7 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
         Matcher matcher = PAYMENT_SESSION_URL_REGEX.matcher(callback);
         if (matcher.find()) {
 
-            SessionApi paymentSession = new SessionApi(matcher.group(1), sessionState);
+            SessionApi paymentSession = new SessionApi(matcher.group(1), sessionState, SessionStatus.PENDING.toString());
             SessionListApi paymentSessions = new SessionListApi();
 
             Optional.ofNullable(getSubmission(submissionId).getPaymentSessions()).ifPresent(paymentSessions::addAll);
@@ -110,6 +110,5 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
 
         return created;
     }
-
 
 }

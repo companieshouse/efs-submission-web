@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import java.util.EnumSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +51,18 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
     @Override
     public String getConfirmation(@PathVariable String id, @PathVariable String companyNumber,
                                   Model model, HttpServletRequest request, HttpSession session, SessionStatus sessionStatus) {
-
+        
         final SubmissionApi submission = getSubmission(id);
+        final SubmissionStatus submissionStatus = submission.getStatus();
+        final EnumSet<SubmissionStatus> allowedStatuses =
+            EnumSet.of(SubmissionStatus.OPEN, SubmissionStatus.PAYMENT_RECEIVED,
+                SubmissionStatus.PAYMENT_FAILED, SubmissionStatus.SUBMITTED);
 
-        if (submission.getStatus() != SubmissionStatus.OPEN) {
+        if (!allowedStatuses.contains(submissionStatus)) {
             return ViewConstants.GONE.asView();
         }
 
-        final ApiResponse<SubmissionResponseApi> response = apiClientService.putSubmissionSubmitted(id);
+        final ApiResponse<SubmissionResponseApi> response = apiClientService.putSubmissionCompleted(id);
 
         logApiResponse(response, id, "PUT /efs-submission-api/submission/" + id);
         model.addAttribute("confirmationRef", submission.getConfirmationReference());

@@ -5,7 +5,6 @@ import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.IP_ALL
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.api.model.paymentsession.SessionListApi;
-import uk.gov.companieshouse.efs.web.configuration.DataCacheConfig;
 import uk.gov.companieshouse.efs.web.exception.UrlEncodingException;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.logging.Logger;
@@ -57,7 +55,6 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    @Cacheable(value = DataCacheConfig.SUBMISSION_BY_ID, sync = true)
     public ApiResponse<SubmissionApi> getSubmission(final String submissionId) {
         final String uri = SUB_URI + submissionId;
 
@@ -66,7 +63,6 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
     public ApiResponse<SubmissionResponseApi> putCompany(final String submissionId, final CompanyApi company) {
         final String uri = SUB_URI + submissionId + "/company";
 
@@ -75,7 +71,6 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
     public ApiResponse<SubmissionResponseApi> putFormType(final String submissionId, final FormTypeApi formType) {
         final String uri = SUB_URI + submissionId + "/form";
 
@@ -84,7 +79,6 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
     public ApiResponse<SubmissionResponseApi> putFileList(final String submissionId, final FileListApi fileList) {
         final String uri = SUB_URI + submissionId + "/files";
 
@@ -92,7 +86,6 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
     public ApiResponse<SubmissionResponseApi> putPaymentSessions(final String submissionId,
         final SessionListApi paymentSessions) {
         final String uri = SUB_URI + submissionId + "/payment-sessions";
@@ -102,7 +95,6 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
     public ApiResponse<SubmissionResponseApi> putConfirmAuthorised(final String submissionId, final ConfirmAuthorisedApi confirmAuthorised) {
         final String uri = SUB_URI + submissionId + "/confirmAuthorised";
 
@@ -111,8 +103,7 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
-    public ApiResponse<SubmissionResponseApi> putSubmissionSubmitted(final String submissionId) {
+    public ApiResponse<SubmissionResponseApi> putSubmissionCompleted(final String submissionId) {
         final String uri = SUB_URI + submissionId;
 
         return executeOp("completeSubmission", uri,
@@ -122,6 +113,7 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     @Override
     @Cacheable(value = IP_ALLOW_LIST, sync = true)
     public ApiResponse<Boolean> isOnAllowList(final String emailAddress) {
+        logger.debug(String.format("Cache miss: fetching allow-list [%s]", emailAddress));
 
         String encodedEmailAddress;
 
