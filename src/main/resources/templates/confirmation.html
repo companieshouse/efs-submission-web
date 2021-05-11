@@ -42,7 +42,7 @@
                 <h2 class="govuk-heading-m" th:text="#{confirmation.next.steps}"></h2>
                 <ul class="govuk-list">
                     <li>
-                        <a class="govuk-link" th:href="*{newSubmissionUri}" th:text="#{confirmation.upload.same.company(*{companyName})}"></a>
+                        <a class="govuk-link" th:href="*{newSubmissionUri}" th:text="#{confirmation.upload.same.company(*{companyDetail.companyName})}"></a>
                     </li>
                     <li>
                         <a class="govuk-link" th:href="@{/efs-submission/new-submission}" th:text="#{confirmation.upload.different.company}"></a>

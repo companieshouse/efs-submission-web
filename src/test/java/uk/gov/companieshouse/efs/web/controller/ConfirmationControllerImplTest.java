@@ -15,6 +15,7 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionFormApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
+import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 
 @ExtendWith(MockitoExtension.class)
 class ConfirmationControllerImplTest extends BaseControllerImplTest {
@@ -27,6 +28,9 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
 
     @Mock
     private FormTemplateApi formTemplateApi;
+    
+    @Mock
+    private CompanyDetail companyDetail;
 
     @BeforeEach
     protected void setup() {
@@ -53,7 +57,7 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
         when(formTemplateApi.getFormCategory()).thenReturn("RP");
         when(categoryTemplateService.getTopLevelCategory("RP")).thenReturn(CategoryTypeConstants.REGISTRAR_POWERS);
 
-        final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER,
+        final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER, companyDetail,
                 model, request, session, sessionStatus);
 
         assertThat(result, is(ViewConstants.CONFIRMATION.asView()));
@@ -71,19 +75,19 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
         when(formTemplateApi.getFormCategory()).thenReturn("MA");
         when(categoryTemplateService.getTopLevelCategory("MA")).thenReturn(CategoryTypeConstants.ARTICLES);
 
-        final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER,
+        final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER, companyDetail,
                 model, request, session, sessionStatus);
 
         assertThat(result, is(ViewConstants.CONFIRMATION.asView()));
     }
 
     @Test
-    void getConfirmationWhenSubmissionNotOpen() {
+    void getConfirmationWhenSubmissionStatusNotAllowed() {
         final SubmissionApi submission = createSubmission(SubmissionStatus.SUBMITTED);
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, headers, submission));
 
-        final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER,
+        final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER, companyDetail,
                 model, request, session, sessionStatus);
 
         assertThat(result, is(ViewConstants.GONE.asView()));

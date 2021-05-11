@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -20,12 +21,15 @@ import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeCo
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
+import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
 
 @Controller
-@SessionAttributes({FormTemplateControllerImpl.ATTRIBUTE_NAME, CategoryTemplateControllerImpl.ATTRIBUTE_NAME})
+@SessionAttributes(
+    {FormTemplateControllerImpl.ATTRIBUTE_NAME, CategoryTemplateControllerImpl.ATTRIBUTE_NAME,
+        CompanyDetailControllerImpl.ATTRIBUTE_NAME})
 public class ConfirmationControllerImpl extends BaseControllerImpl implements ConfirmationController {
 
     /**
@@ -50,13 +54,15 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
 
     @Override
     public String getConfirmation(@PathVariable String id, @PathVariable String companyNumber,
-                                  Model model, HttpServletRequest request, HttpSession session, SessionStatus sessionStatus) {
-        
+        @ModelAttribute(CompanyDetailControllerImpl.ATTRIBUTE_NAME)
+            CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request,
+        HttpSession session, SessionStatus sessionStatus) {
+
         final SubmissionApi submission = getSubmission(id);
         final SubmissionStatus submissionStatus = submission.getStatus();
         final EnumSet<SubmissionStatus> allowedStatuses =
             EnumSet.of(SubmissionStatus.OPEN, SubmissionStatus.PAYMENT_RECEIVED,
-                SubmissionStatus.PAYMENT_FAILED, SubmissionStatus.SUBMITTED);
+                SubmissionStatus.PAYMENT_FAILED);
 
         if (!allowedStatuses.contains(submissionStatus)) {
             return ViewConstants.GONE.asView();
@@ -66,9 +72,11 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
 
         logApiResponse(response, id, "PUT /efs-submission-api/submission/" + id);
         model.addAttribute("confirmationRef", submission.getConfirmationReference());
-        model.addAttribute("companyName", submission.getCompany().getCompanyName());
         model.addAttribute("newSubmissionUri",
             ViewConstants.NEW_SUBMISSION.asUriForCompany(chsUrl, submission.getCompany().getCompanyNumber()));
+        // repopulate companyDetail
+        companyDetailAttribute.setCompanyName(submission.getCompany().getCompanyName());
+        companyDetailAttribute.setCompanyNumber(submission.getCompany().getCompanyNumber());
 
         SubmissionFormApi submissionFormApi = submission.getSubmissionForm();
 

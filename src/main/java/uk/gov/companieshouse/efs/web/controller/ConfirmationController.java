@@ -4,9 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
+import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
 public interface ConfirmationController {
@@ -24,6 +26,7 @@ public interface ConfirmationController {
      */
     @GetMapping("{id}/company/{companyNumber}/confirmation")
     String getConfirmation(@PathVariable String id, @PathVariable String companyNumber,
-                           Model model, HttpServletRequest request, HttpSession session,
-                           SessionStatus sessionStatus);
+        @ModelAttribute(CompanyDetailControllerImpl.ATTRIBUTE_NAME)
+            CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request,
+        HttpSession session, SessionStatus sessionStatus);
 }
