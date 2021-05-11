@@ -24,8 +24,14 @@
                 </div>
                 <br/>
                 <h2 class="govuk-heading-m" th:text="#{confirmation.happens.title}"></h2>
-                <p class="govuk-body" th:text="#{confirmation.next.emailSent}"></p>
-                <p class="govuk-body" th:text="#{confirmation.next.body1}"></p>
+                <div class="govuk-body" th:if="*{paymentRequired}">
+                    <p th:text="#{confirmation.next.fee.emailPending}"></p>
+                    <p th:text="#{confirmation.next.fee.body1}"></p>
+                </div>
+                <div class="govuk-body" th:unless="*{paymentRequired}">
+                    <p th:text="#{confirmation.next.emailSent}"></p>
+                    <p th:text="#{confirmation.next.body1}"></p>
+                </div>
                 <div class="govuk-body" th:if="${registrarsPowers}">
                     <p th:text="#{confirmation.next.body2}"></p>
                 </div>

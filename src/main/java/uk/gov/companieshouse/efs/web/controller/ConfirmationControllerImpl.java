@@ -3,6 +3,7 @@ package uk.gov.companieshouse.efs.web.controller;
 import java.util.EnumSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -87,6 +88,7 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
 
         boolean isRegPowers = topLevelCategory.equals(CategoryTypeConstants.REGISTRAR_POWERS);
         model.addAttribute("registrarsPowers", isRegPowers);
+        model.addAttribute("paymentRequired", StringUtils.isNotBlank(submission.getFeeOnSubmission()));
 
         addTrackingAttributeToModel(model);
         sessionStatus.setComplete();
