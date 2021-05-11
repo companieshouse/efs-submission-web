@@ -69,11 +69,8 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
     public String paymentCallback(final HttpServletRequest request, @PathVariable String id,
         @PathVariable String companyNumber, @RequestParam(name = "status") String status,
         @RequestParam(name = "ref") String ref, @RequestParam(name = "state") String state, ServletRequest servletRequest) {
-        ApiResponse<SubmissionApi> response = apiClientService.getSubmission(id);
-
-        logApiResponse(response, id, MessageFormat.format("GET " + BaseApiClientServiceImpl.SUB_URI + "{0}", id));
-
-        SessionListApi paymentSessions = Objects.requireNonNull(response.getData()).getPaymentSessions();
+        final SubmissionApi submissionApi = fetchSubmission(id);
+        SessionListApi paymentSessions = Objects.requireNonNull(submissionApi).getPaymentSessions();
 
         if (SessionStatus.fromValue(status) == SessionStatus.PAID) { // provisionally paid
             if (paymentSessions.stream().anyMatch(s -> StringUtils.equals(s.getSessionState(), state))) {

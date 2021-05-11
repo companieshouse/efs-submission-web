@@ -79,6 +79,21 @@ public abstract class BaseControllerImpl implements BaseController {
     }
 
     /**
+     * Retrieves the submission data from the efs-submission-api, bypassing web data cache
+     *
+     * @param id the submission id
+     * @return Submission data
+     */
+    @Override
+    public SubmissionApi fetchSubmission(final String id) {
+        ApiResponse<SubmissionApi> response = apiClientService.fetchSubmission(id);
+
+        logApiResponse(response, id, GET_APPLICATION);
+
+        return response.getData();
+    }
+
+    /**
      * Required for Web Analytics.
      *
      * @param model the model

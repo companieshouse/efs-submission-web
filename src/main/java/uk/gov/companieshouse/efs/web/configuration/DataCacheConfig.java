@@ -21,6 +21,7 @@ public class DataCacheConfig {
     public static final String FORM_BY_ID = "form-by-id";
     public static final String FORM_BY_CATEGORY = "form-by-category";
     public static final String IP_ALLOW_LIST = "ip-allow-list";
+    public static final String SUBMISSION_BY_ID = "submission-by-id";
 
     protected static final String[] REF_DATA_CACHE_NAMES =
             {ALL_CATEGORIES, CATEGORY_BY_ID, CATEGORY_BY_PARENT, TOP_LEVEL_CATEGORY, ALL_FORMS,

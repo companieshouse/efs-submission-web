@@ -49,7 +49,7 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
     void getConfirmationRP() {
         final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
         submission.setSubmissionForm(new SubmissionFormApi(null, TEST_FORM, null));
-        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, headers, submission));
 
         when(formTemplateService.getFormTemplate(TEST_FORM)).thenReturn(formTemplateApiResponse);
@@ -67,7 +67,7 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
     void getConfirmationNonRP() {
         final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
         submission.setSubmissionForm(new SubmissionFormApi(null, TEST_FORM, null));
-        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
                 new ApiResponse<>(200, headers, submission));
 
         when(formTemplateService.getFormTemplate(TEST_FORM)).thenReturn(formTemplateApiResponse);
@@ -84,7 +84,7 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
     @Test
     void getConfirmationWhenSubmissionStatusNotAllowed() {
         final SubmissionApi submission = createSubmission(SubmissionStatus.SUBMITTED);
-        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, headers, submission));
 
         final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER, companyDetail,

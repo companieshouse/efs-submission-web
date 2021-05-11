@@ -7,6 +7,7 @@ import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.CATEGO
 import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.FORM_BY_CATEGORY;
 import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.FORM_BY_ID;
 import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.IP_ALLOW_LIST;
+import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.SUBMISSION_BY_ID;
 import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.TOP_LEVEL_CATEGORY;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,10 @@ public class DataCacheServiceImpl implements DataCacheService {
     }
 
     @Scheduled(fixedDelayString = "${cache.eviction.delay.ms}")
+    // Include SUBMISSION_BY_ID cache to ensure to ensure old entries are cleared.
     // Replacing the Boot default with a configurable cache provider would enable
     // TTL configuration.
-    @CacheEvict(cacheNames = {ALL_CATEGORIES, CATEGORY_BY_ID, CATEGORY_BY_PARENT,
+    @CacheEvict(cacheNames = {SUBMISSION_BY_ID, ALL_CATEGORIES, CATEGORY_BY_ID, CATEGORY_BY_PARENT,
             TOP_LEVEL_CATEGORY, ALL_FORMS, FORM_BY_ID, FORM_BY_CATEGORY, IP_ALLOW_LIST},
             allEntries = true)
     @Override

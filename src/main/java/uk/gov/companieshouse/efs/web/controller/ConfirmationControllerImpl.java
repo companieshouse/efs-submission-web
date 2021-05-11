@@ -58,7 +58,7 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
             CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request,
         HttpSession session, SessionStatus sessionStatus) {
 
-        final SubmissionApi submission = getSubmission(id);
+        final SubmissionApi submission = fetchSubmission(id);
         final SubmissionStatus submissionStatus = submission.getStatus();
         final EnumSet<SubmissionStatus> allowedStatuses =
             EnumSet.of(SubmissionStatus.OPEN, SubmissionStatus.PAYMENT_RECEIVED,

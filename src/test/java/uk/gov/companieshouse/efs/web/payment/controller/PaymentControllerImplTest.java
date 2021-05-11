@@ -88,7 +88,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
     @Test
     void paymentCallbackWhenStatusPaidWithAndStateMatch() {
         paymentSessions.add(paySession);
-        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(getSubmissionOkResponse(submission));
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(getSubmissionOkResponse(submission));
         when(submission.getPaymentSessions()).thenReturn(paymentSessions);
 
         final String result = testController
@@ -102,7 +102,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
     void paymentCallbackWhenStatusPaidWithAndStateMismatch() {
         paySession.setSessionState("[won't match]");
         paymentSessions.add(paySession);
-        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(getSubmissionOkResponse(submission));
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(getSubmissionOkResponse(submission));
         when(submission.getPaymentSessions()).thenReturn(paymentSessions);
 
         final ServiceException exception = assertThrows(ServiceException.class, () -> testController
@@ -115,7 +115,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
     @Test
     void paymentCallbackWhenStatusNotPaid() {
         paymentSessions.add(paySession);
-        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(getSubmissionOkResponse(submission));
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(getSubmissionOkResponse(submission));
         when(submission.getPaymentSessions()).thenReturn(paymentSessions);
 
         final String result = testController
