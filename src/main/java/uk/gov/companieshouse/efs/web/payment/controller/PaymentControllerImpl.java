@@ -84,7 +84,8 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
                 throw stateServiceException;
             }
         } else {
-            return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
+            // placeholder view: may become "payment failed" screen, see BI-7784
+            return ViewConstants.CONFIRMATION.asRedirectUri(chsUrl, id, companyNumber);
         }
     }
 

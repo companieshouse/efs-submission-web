@@ -122,7 +122,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
             .paymentCallback(request, SUBMISSION_ID, COMPANY_NUMBER, "failed", PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE,
                 servletRequest);
 
-        assertThat(result, is(ViewConstants.CHECK_DETAILS.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+        assertThat(result, is(ViewConstants.CONFIRMATION.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
 
 }
