@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 enum SessionStatus {
-    PAID("paid"), PENDING("pending"), FAILED("failed");
+    PAID("paid"), PENDING("pending"), CANCELLED("cancelled"), FAILED("failed");
 
     private String value;
 

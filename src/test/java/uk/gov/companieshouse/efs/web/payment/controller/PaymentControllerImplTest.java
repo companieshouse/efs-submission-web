@@ -30,7 +30,9 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
     private static final String PAYMENT_SESSION_ID = "yMxgdNVSdwyk7sN";
     private static final String PAYMENT_SESSION_URL = "http://localhost:5000/payments/" + PAYMENT_SESSION_ID + "/pay";
     private static final String PAYMENT_SESSION_URL_BAD = "http://localhost:5000/bad/" + PAYMENT_SESSION_ID + "/pay";
-    private static final String PAYMENT_STATE_PENDING = "pending";
+    private static final String PAYMENT_STATUS_PENDING = "pending";
+    public static final String PAYMENT_STATUS_FAILED = "failed";
+    public static final String PAYMENT_STATUS_CANCELLED = "cancelled";
 
     private PaymentController testController;
 
@@ -40,9 +42,9 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
     private PaymentService paymentService;
     @Mock
     private NonceService nonceService;
-
     @Mock
     private SubmissionApi submission;
+
     private SessionListApi paymentSessions;
     private SessionApi paySession;
 
@@ -52,7 +54,8 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
         testController = new PaymentControllerImpl(apiClientService, paymentService, nonceService, logger);
         ((PaymentControllerImpl) testController).setChsUrl(CHS_URL);
         paymentSessions = new SessionListApi();
-        paySession = new SessionApi(PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE, PAYMENT_STATE_PENDING);
+        paySession = new SessionApi(PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE,
+            PAYMENT_STATUS_PENDING);
 
     }
 
@@ -95,6 +98,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
             .paymentCallback(request, SUBMISSION_ID, COMPANY_NUMBER, "paid", PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE,
                 servletRequest);
 
+        assertThat(paySession.getSessionStatus(), is(PAYMENT_STATUS_PENDING)); // unchanged
         assertThat(result, is(ViewConstants.CONFIRMATION.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
 
@@ -109,20 +113,40 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
             .paymentCallback(request, SUBMISSION_ID, COMPANY_NUMBER, "paid", PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE,
                 servletRequest));
 
+        assertThat(paySession.getSessionStatus(), is(PAYMENT_STATUS_PENDING)); // unchanged
         assertThat(exception.getMessage(), is("State does not match"));
     }
 
     @Test
-    void paymentCallbackWhenStatusNotPaid() {
+    void paymentCallbackWhenStatusFailed() {
         paymentSessions.add(paySession);
         when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(getSubmissionOkResponse(submission));
         when(submission.getPaymentSessions()).thenReturn(paymentSessions);
 
-        final String result = testController
-            .paymentCallback(request, SUBMISSION_ID, COMPANY_NUMBER, "failed", PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE,
-                servletRequest);
+        final String result = testController.paymentCallback(request, SUBMISSION_ID, COMPANY_NUMBER,
+            PAYMENT_STATUS_FAILED, PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE, servletRequest);
 
-        assertThat(result, is(ViewConstants.CONFIRMATION.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+        assertThat(paySession.getSessionStatus(), is(PAYMENT_STATUS_PENDING)); // unchanged
+        assertThat(result,
+            is(ViewConstants.CONFIRMATION.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+    }
+
+    @Test
+    void paymentCallbackWhenStatusCancelled() {
+        paymentSessions.add(paySession);
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
+            getSubmissionOkResponse(submission));
+        when(submission.getPaymentSessions()).thenReturn(paymentSessions);
+
+        final String result =
+            testController.paymentCallback(request, SUBMISSION_ID, COMPANY_NUMBER,
+                PAYMENT_STATUS_CANCELLED,
+                PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE, servletRequest);
+
+        assertThat(paySession.getSessionStatus(), is(PAYMENT_STATUS_CANCELLED));
+        verify(apiClientService).putPaymentSessions(SUBMISSION_ID, paymentSessions);
+        assertThat(result,
+            is(ViewConstants.CHECK_DETAILS.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
 
 }
