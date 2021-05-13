@@ -24,7 +24,6 @@ import uk.gov.companieshouse.efs.web.exception.ServiceException;
 import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.PaymentService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
-import uk.gov.companieshouse.efs.web.service.api.impl.BaseApiClientServiceImpl;
 import uk.gov.companieshouse.logging.Logger;
 
 @Controller
@@ -69,22 +68,39 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
     public String paymentCallback(final HttpServletRequest request, @PathVariable String id,
         @PathVariable String companyNumber, @RequestParam(name = "status") String status,
         @RequestParam(name = "ref") String ref, @RequestParam(name = "state") String state, ServletRequest servletRequest) {
-        ApiResponse<SubmissionApi> response = apiClientService.getSubmission(id);
+        final SubmissionApi submissionApi = fetchSubmission(id);
+        SessionListApi paymentSessions = Objects.requireNonNull(submissionApi).getPaymentSessions();
+        final SessionStatus provisionalSessionStatus =
+            Objects.requireNonNull(SessionStatus.fromValue(status));
 
-        logApiResponse(response, id, MessageFormat.format("GET " + BaseApiClientServiceImpl.SUB_URI + "{0}", id));
+        logger.debug(
+            String.format("Payment callback status %s for submission with id [%s]", status, id));
+        final Optional<SessionApi> maybeMatchedSession = paymentSessions.stream()
+            .filter(s -> StringUtils.equals(s.getSessionState(), state))
+            .findFirst();
 
-        SessionListApi paymentSessions = Objects.requireNonNull(response.getData()).getPaymentSessions();
-
-        if (StringUtils.equals(status, "paid")) {
-            if (paymentSessions.stream().anyMatch(s -> StringUtils.equals(s.getSessionState(), state))) {
+        switch (provisionalSessionStatus) {
+            case PAID:  // provisionally paid
+                if (maybeMatchedSession.isPresent()) {
+                    return ViewConstants.CONFIRMATION.asRedirectUri(chsUrl, id, companyNumber);
+                } else {
+                    final ServiceException stateServiceException =
+                        new ServiceException("State does not match");
+                    logger.errorContext(id, null, stateServiceException, null);
+                    throw stateServiceException;
+                }
+            case CANCELLED:
+                maybeMatchedSession.ifPresent(s -> {
+                    logger.debug(String.format(
+                        "Attempting to update payment session %s status 'cancelled' for "
+                            + "submission with id [%s]", s.getSessionId(), id));
+                    s.setSessionStatus(SessionStatus.CANCELLED.toString());
+                    apiClientService.putPaymentSessions(id, paymentSessions);
+                });
+                return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
+            case FAILED: // fall through, will get PATCH request status 'failed' later
+            default:
                 return ViewConstants.CONFIRMATION.asRedirectUri(chsUrl, id, companyNumber);
-            } else {
-                final ServiceException stateServiceException = new ServiceException("State does not match");
-                logger.errorContext(id, null, stateServiceException, null);
-                throw stateServiceException;
-            }
-        } else {
-            return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
         }
     }
 
@@ -94,7 +110,7 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
         Matcher matcher = PAYMENT_SESSION_URL_REGEX.matcher(callback);
         if (matcher.find()) {
 
-            SessionApi paymentSession = new SessionApi(matcher.group(1), sessionState);
+            SessionApi paymentSession = new SessionApi(matcher.group(1), sessionState, SessionStatus.PENDING.toString());
             SessionListApi paymentSessions = new SessionListApi();
 
             Optional.ofNullable(getSubmission(submissionId).getPaymentSessions()).ifPresent(paymentSessions::addAll);
@@ -110,6 +126,5 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
 
         return created;
     }
-
 
 }

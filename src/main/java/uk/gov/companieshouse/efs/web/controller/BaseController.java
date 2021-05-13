@@ -5,5 +5,7 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 public interface BaseController {
     SubmissionApi getSubmission(String id);
 
+    SubmissionApi fetchSubmission(String id);
+
     String getViewName();
 }

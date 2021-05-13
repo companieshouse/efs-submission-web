@@ -37,6 +37,14 @@ public interface ApiClientService {
     ApiResponse<SubmissionApi> getSubmission(final String submissionId);
 
     /**
+     * Fetch a submission, bypassing Data Cache "submission-by-id"
+     *
+     * @param submissionId the submission ID
+     * @return the model for the submission json response
+     */
+    ApiResponse<SubmissionApi> fetchSubmission(final String submissionId);
+
+    /**
      * Update company details.
      *
      * @param submissionId the submission ID
@@ -88,7 +96,7 @@ public interface ApiClientService {
      * @param submissionId the submission ID
      * @return the api response
      */
-    ApiResponse<SubmissionResponseApi> putSubmissionSubmitted(final String submissionId);
+    ApiResponse<SubmissionResponseApi> putSubmissionCompleted(final String submissionId);
 
     /**
      * Checks if an email address is on the allow list.

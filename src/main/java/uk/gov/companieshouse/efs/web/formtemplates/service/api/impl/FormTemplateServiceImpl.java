@@ -52,6 +52,8 @@ public class FormTemplateServiceImpl extends BaseApiClientServiceImpl
 
         final String uri = BaseApiClientServiceImpl.ROOT_URI + FORM_TEMPLATES_FRAGMENT;
 
+        logger.debug("Cache miss: fetching FormTemplates");
+
         return executeOp("getFormTemplates", uri,
                 getApiClient().privateEfsResourceHandler().formTemplates().formTemplates().get(uri));
     }
@@ -64,6 +66,8 @@ public class FormTemplateServiceImpl extends BaseApiClientServiceImpl
             .buildAndExpand(id).encode();
 
         final String uri = components.toUriString();
+
+        logger.debug(String.format("Cache miss: fetching FormTemplate [%s]", id));
 
         return executeOp("getFormTemplate", uri,
                 getApiClient().privateEfsResourceHandler().formTemplates().formTemplate().get(uri));
@@ -78,6 +82,8 @@ public class FormTemplateServiceImpl extends BaseApiClientServiceImpl
             .buildAndExpand(id).encode();
 
         final String uri = components.toUriString();
+
+        logger.debug(String.format("Cache miss: fetching FormTemplate [%s]", id));
 
         return executeOp("getFormTemplatesByCategory", uri,
             getApiClient().privateEfsResourceHandler().formTemplates().formTemplatesByCategory().get(uri));

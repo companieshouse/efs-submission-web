@@ -59,6 +59,13 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     @Override
     @Cacheable(value = DataCacheConfig.SUBMISSION_BY_ID, sync = true)
     public ApiResponse<SubmissionApi> getSubmission(final String submissionId) {
+        logger.debug(String.format("Cache miss: fetching submission [%s]", submissionId));
+
+        return fetchSubmission(submissionId);
+    }
+
+    @Override
+    public ApiResponse<SubmissionApi> fetchSubmission(final String submissionId) {
         final String uri = SUB_URI + submissionId;
 
         return executeOp("getSubmission", uri,
@@ -112,7 +119,7 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
 
     @Override
     @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
-    public ApiResponse<SubmissionResponseApi> putSubmissionSubmitted(final String submissionId) {
+    public ApiResponse<SubmissionResponseApi> putSubmissionCompleted(final String submissionId) {
         final String uri = SUB_URI + submissionId;
 
         return executeOp("completeSubmission", uri,
@@ -122,6 +129,7 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     @Override
     @Cacheable(value = IP_ALLOW_LIST, sync = true)
     public ApiResponse<Boolean> isOnAllowList(final String emailAddress) {
+        logger.debug(String.format("Cache miss: fetching allow-list [%s]", emailAddress));
 
         String encodedEmailAddress;
 

@@ -296,7 +296,7 @@ class ApiClientServiceImplTest {
         when(upsertResourceHandler.upsert(SUBMISSION_URI, SubmissionStatus.SUBMITTED)).thenReturn(modelUpsert);
         when(modelUpsert.execute()).thenReturn(EMPTY_OK_RESPONSE);
 
-        final ApiResponse<SubmissionResponseApi> response = apiClientService.putSubmissionSubmitted(SUBMISSION_ID);
+        final ApiResponse<SubmissionResponseApi> response = apiClientService.putSubmissionCompleted(SUBMISSION_ID);
 
         assertThat(response, is(EMPTY_OK_RESPONSE));
     }
