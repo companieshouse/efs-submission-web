@@ -93,4 +93,16 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
         assertThat(result, is(ViewConstants.GONE.asView()));
     }
 
+    @Test
+    void getConfirmationWhenPaymentFailedThenEmailNotResent                                                                                                                                                () {
+        final SubmissionApi submission = createSubmission(SubmissionStatus.PAYMENT_FAILED);
+        when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
+            new ApiResponse<>(200, headers, submission));
+
+        final String result = testController.getConfirmation(SUBMISSION_ID, COMPANY_NUMBER, companyDetail,
+                model, request, session, sessionStatus);
+
+        assertThat(result, is(ViewConstants.GONE.asView()));
+    }
+
 }
