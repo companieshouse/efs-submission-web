@@ -97,11 +97,11 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
                     s.setSessionStatus(SessionStatus.CANCELLED.toString());
                     apiClientService.putPaymentSessions(id, paymentSessions);
                 });
-                return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
-            case FAILED: // fall through, will get PATCH request status 'failed' later
+                break;
             default:
-                return ViewConstants.CONFIRMATION.asRedirectUri(chsUrl, id, companyNumber);
+                break;
         }
+        return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
     }
 
     private boolean createPaymentSession(final String submissionId, String callback, final String sessionState) {

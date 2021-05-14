@@ -128,7 +128,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
 
         assertThat(paySession.getSessionStatus(), is(PAYMENT_STATUS_PENDING)); // unchanged
         assertThat(result,
-            is(ViewConstants.CONFIRMATION.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+            is(ViewConstants.CHECK_DETAILS.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
 
     @Test
