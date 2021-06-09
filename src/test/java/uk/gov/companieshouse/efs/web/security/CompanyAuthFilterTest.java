@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -67,13 +65,11 @@ class CompanyAuthFilterTest {
         new FormTemplateApi("CC01", null, "CC", null, false, false, null);
     private static final String TEST_EMAIL = "testing@test.com";
 
-    public static final String NON_MATCHING_FINE_GRAINED_SCOPE = " /company/12345678/admin.write-full";
-    public static final String MATCHING_FINE_GRAINED_SCOPE = "/company/12345678/admin.write-full";
+    public static final String NON_MATCHING_SCOPE = " /company/12345678/admin.write-full";
+    public static final String MATCHING_SCOPE = "/company/12345678/admin.write-full";
     private static final String OTHER_COMPANY_NUMBER = "11223344";
 
     private TestCompanyAuthFilter spyFilter;
-    private static final String MATCHING_LEGACY_SCOPE = "/company/" + OTHER_COMPANY_NUMBER;
-    private static final String NON_MATCHING_LEGACY_SCOPE = MATCHING_LEGACY_SCOPE + " ";
 
     private static class TestCompanyAuthFilter extends CompanyAuthFilter {
         public TestCompanyAuthFilter(final EnvironmentReader environmentReader, final ApiClientService apiClientService,
@@ -279,19 +275,16 @@ class CompanyAuthFilterTest {
         verifyCompanyAuthIsNotSkipped();
     }
 
-    @ParameterizedTest(name = "Fine grained scopes={0}")
-    @ValueSource(booleans = {false, true})
-    void doFilterWhenAuthIsRequiredForInsolvencyAndFineGrainedScopeMatches(final boolean fineGrainedUserScope)
+    @Test
+    void doFilterWhenAuthIsRequiredForInsolvencyAndFineGrainedScopeMatches()
         throws IOException, ServletException {
         SubmissionFormApi submissionForm = createSubmissionForm(INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         SubmissionApi submission = createSubmission(submissionForm);
 
-        expectFineGrainedScope();
-
         expectSession(session);
         signInInfo.setUserProfile(userProfile);
         signInInfo.setCompanyNumber(OTHER_COMPANY_NUMBER);
-        userProfile.setScope(fineGrainedUserScope ? MATCHING_FINE_GRAINED_SCOPE : MATCHING_LEGACY_SCOPE);
+        userProfile.setScope(MATCHING_SCOPE);
         expectCategoryAndFormLookup(submission, INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         expectRequestUrlLookup();
         when(request.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY)).thenReturn(session);
@@ -301,23 +294,17 @@ class CompanyAuthFilterTest {
         verifyCompanyAuthIsNotSkipped();
     }
 
-    @ParameterizedTest(name = "Fine grained scopes={0}")
-    @ValueSource(booleans = {false, true})
-    void doFilterWhenAuthIsRequiredForInsolvencyAndFineGrainedScopeMatchesCompanyNumber(
-        final boolean fineGrainedUserScope) throws IOException, ServletException {
+    @Test
+    void doFilterWhenAuthIsRequiredForInsolvencyAndFineGrainedScopeMatchesCompanyNumber() throws IOException, ServletException {
         SubmissionFormApi submissionForm = createSubmissionForm(INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         SubmissionApi submission = createSubmission(submissionForm);
-
-        if (fineGrainedUserScope) {
-            expectFineGrainedScope();
-        }
 
         expectSession(session);
         signInInfo.setUserProfile(userProfile);
 
-        final String scope = fineGrainedUserScope ? MATCHING_FINE_GRAINED_SCOPE : MATCHING_LEGACY_SCOPE;
+        final String scope = MATCHING_SCOPE.replace(OTHER_COMPANY_NUMBER, COMPANY_NUMBER);
 
-        userProfile.setScope(scope.replace(OTHER_COMPANY_NUMBER, COMPANY_NUMBER));
+        userProfile.setScope(scope);
         expectCategoryAndFormLookup(submission, INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         when(request.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY)).thenReturn(session);
 
@@ -326,21 +313,16 @@ class CompanyAuthFilterTest {
         verifyCompanyAuthIsSkipped();
     }
 
-    @ParameterizedTest(name = "Fine grained scopes={0}")
-    @ValueSource(booleans = {false, true})
-    void doFilterWhenAuthIsRequiredForInsolvencyAndScopeDoesntMatch(final boolean fineGrainedUserScope)
+    @Test
+    void doFilterWhenAuthIsRequiredForInsolvencyAndScopeDoesntMatch()
         throws IOException, ServletException {
         SubmissionFormApi submissionForm = createSubmissionForm(INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         SubmissionApi submission = createSubmission(submissionForm);
 
-        if (fineGrainedUserScope) {
-            expectFineGrainedScope();
-        }
-
         expectSession(session);
         signInInfo.setUserProfile(userProfile);
         signInInfo.setCompanyNumber(OTHER_COMPANY_NUMBER);
-        userProfile.setScope(fineGrainedUserScope ? NON_MATCHING_FINE_GRAINED_SCOPE : NON_MATCHING_LEGACY_SCOPE);
+        userProfile.setScope(NON_MATCHING_SCOPE);
         expectCategoryAndFormLookup(submission, INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         expectRequestUrlLookup();
         when(request.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY)).thenReturn(session);
@@ -458,12 +440,5 @@ class CompanyAuthFilterTest {
 
     private void verifyCompanyAuthIsSkipped() throws IOException, ServletException {
         verify(chain).doFilter(request, response);
-    }
-
-    private void expectFineGrainedScope() {
-        when(environmentReader.getOptionalString("USE_FINE_GRAIN_SCOPES_MODEL")).thenReturn("1");
-        testCompanyAuthFilter = new TestCompanyAuthFilter(environmentReader, apiClientService, formTemplateService,
-            categoryTemplateService);
-        spyFilter = spy(testCompanyAuthFilter);
     }
 }
