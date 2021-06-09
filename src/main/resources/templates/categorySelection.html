@@ -24,8 +24,8 @@
                         <fieldset class="govuk-fieldset" data-required="data-required"
                                   th:attr="data-error=#{NotBlankCategoryTemplate.categoryTemplate.details}">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                                <span id="category-name" class="govuk-caption-xl"
-                                      th:text="*{parentCategory.categoryName}"></span>
+                                <span id="category-name" class="govuk-caption-l"
+                                      th:text="*{parentCategory.categoryName} != '' ? *{parentCategory.categoryName} : #{documentSelection.subtitle}"></span>
                                 <h1 class="govuk-fieldset__heading"
                                     th:text="#{categorySelection.catType}"></h1>
                             </legend>
