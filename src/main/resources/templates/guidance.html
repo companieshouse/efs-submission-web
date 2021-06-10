@@ -114,6 +114,9 @@
                             </div>
                         </div>
                         <div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
+                            <p class="govuk-body" th:text="#{guidance.documents.you.can.upload.one.doc}">
+                            </p>
+
                             <p class="govuk-body">
                                 <a href="https://www.gov.uk/government/publications/consolidate-sub-divide-redeem-shares-or-re-convert-stock-into-shares-sh02"
                                    th:text="#{guidance.documents.you.can.upload.sh02}" class="govuk-link"></a>
@@ -173,6 +176,22 @@
                             <p class="govuk-body">
                                 <a href="https://www.gov.uk/government/publications/give-notice-by-the-company-of-application-to-cancel-special-resolution-sh17"
                                    th:text="#{guidance.documents.you.can.upload.sh17}" class="govuk-link"></a>
+                            </p>
+                            <p class="govuk-body">
+                                <a href="https://www.gov.uk/government/publications/statement-of-capital-when-reducing-capital-in-a-company-sh19"
+                                   th:text="#{guidance.documents.you.can.upload.sh19}" class="govuk-link"></a>
+                                <br />
+                                <span th:text="#{guidance.documents.you.can.upload.sh19.standard.fee}" th:remove="tag"></span>
+
+                                <p class="govuk-body" th:text="#{guidance.documents.you.can.upload.sh19.statement.by.directors}"></p>
+                                <p class="govuk-body" th:text="#{guidance.documents.you.can.upload.sh19.solvency.statement}"></p>
+                                <p class="govuk-body" th:text="#{guidance.documents.you.can.upload.sh19.resolution}"></p>
+
+                                <p class="govuk-body govuk-!-font-weight-bold" th:text="#{guidance.documents.you.can.upload.sh19.no.resolution}"></p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li th:text="#{guidance.documents.you.can.upload.sh.not.allowed.0}"></li>
+                                    <li th:text="#{guidance.documents.you.can.upload.sh.not.allowed.1}"></li>
+                                </ul>
                             </p>
                         </div>
                     </div>
@@ -434,6 +453,7 @@
                 <p class="govuk-body" th:text="#{guidance.cover.letter.text}"></p>
                 <div th:replace="fragments/guidance/continuationPages :: continuationPages"></div>
                 <div th:replace="fragments/guidance/howToUploadDocuments :: howToUploadDocuments(include_para4='true')"></div>
+                <div th:replace="fragments/guidance/howToUploadDocuments :: sh19"></div>
 
                 <h2 class="govuk-heading-l" id="documents-that-need-evidence" th:text="#{guidance.documents.that.need.evidence}"></h2>
                 <h3 class="govuk-heading-m" th:text="#{guidance.documents.that.need.evidence.form.name}"></h3>
