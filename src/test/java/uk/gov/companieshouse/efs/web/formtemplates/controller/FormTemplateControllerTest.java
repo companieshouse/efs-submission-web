@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.ROOT;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,14 +48,14 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
      *     CAT1_SUB_LEVEL2   CAT2_SUB_LEVEL2
      */
     public static final CategoryTemplateApi INSOLVENCY = new CategoryTemplateApi("INS",
-            "Insolvency", "", null, null);
+            "Insolvency", "", null);
     public static final CategoryTemplateApi CAT1_SUB_LEVEL1 = new CategoryTemplateApi(
-            "CAT1_SUB_LEVEL1", "Dummy category 1, subcategory level 1", "CAT_TOP_LEVEL", null, null);
+            "CAT1_SUB_LEVEL1", "Dummy category 1, subcategory level 1", "CAT_TOP_LEVEL", null);
     public static final CategoryTemplateApi CAT2_SUB_LEVEL1 = new CategoryTemplateApi(
-            "CAT2_SUB_LEVEL1", "Dummy category 2, subcategory level 1", "CAT_TOP_LEVEL", null, null);
+            "CAT2_SUB_LEVEL1", "Dummy category 2, subcategory level 1", "CAT_TOP_LEVEL", null);
 
     public static final CategoryTemplateApi INS_SUB_LEVEL1 = new CategoryTemplateApi(
-            "INS_SUB_LEVEL1", "Dummy ins category 1, subcategory level 1", "INS", null, null);
+            "INS_SUB_LEVEL1", "Dummy ins category 1, subcategory level 1", "INS", null);
 
     public static final FormTemplateApi FORM_TEMPLATE_1 = new FormTemplateApi("CC01", "Test01", "CAT1_SUB_LEVEL1",
             "100", true, true, null);
@@ -112,12 +111,6 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
         assertThat(result, is(ViewConstants.GONE.asView()));
     }
 
-    private void setupParentCategory() {
-        when(categoryTemplateAttribute.getParentCategory()).thenReturn(new CategoryTemplateApi());
-        when(categoryTemplateService.getCategoryTemplate(ROOT.getValue())).thenReturn(
-                new ApiResponse<>(200, getHeaders(), new CategoryTemplateApi()));
-    }
-
     @Test
     void formTemplateWhenSubmissionOpen() {
 
@@ -127,7 +120,6 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
         submission.setPresenter(presenter);
 
         expectOpenSubmission(submission, CAT1_SUB_LEVEL1);
-        when(categoryTemplateAttribute.getParentCategory()).thenReturn(new CategoryTemplateApi());
 
         String template = testController.formTemplate(SUBMISSION_ID, COMPANY_NUMBER, CAT1_SUB_LEVEL1.getCategoryType(),
                 categoryTemplateAttribute, formTemplateAttribute, model, servletRequest);
@@ -157,8 +149,6 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
 
         when(formTemplateAttribute.getFormType()).thenReturn(FORM_TEMPLATE_1.getFormType());
 
-        when(categoryTemplateAttribute.getParentCategory()).thenReturn(new CategoryTemplateApi());
-
         String template = testController.formTemplate(SUBMISSION_ID, COMPANY_NUMBER, CAT1_SUB_LEVEL1.getCategoryType(),
             categoryTemplateAttribute, formTemplateAttribute, model, servletRequest);
 
@@ -187,8 +177,6 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
         when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
 
         when(formTemplateAttribute.getFormType()).thenReturn(FORM_TEMPLATE_1.getFormType());
-
-        when(categoryTemplateAttribute.getParentCategory()).thenReturn(new CategoryTemplateApi());
 
         String template = testController.formTemplate(SUBMISSION_ID, COMPANY_NUMBER, CAT2_SUB_LEVEL1.getCategoryType(),
             categoryTemplateAttribute, formTemplateAttribute, model, servletRequest);
@@ -262,8 +250,6 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
         submission.setPresenter(presenter);
 
         expectOpenSubmission(submission, CAT1_SUB_LEVEL1);
-
-        when(categoryTemplateAttribute.getParentCategory()).thenReturn(new CategoryTemplateApi());
 
         String template = testController.formTemplate(SUBMISSION_ID, companyNumber, CAT1_SUB_LEVEL1.getCategoryType(),
                 categoryTemplateAttribute, formTemplateAttribute, model, servletRequest);

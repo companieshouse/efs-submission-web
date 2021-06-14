@@ -18,7 +18,7 @@ class CategoryTemplateModelTest {
 
     @BeforeEach
     void setUp() {
-        categoryTemplate = new CategoryTemplateApi("CC01", "CategoryC01", "INS", "CC01", null);
+        categoryTemplate = new CategoryTemplateApi("CC01", "CategoryC01", "INS", "CC01");
         testCategoryTemplate = new CategoryTemplateModel(categoryTemplate);
     }
 
@@ -26,12 +26,12 @@ class CategoryTemplateModelTest {
     void defaultConstructor() {
         testCategoryTemplate = new CategoryTemplateModel();
 
-        assertThat(testCategoryTemplate.getDetails(), is(new CategoryTemplateApi("", "", null, null, null)));
+        assertThat(testCategoryTemplate.getDetails(), is(new CategoryTemplateApi("", "", null, null)));
     }
 
     @Test
     void setGetDetails() {
-        CategoryTemplateApi expected = new CategoryTemplateApi("CC01", "CategoryC01", "INS", "CC01", null);
+        CategoryTemplateApi expected = new CategoryTemplateApi("CC01", "CategoryC01", "INS", "CC01");
 
         testCategoryTemplate.setDetails(expected);
 

@@ -47,10 +47,6 @@
                                 </div>
                             </fieldset>
                         <div>
-                            <!-- Guidance text -->
-                            <div th:each="textId : ${guidance_fragment_ids}">
-                                <div th:replace="__${'fragments/documentSelection/guidance :: guidance' + textId}__"></div>
-                            </div>
                             <button data-prevent-double-click="true" id="submit-all" type="submit" class="govuk-button"
                                     name="action" value="submit"
                                     th:text="#{button.continue}"></button>

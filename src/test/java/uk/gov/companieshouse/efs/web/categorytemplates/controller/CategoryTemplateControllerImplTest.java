@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.ROOT;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,23 +42,23 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
      *     CAT1_SUB_LEVEL2   CAT2_SUB_LEVEL2          INS_SUB_LEVEL2
      */
     public static final CategoryTemplateApi ROOT_LEVEL = new CategoryTemplateApi("",
-            "Dummy ROOT level category", "", null, null);
+            "Dummy ROOT level category", "", null);
     public static final CategoryTemplateApi CAT_TOP_LEVEL = new CategoryTemplateApi("CAT_TOP_LEVEL",
-            "Dummy top level category", "", null, null);
+            "Dummy top level category", "", null);
     public static final CategoryTemplateApi INSOLVENCY = new CategoryTemplateApi("INS",
-            "INSOLVENCY", "", null, null);
+            "INSOLVENCY", "", null);
     public static final CategoryTemplateApi INS_SUB_LEVEL1 = new CategoryTemplateApi(
-            "INS_SUB_LEVEL1", "Dummy insolvency category 1, subcategory level 1", "INS", null, null);
+            "INS_SUB_LEVEL1", "Dummy insolvency category 1, subcategory level 1", "INS", null);
     public static final CategoryTemplateApi INS_SUB_LEVEL2 = new CategoryTemplateApi(
-            "INS_SUB_LEVEL2", "Dummy insolvency category 1, subcategory level 2", "INS_SUB_LEVEL1", null, null);
+            "INS_SUB_LEVEL2", "Dummy insolvency category 1, subcategory level 2", "INS_SUB_LEVEL1", null);
     public static final CategoryTemplateApi CAT1_SUB_LEVEL1 = new CategoryTemplateApi(
-            "CAT1_SUB_LEVEL1", "Dummy category 1, subcategory level 1", "CAT_TOP_LEVEL", null, null);
+            "CAT1_SUB_LEVEL1", "Dummy category 1, subcategory level 1", "CAT_TOP_LEVEL", null);
     public static final CategoryTemplateApi CAT2_SUB_LEVEL1 = new CategoryTemplateApi(
-            "CAT2_SUB_LEVEL1", "Dummy category 2, subcategory level 1", "CAT_TOP_LEVEL", null, null);
+            "CAT2_SUB_LEVEL1", "Dummy category 2, subcategory level 1", "CAT_TOP_LEVEL", null);
     public static final CategoryTemplateApi CAT1_SUB_LEVEL2 = new CategoryTemplateApi(
-            "CAT1_SUB_LEVEL2", "Dummy category1, subcategory level 2", "CAT1_SUB_LEVEL1", null, null);
+            "CAT1_SUB_LEVEL2", "Dummy category1, subcategory level 2", "CAT1_SUB_LEVEL1", null);
     public static final CategoryTemplateApi CAT2_SUB_LEVEL2 = new CategoryTemplateApi(
-            "CAT2_SUB_LEVEL2", "Dummy category 2, subcategory level 2", "CAT1_SUB_LEVEL1", null, null);
+            "CAT2_SUB_LEVEL2", "Dummy category 2, subcategory level 2", "CAT1_SUB_LEVEL1", null);
     public static final List<CategoryTemplateApi> ALL_CATEGORIES = Arrays.asList(CAT_TOP_LEVEL,
             INSOLVENCY, CAT1_SUB_LEVEL1, CAT2_SUB_LEVEL1, CAT1_SUB_LEVEL2, CAT2_SUB_LEVEL2);
 
@@ -111,7 +110,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 Arrays.asList(CAT_TOP_LEVEL, INSOLVENCY));
 
         expectInteractionsForGet(submission, true, expectedCategoryList,
-                CategoryTemplateModel.ROOT_CATEGORY_ID, null, categoryTemplateAttribute);
+                CategoryTemplateModel.ROOT_CATEGORY_ID, null);
 
         final String result = testController.categoryTemplate(SUBMISSION_ID, COMPANY_NUMBER, null,
                 categoryTemplateAttribute, model, servletRequest);
@@ -127,7 +126,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 Arrays.asList(CAT_TOP_LEVEL, INSOLVENCY));
 
         expectInteractionsForGet(submission, true, expectedCategoryList,
-                INSOLVENCY.getCategoryType(), null, categoryTemplateAttribute);
+                INSOLVENCY.getCategoryType(), null);
 
         final String result = testController.categoryTemplate(SUBMISSION_ID, COMPANY_NUMBER,
                 Collections.singletonList(INSOLVENCY.getCategoryType()), categoryTemplateAttribute,
@@ -186,7 +185,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 Arrays.asList(CAT_TOP_LEVEL, INSOLVENCY));
 
         expectInteractionsForGet(submission, true, expectedCategoryList,
-                CategoryTemplateModel.ROOT_CATEGORY_ID, null, categoryTemplateAttribute);
+                CategoryTemplateModel.ROOT_CATEGORY_ID, null);
 
         final List<String> categorySequenceList = Collections.emptyList();
         final String result = testController.categoryTemplate(SUBMISSION_ID, COMPANY_NUMBER,
@@ -203,7 +202,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 Collections.singletonList(CAT_TOP_LEVEL));
 
         expectInteractionsForGet(submission, false, expectedCategoryList,
-                CategoryTemplateModel.ROOT_CATEGORY_ID, null, categoryTemplateAttribute);
+                CategoryTemplateModel.ROOT_CATEGORY_ID, null);
         when(apiClientService.isOnAllowList(anyString())).thenReturn(
                 new ApiResponse<>(200, getHeaders(), Boolean.FALSE));
 
@@ -222,7 +221,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 Collections.singletonList(CAT1_SUB_LEVEL1));
 
         expectInteractionsForGet(submission, true, categoryList, CAT_TOP_LEVEL.getCategoryType(),
-                CAT_TOP_LEVEL, categoryTemplateAttribute);
+                CAT_TOP_LEVEL);
 
         final String result = testController.categoryTemplate(SUBMISSION_ID, COMPANY_NUMBER,
                 Collections.singletonList(CAT_TOP_LEVEL.getCategoryType()),
@@ -239,7 +238,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 Collections.singletonList(CAT1_SUB_LEVEL1));
 
         expectInteractionsForGet(submission, false, categoryList, CAT_TOP_LEVEL.getCategoryType(),
-                CAT_TOP_LEVEL, categoryTemplateAttribute);
+                CAT_TOP_LEVEL);
 
         final String result = testController.categoryTemplate(SUBMISSION_ID, COMPANY_NUMBER,
                 Collections.singletonList(CAT_TOP_LEVEL.getCategoryType()),
@@ -256,7 +255,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 Arrays.asList(CAT1_SUB_LEVEL2, CAT2_SUB_LEVEL2));
 
         expectInteractionsForGet(submission, true, categoryList, CAT1_SUB_LEVEL1.getCategoryType(),
-                CAT1_SUB_LEVEL1, categoryTemplateAttribute);
+                CAT1_SUB_LEVEL1);
 
         final String result = testController.categoryTemplate(SUBMISSION_ID, COMPANY_NUMBER,
                 Arrays.asList(CAT_TOP_LEVEL.getCategoryType(), CAT1_SUB_LEVEL1.getCategoryType()),
@@ -347,11 +346,11 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
     }
 
     private void expectInteractionsForGet(final SubmissionApi submission, final Boolean isAllowed,
-                                          final CategoryTemplateListApi categoryList, final String leafCategoryId,
-                                          final CategoryTemplateApi removedCategoryId, CategoryTemplateModel categoryTemplateAttribute) {
+            final CategoryTemplateListApi categoryList, final String leafCategoryId,
+            final CategoryTemplateApi removedCategoryId) {
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
                 getSubmissionOkResponse(submission));
-        when(this.categoryTemplateAttribute.rewindCategoryStack(leafCategoryId)).thenReturn(
+        when(categoryTemplateAttribute.rewindCategoryStack(leafCategoryId)).thenReturn(
                 removedCategoryId);
         when(categoryTemplateService.getCategoryTemplates()).thenReturn(
                 new ApiResponse<>(200, getHeaders(), new CategoryTemplateListApi(ALL_CATEGORIES)));
@@ -359,9 +358,6 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 new ApiResponse<>(200, getHeaders(), categoryList));
         when(apiClientService.isOnAllowList(anyString())).thenReturn(
                 new ApiResponse<>(200, getHeaders(), isAllowed));
-        when(categoryTemplateAttribute.getParentCategory()).thenReturn(new CategoryTemplateApi());
-        when(categoryTemplateService.getCategoryTemplate(ROOT.getValue())).thenReturn(
-                new ApiResponse<>(200, getHeaders(), new CategoryTemplateApi()));
     }
 
     private void expectInteractionsForPost(final CategoryTemplateApi details,
