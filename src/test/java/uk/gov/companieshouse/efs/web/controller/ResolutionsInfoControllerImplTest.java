@@ -65,7 +65,7 @@ class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
     @Test
     void postResolutionsInfo() {
         final CategoryTemplateApi resolutions = new CategoryTemplateApi("RESOLUTIONS",
-            "Resolutions", "RESOLUTIONS", null, null);
+            "Resolutions", "RESOLUTIONS", null);
         final FormTemplateApi formTemplateApi = new FormTemplateApi();
         final FormTemplateApi resolutionsForm = new FormTemplateApi(RESOLUTIONS_FORM);
 
