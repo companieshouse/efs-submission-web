@@ -2,15 +2,16 @@ package uk.gov.companieshouse.efs.web.categorytemplates.controller;
 
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl.ATTRIBUTE_NAME;
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.INSOLVENCY;
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.ROOT;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,17 +96,23 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
             return ViewConstants.GONE.asView();
         }
 
+        categorySequenceList = Optional.ofNullable(categorySequenceList)
+                .orElse(new ArrayList<>());
+
         final Boolean isEmailAllowed = apiClientService.isOnAllowList(
                 submissionApi.getPresenter().getEmail()).getData();
         final boolean sequenceHasInsolvency =
-                categorySequenceList != null && categorySequenceList.contains(
+                categorySequenceList.contains(
                         INSOLVENCY.getValue());
+
+        // TODO: we should probably handle failure
         final CategoryTemplateListApi allCategoryTemplates =
                 categoryTemplateService.getCategoryTemplates().getData();
+
         final List<String> categoryTypesList = Optional.ofNullable(allCategoryTemplates.getList())
                 .orElseGet(ArrayList::new).stream().map(CategoryTemplateApi::getCategoryType)
                 .collect(Collectors.toList());
-        final boolean sequenceValid = categorySequenceList == null || categoryTypesList.containsAll(
+        final boolean sequenceValid = categoryTypesList.containsAll(
                 categorySequenceList);
 
         if (!sequenceValid || (sequenceHasInsolvency && !isEmailAllowed)) {
@@ -113,8 +120,8 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
         }
 
         // find last entry in categorySequenceList
-        final String parentCategoryId = Optional.ofNullable(categorySequenceList).map(
-                Collection::stream).orElseGet(Stream::empty).reduce((first, second) -> second)
+        final String parentCategoryId = categorySequenceList.stream()
+                .reduce((first, second) -> second)
                 .orElse(CategoryTemplateModel.ROOT_CATEGORY_ID);
 
         final CategoryTemplateApi childTemplate = categoryTemplateAttribute.rewindCategoryStack(
@@ -129,7 +136,39 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
                         submissionApi.getPresenter().getEmail()));
         addTrackingAttributeToModel(model);
 
+        addGuidanceFragmentIdsToModel(categoryTemplateAttribute, model);
+
         return ViewConstants.CATEGORY_SELECTION.asView();
+    }
+
+    private void addGuidanceFragmentIdsToModel(CategoryTemplateModel categoryTemplateAttribute,
+                                               Model model) {
+        CategoryTemplateApi currentTemplate = categoryTemplateAttribute.getParentCategory();
+        if (currentTemplate.getGuidanceTextList() == null) {
+            // Hacky work around for the fact the categoryTemplate attribute does have any details
+            // if it's the root.
+            currentTemplate = getRootCategory();
+        }
+
+        Map<String, Object> info = new HashMap<>();
+        info.put("guidance_fragment_ids", currentTemplate.getGuidanceTextList());
+        logger.debug("Adding guidance fragment ID's to category template", info);
+        model.addAttribute("guidance_fragment_ids", currentTemplate.getGuidanceTextList());
+    }
+
+    private CategoryTemplateApi getRootCategory() {
+        ApiResponse<CategoryTemplateApi> rootTemplateResponse =
+                categoryTemplateService.getCategoryTemplate(ROOT.getValue());
+
+        if (rootTemplateResponse.hasErrors()) {
+            Map<String, Object> info = new HashMap<>();
+            info.put("errors", rootTemplateResponse.getErrors());
+            logger.error("Error whilst getting root category to add guidance fragments.", info);
+
+            return CategoryTemplateModel.ROOT_CATEGORY;
+        }
+
+        return rootTemplateResponse.getData();
     }
 
     @Override
@@ -179,7 +218,13 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
         final Predicate<CategoryTemplateApi> includeCategory =
                 c -> isEmailAllowed || !c.getCategoryType().equals(INSOLVENCY.getValue());
 
-        return listResponse.getData().getList().stream().filter(includeCategory).collect(
+        final Predicate<CategoryTemplateApi> notRootCategory = category ->
+                !category.getCategoryType().equals("ROOT");
+
+        return listResponse.getData().getList().stream()
+                .filter(includeCategory)
+                .filter(notRootCategory)
+                .collect(
                 Collectors.toList());
     }
 
