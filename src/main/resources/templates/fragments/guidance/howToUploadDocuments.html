@@ -15,5 +15,18 @@
             <span th:if="${include_para4}" th:text="#{guidance.how.to.upload.documents.para4}"></span>
         </p>
     </div>
+
+    <div th:fragment="sh19">
+        <h3 class="govuk-heading-m" th:text="#{guidance.how.to.upload.documents.sh19.heading}"></h3>
+        <p class="govuk-body" th:text="#{guidance.how.to.upload.documents.sh19.associated}"></p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li th:text="#{guidance.how.to.upload.documents.sh19.associated.1}"></li>
+            <li th:text="#{guidance.how.to.upload.documents.sh19.associated.2}"></li>
+        </ul>
+        <p class="govuk-body" th:text="#{guidance.how.to.upload.documents.sh19.upload.soon}"></p>
+        <p class="govuk-body">
+            <span th:text="#{guidance.how.to.upload.documents.sh19.you.can}" th:remove="tag"></span>
+            <a href="https://www.gov.uk/government/publications/life-of-a-company-event-driven-filings/life-of-a-company-part-2-event-driven-filings#share-capital" class="govuk-link" th:text="#{guidance.how.to.upload.documents.sh19.other.guidance}"></a>.</p>
+    </div>
 </body>
 </html>
