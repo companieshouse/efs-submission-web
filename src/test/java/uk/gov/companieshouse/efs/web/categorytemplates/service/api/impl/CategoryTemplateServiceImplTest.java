@@ -157,7 +157,7 @@ class CategoryTemplateServiceImplTest {
     @Test
     void getTopLevelCategoryGivenResolutionsCategory() throws ApiErrorResponseException, URIValidationException {
         final CategoryTemplateApi category = new CategoryTemplateApi("RESOLUTIONS",
-                "RESOLUTIONS", "", null);;
+                "RESOLUTIONS", "", null, null);
 
         expectGetCategoryTemplate();
         when(categoryTemplateGet.execute()).thenReturn(buildApiResponseOK(category));

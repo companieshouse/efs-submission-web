@@ -5,7 +5,9 @@ import static uk.gov.companieshouse.efs.web.categorytemplates.controller.Categor
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.RESOLUTIONS;
 import static uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl.ATTRIBUTE_NAME;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateListApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FormTypeApi;
@@ -127,7 +130,20 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
         model.addAttribute("isScottishCompany", isScottishCompany(companyNumber));
         addTrackingAttributeToModel(model);
 
+        addGuidanceFragmentIdsToModel(categoryTemplateAttribute, model);
+
+
         return ViewConstants.DOCUMENT_SELECTION.asView();
+    }
+
+    private void addGuidanceFragmentIdsToModel(CategoryTemplateModel categoryTemplateAttribute, Model model) {
+        CategoryTemplateApi currentCategory = categoryTemplateAttribute.getParentCategory();
+        List<Integer> guidanceTextList = currentCategory.getGuidanceTextList();
+
+        Map<String, Object> info = new HashMap<>();
+        info.put("guidance_text_ids", guidanceTextList);
+        logger.info("Adding guidance fragment ID's to category template", info);
+        model.addAttribute("guidance_fragment_ids", guidanceTextList);
     }
 
     @Override
