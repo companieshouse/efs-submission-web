@@ -28,6 +28,12 @@
                                       th:text="*{parentCategory.categoryName} != '' ? *{parentCategory.categoryName} : #{documentSelection.subtitle}"></span>
                                 <h1 class="govuk-fieldset__heading"
                                     th:text="#{categorySelection.catType}"></h1>
+
+                                <!-- Guidance text -->
+                                <div th:each="textId : ${guidance_fragment_ids}">
+                                    <div th:replace="__${'fragments/categorySelection/guidance :: guidance' + textId}__"></div>
+                                </div>
+
                             </legend>
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*')}
                                 ? 'govuk-form-group--error' : ''">

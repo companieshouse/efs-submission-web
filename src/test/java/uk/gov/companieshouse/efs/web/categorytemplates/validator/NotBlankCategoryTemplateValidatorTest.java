@@ -47,7 +47,7 @@ class NotBlankCategoryTemplateValidatorTest {
     void isNotValidWhenValuesBlank() {
 
         boolean valid = testValidator.isValid(
-                new CategoryTemplateApi("", "", "", ""), context);
+                new CategoryTemplateApi("", "", "", "", null), context);
         assertThat(valid, is(false));
     }
 
@@ -55,7 +55,7 @@ class NotBlankCategoryTemplateValidatorTest {
     void isValidWhenValuesNotBlank() {
 
         boolean valid = testValidator.isValid(
-                new CategoryTemplateApi("CC01", "Test01", "CC02", "CC01"), context);
+                new CategoryTemplateApi("CC01", "Test01", "CC02", "CC01", null), context);
         assertThat(valid, is(true));
     }
 
