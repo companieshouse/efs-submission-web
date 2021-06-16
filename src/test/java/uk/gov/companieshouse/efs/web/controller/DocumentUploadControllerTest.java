@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.efs.web.controller.DocumentUploadControllerImpl.FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS;
 
@@ -48,7 +47,8 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     private static final String CHS_URL = "chs-url";
     private static final String SIGNED_IN_USER = "test@ch.gov.uk";
-    private static final String FORM_TYPE_CODE = "RP06";
+    private static final String FORM_TYPE = "RP06";
+    private static final String CATEGORY_TYPE = "RP";
     private static final String CC_REMINDER = "showCcReminder";
 
     @Mock
@@ -96,7 +96,8 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         companyApi.setCompanyNumber(COMPANY_NUMBER);
 
         SubmissionFormApi submissionFormApi = new SubmissionFormApi();
-        submissionFormApi.setFormType(FORM_TYPE_CODE);
+        submissionFormApi.setFormType(FORM_TYPE);
+        submissionFormApi.setCategoryType(CATEGORY_TYPE);
 
         SubmissionApi submissionApi = new SubmissionApi();
         submissionApi.setId(SUBMISSION_ID);
@@ -133,7 +134,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
 
-        when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(apiFormTypeResponse);
 
         Map<String, Object> sessionContextData = new HashMap<>();
         sessionContextData.put(ORIGINAL_SUBMISSION_ID, SUBMISSION_ID);
@@ -167,7 +168,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
 
-        when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(apiFormTypeResponse);
 
         expectSignedInUser(submissionApi, SUBMISSION_ID, SIGNED_IN_USER);
 
@@ -196,7 +197,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
 
-        when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(apiFormTypeResponse);
 
         expectSignedInUser(submissionApi, SUBMISSION_ID, SIGNED_IN_USER);
 
@@ -271,7 +272,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
-        when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(apiFormTypeResponse);
 
         BindingResult binding = mock(BindingResult.class);
 
@@ -293,7 +294,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
-        when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(apiFormTypeResponse);
 
         BindingResult binding = mock(BindingResult.class);
 
@@ -433,7 +434,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
-        when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(apiFormTypeResponse);
     }
 
     private void expectSubmissionID(final SubmissionApi submissionApi) {
@@ -455,7 +456,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
-        when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(apiFormTypeResponse);
 
         BindingResult binding = mock(BindingResult.class);
         when(binding.hasErrors()).thenReturn(expectBindingErrors);

@@ -109,7 +109,8 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         }
 
         FileListApi uploadedFiles = getUploadedFiles(submissionApi);
-        final FormTemplateApi formTemplate = getFormTemplateApi(submissionApi.getSubmissionForm().getFormType());
+        final FormTemplateApi formTemplate = getFormTemplateApi(submissionApi.getSubmissionForm().getFormType(),
+            submissionApi.getSubmissionForm().getCategoryType());
 
         addDataToPrepareModel(documentUploadAttribute, submissionApi, formTemplate, uploadedFiles);
         addDynamicHintText(documentUploadAttribute, formTemplate.getFormCategory());
@@ -119,8 +120,8 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         return ViewConstants.DOCUMENT_UPLOAD.asView();
     }
 
-    private FormTemplateApi getFormTemplateApi(final String formType) {
-        ApiResponse<FormTemplateApi> formResponse = formTemplateService.getFormTemplate(formType);
+    private FormTemplateApi getFormTemplateApi(final String formType, final String categoryType) {
+        ApiResponse<FormTemplateApi> formResponse = formTemplateService.getFormTemplate(formType, categoryType);
         return formResponse.getData();
     }
 
@@ -130,7 +131,8 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         HttpServletRequest servletRequest, HttpSession session) {
 
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
-        final FormTemplateApi formTemplate = getFormTemplateApi(submissionApi.getSubmissionForm().getFormType());
+        final FormTemplateApi formTemplate = getFormTemplateApi(submissionApi.getSubmissionForm().getFormType(),
+            submissionApi.getSubmissionForm().getCategoryType());
 
         model.mergeAttributes(documentUploadAttribute.getAttributes());
         if (!verifySubmission(submissionApi)) {
@@ -185,7 +187,8 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
 
         final FileListApi files = getDocumentUploadAttribute().getDetails();
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
-        final FormTemplateApi formTemplate = getFormTemplateApi(submissionApi.getSubmissionForm().getFormType());
+        final FormTemplateApi formTemplate = getFormTemplateApi(submissionApi.getSubmissionForm().getFormType(),
+            submissionApi.getSubmissionForm().getCategoryType());
 
         model.mergeAttributes(documentUploadAttribute.getAttributes());
         if (files == null || files.getFiles().isEmpty()) {

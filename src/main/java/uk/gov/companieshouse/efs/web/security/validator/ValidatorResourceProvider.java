@@ -1,19 +1,17 @@
 package uk.gov.companieshouse.efs.web.security.validator;
 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionFormApi;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.session.Session;
 import uk.gov.companieshouse.session.handler.SessionHandler;
 import uk.gov.companieshouse.session.model.SignInInfo;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * To validate whether a request requires authorisation information about that request must be gathered
@@ -133,11 +131,9 @@ public class ValidatorResourceProvider {
      * @return an optional containing the form
      */
     private Optional<FormTemplateApi> getFormFromSubmission() {
-        Optional<FormTemplateApi> maybeForm = getSubmission()
-                .map(SubmissionApi::getSubmissionForm)
-                .map(SubmissionFormApi::getFormType)
-                .map(formTemplateService::getFormTemplate)
-                .map(ApiResponse::getData);
+        Optional<FormTemplateApi> maybeForm = getSubmission().map(SubmissionApi::getSubmissionForm)
+            .map(f -> formTemplateService.getFormTemplate(f.getFormType(), f.getCategoryType()))
+            .map(ApiResponse::getData);
 
         maybeForm.ifPresent(formTemplateApi -> form = formTemplateApi);
 

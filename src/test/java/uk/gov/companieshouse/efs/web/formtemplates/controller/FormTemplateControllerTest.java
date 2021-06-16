@@ -2,7 +2,7 @@ package uk.gov.companieshouse.efs.web.formtemplates.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -64,7 +64,11 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
     public static final FormTemplateApi FORM_TEMPLATE_3 = new FormTemplateApi("CC03", "Test03", "CAT1_SUB_LEVEL1",                          "100", true, true, null);
     public static final FormTemplateApi INS_TEMPLATE_1 = new FormTemplateApi("INS", "InsTest04", "INS_SUB_LEVEL1",
             "100", true, true, null);
-    public static final List<FormTemplateApi> FORM_TEMPLATE_LIST = Arrays.asList(FORM_TEMPLATE_1, FORM_TEMPLATE_2, FORM_TEMPLATE_3);
+    public static final FormTemplateApi RES_TEMPLATE_1 = new FormTemplateApi("RESOLUTIONS", "ResTest0q", "CAT1_SUB_LEVEL1",
+            "100", true, true, null);
+    public static final List<FormTemplateApi> FORM_TEMPLATE_LIST =
+        Arrays.asList(FORM_TEMPLATE_1, FORM_TEMPLATE_2, FORM_TEMPLATE_3, RES_TEMPLATE_1);
+    private static final String UNKNOWN_TYPE = "UNKNOWN";
 
     private FormTemplateController testController;
 
@@ -202,7 +206,7 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
                 .thenReturn(CategoryTypeConstants.INSOLVENCY);
 
         when(apiClientService.isOnAllowList(PRESENTER_EMAIL)).
-                thenReturn(new ApiResponse(200, getHeaders(), false));
+                thenReturn(new ApiResponse<>(200, getHeaders(), false));
 
         String template = testController.formTemplate(SUBMISSION_ID, COMPANY_NUMBER, INS_SUB_LEVEL1.getCategoryType(),
                 categoryTemplateAttribute, formTemplateAttribute, model, servletRequest);
@@ -226,9 +230,11 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
 
         when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
         when(formTemplateAttribute.getFormType()).thenReturn(FORM_TEMPLATE_1.getFormType());
+        when(formTemplateAttribute.getFormCategory()).thenReturn(FORM_TEMPLATE_1.getFormCategory());
         when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
-        when(apiClientService.putFormType(SUBMISSION_ID, new FormTypeApi(FORM_TEMPLATE_1.getFormType()))).
-                thenReturn(new ApiResponse(200, getHeaders(), new SubmissionResponseApi(FORM_TEMPLATE_1.getFormType())));
+        when(apiClientService.putFormType(SUBMISSION_ID,
+            new FormTypeApi(FORM_TEMPLATE_1.getFormType(), FORM_TEMPLATE_1.getFormCategory()))).thenReturn(
+            new ApiResponse<>(200, getHeaders(), new SubmissionResponseApi(FORM_TEMPLATE_1.getFormType())));
 
         final String result = testController.postFormTemplate(SUBMISSION_ID, COMPANY_NUMBER,
                 categoryTemplateAttribute, formTemplateAttribute, bindingResult, model, servletRequest);
@@ -236,6 +242,71 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
         verify(bindingResult).hasErrors();
         verifyNoMoreInteractions(bindingResult, apiClientService);
 
+        assertThat(result, is(ViewConstants.DOCUMENT_UPLOAD
+                .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+    }
+
+    @Test
+    void postFormTemplateWhenResolutions() {
+
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(formTemplateAttribute.getFormType()).thenReturn(RES_TEMPLATE_1.getFormType());
+        when(formTemplateAttribute.getFormCategory()).thenReturn(RES_TEMPLATE_1.getFormCategory());
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(apiClientService.putFormType(SUBMISSION_ID,
+            new FormTypeApi(RES_TEMPLATE_1.getFormType(), RES_TEMPLATE_1.getFormCategory()))).thenReturn(
+            new ApiResponse<>(200, getHeaders(), new SubmissionResponseApi(RES_TEMPLATE_1.getFormType())));
+
+        final String result = testController.postFormTemplate(SUBMISSION_ID, COMPANY_NUMBER,
+                categoryTemplateAttribute, formTemplateAttribute, bindingResult, model, servletRequest);
+
+        verify(bindingResult).hasErrors();
+        verifyNoMoreInteractions(bindingResult, apiClientService);
+
+        assertThat(result, is(ViewConstants.RESOLUTIONS_INFO
+                .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+    }
+
+    @Test
+    void postFormTemplateWhenFormTypeNotMatched() {
+
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(formTemplateAttribute.getFormType()).thenReturn(UNKNOWN_TYPE);
+        when(formTemplateAttribute.getFormCategory()).thenReturn(FORM_TEMPLATE_1.getFormCategory());
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(apiClientService.putFormType(SUBMISSION_ID,
+            new FormTypeApi(UNKNOWN_TYPE, FORM_TEMPLATE_1.getFormCategory()))).thenReturn(
+            new ApiResponse<>(200, getHeaders(), new SubmissionResponseApi(FORM_TEMPLATE_1.getFormType())));
+
+        final String result = testController.postFormTemplate(SUBMISSION_ID, COMPANY_NUMBER,
+                categoryTemplateAttribute, formTemplateAttribute, bindingResult, model, servletRequest);
+
+        verify(bindingResult).hasErrors();
+        verifyNoMoreInteractions(bindingResult, apiClientService);
+
+        verify(formTemplateAttribute).setDetails(null);
+        assertThat(result, is(ViewConstants.DOCUMENT_UPLOAD
+                .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+    }
+
+    @Test
+    void postFormTemplateWhenCategoryTypeNotMatched() {
+
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(formTemplateAttribute.getFormType()).thenReturn(FORM_TEMPLATE_1.getFormType());
+        when(formTemplateAttribute.getFormCategory()).thenReturn(UNKNOWN_TYPE);
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(apiClientService.putFormType(SUBMISSION_ID,
+            new FormTypeApi(FORM_TEMPLATE_1.getFormType(), UNKNOWN_TYPE))).thenReturn(
+            new ApiResponse<>(200, getHeaders(), new SubmissionResponseApi(FORM_TEMPLATE_1.getFormType())));
+
+        final String result = testController.postFormTemplate(SUBMISSION_ID, COMPANY_NUMBER,
+                categoryTemplateAttribute, formTemplateAttribute, bindingResult, model, servletRequest);
+
+        verify(bindingResult).hasErrors();
+        verifyNoMoreInteractions(bindingResult, apiClientService);
+
+        verify(formTemplateAttribute).setDetails(null);
         assertThat(result, is(ViewConstants.DOCUMENT_UPLOAD
                 .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
@@ -265,11 +336,11 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
             .thenReturn(getSubmissionOkResponse(submission));
 
         when(apiClientService.isOnAllowList(PRESENTER_EMAIL)).
-            thenReturn(new ApiResponse(200, getHeaders(), true));
+            thenReturn(new ApiResponse<>(200, getHeaders(), true));
 
         when(formTemplateService.getFormTemplatesByCategory(categoryTemplate.getCategoryType())).
             thenReturn(
-                new ApiResponse(200, getHeaders(), new FormTemplateListApi(FORM_TEMPLATE_LIST)));
+                new ApiResponse<>(200, getHeaders(), new FormTemplateListApi(FORM_TEMPLATE_LIST)));
 
         when(categoryTemplateAttribute.getCategoryName())
             .thenReturn(categoryTemplate.getCategoryName());

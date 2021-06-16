@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +29,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
 
     private CheckDetailsController testController;
     private static final String FORM_TYPE = "AM01";
+    private static final String CATEGORY_TYPE = "AM";
     @Mock
     private ApiClientService apiClientService;
     @Mock
@@ -57,7 +58,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
         final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, getHeaders(), submission));
-        when(formTemplateService.getFormTemplate(FORM_TYPE)).thenReturn(
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(
             new ApiResponse<FormTemplateApi>(200, getHeaders(), new FormTemplateApi()));
         final String result = testController.checkDetails(SUBMISSION_ID, COMPANY_NUMBER, checkDetailsAttribute, model, request, session, sessionStatus);
 
@@ -111,7 +112,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, getHeaders(), submission));
         when(bindingResult.hasErrors()).thenReturn(true);
-        when(formTemplateService.getFormTemplate(FORM_TYPE))
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE))
             .thenReturn(new ApiResponse<>(200, getHeaders(), new FormTemplateApi()));
 
         final String result = testController.postCheckDetails(SUBMISSION_ID, COMPANY_NUMBER, checkDetailsAttribute, bindingResult, model, request);
@@ -123,6 +124,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
         final SubmissionApi submission = super.createSubmission(submitted);
         submission.setSubmissionForm(new SubmissionFormApi());
         submission.getSubmissionForm().setFormType(FORM_TYPE);
+        submission.getSubmissionForm().setCategoryType(CATEGORY_TYPE);
         submission.setCompany(new CompanyApi(COMPANY_NUMBER, COMPANY_NAME));
         submission.getSubmissionForm().setFileDetails(new FileDetailListApi());
         submission.getSubmissionForm().getFileDetails().add(new FileDetailApi());

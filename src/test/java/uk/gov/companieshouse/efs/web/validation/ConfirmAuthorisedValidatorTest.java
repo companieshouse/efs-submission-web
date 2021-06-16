@@ -50,7 +50,7 @@ class ConfirmAuthorisedValidatorTest {
         BindingResult binding = new BeanPropertyBindingResult(checkDetailsModel, "checkDetails");
         FormTemplateApi formTemplate = new FormTemplateApi();
         formTemplate.setFormCategory(FORM_CATEGORY);
-        when(formTemplateService.getFormTemplate(FORM_TYPE)).thenReturn(
+        when(formTemplateService.getFormTemplate(FORM_TYPE, FORM_CATEGORY)).thenReturn(
             new ApiResponse<FormTemplateApi>(200, headers, formTemplate));
         when(categoryTemplateService.getTopLevelCategory(FORM_CATEGORY)).thenReturn(
             CategoryTypeConstants.ARTICLES);
@@ -67,8 +67,8 @@ class ConfirmAuthorisedValidatorTest {
         BindingResult binding = new BeanPropertyBindingResult(checkDetailsModel, "checkDetails");
         FormTemplateApi formTemplate = new FormTemplateApi();
         formTemplate.setFormCategory(FORM_CATEGORY);
-        when(formTemplateService.getFormTemplate(FORM_TYPE)).thenReturn(
-            new ApiResponse<FormTemplateApi>(200, headers, formTemplate));
+        when(formTemplateService.getFormTemplate(FORM_TYPE, FORM_CATEGORY)).thenReturn(
+            new ApiResponse<>(200, headers, formTemplate));
         when(categoryTemplateService.getTopLevelCategory(FORM_CATEGORY)).thenReturn(
             CategoryTypeConstants.INSOLVENCY);
 
@@ -81,6 +81,7 @@ class ConfirmAuthorisedValidatorTest {
         final SubmissionApi submission = new SubmissionApi();
         submission.setSubmissionForm(new SubmissionFormApi());
         submission.getSubmissionForm().setFormType(FORM_TYPE);
+        submission.getSubmissionForm().setCategoryType(FORM_CATEGORY);
         return submission;
     }
 }

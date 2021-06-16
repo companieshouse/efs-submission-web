@@ -1,5 +1,23 @@
 package uk.gov.companieshouse.efs.web.security.validator;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.text.MessageFormat;
+import java.util.Objects;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,30 +34,12 @@ import uk.gov.companieshouse.session.Session;
 import uk.gov.companieshouse.session.handler.SessionHandler;
 import uk.gov.companieshouse.session.model.SignInInfo;
 
-import javax.servlet.http.HttpServletRequest;
-import java.text.MessageFormat;
-import java.util.Objects;
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class ValidatorResourceProviderTest {
 
     private static final String EFS_SUBMISSION_WITH_COMPANY = "/efs-submission/{0}/company/{1}";
-    public static final String FORM_TYPE = "FORM_TYPE";
+    private static final String FORM_TYPE = "FORM_TYPE";
+    private static final String CATEGORY_TYPE = "CATEGORY_TYPE";
 
     @Mock
     HttpServletRequest request;
@@ -135,7 +135,8 @@ class ValidatorResourceProviderTest {
 
         when(submission.getSubmissionForm()).thenReturn(submissionForm);
         when(submissionForm.getFormType()).thenReturn(FORM_TYPE);
-        when(formTemplateService.getFormTemplate(FORM_TYPE)).thenReturn(formTemplateServiceResponse);
+        when(submissionForm.getCategoryType()).thenReturn(CATEGORY_TYPE);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(formTemplateServiceResponse);
         when(formTemplateServiceResponse.getData()).thenReturn(formTemplate);
 
         testResourceProvider.getForm();
@@ -157,7 +158,7 @@ class ValidatorResourceProviderTest {
         assertThat(form.get(), sameInstance(formTemplate));
 
         verify(testResourceProvider, never()).getSubmission();
-        verify(formTemplateService, never()).getFormTemplate(FORM_TYPE);
+        verify(formTemplateService, never()).getFormTemplate(FORM_TYPE, CATEGORY_TYPE);
     }
 
     @Test
@@ -167,7 +168,7 @@ class ValidatorResourceProviderTest {
 
         Optional<FormTemplateApi> form = testResourceProvider.getForm();
         assertFalse(form.isPresent());
-        verify(formTemplateService, never()).getFormTemplate(null);
+        verify(formTemplateService, never()).getFormTemplate(anyString(), anyString());
     }
 
 

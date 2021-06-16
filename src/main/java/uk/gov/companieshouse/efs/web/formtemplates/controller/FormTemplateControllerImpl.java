@@ -147,12 +147,13 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
         }
 
         final String selectedFormType = formTemplateAttribute.getFormType();
-        final FormTemplateApi selectedFormTemplate = getSelectedFormTemplate(selectedFormType);
-
+        final String selectedCategoryType = formTemplateAttribute.getFormCategory();
+        final FormTemplateApi selectedFormTemplate = getSelectedFormTemplate(selectedFormType, selectedCategoryType);
+        
         // Call the API layer to persist the form type.
         ApiResponse<SubmissionResponseApi> submissionResponse = apiClientService.putFormType(id,
-            new FormTypeApi(selectedFormType));
-        logApiResponse(submissionResponse, id, "Form type: " + submissionResponse.getData().getId());
+            new FormTypeApi(selectedFormType, selectedCategoryType));
+        logApiResponse(submissionResponse, id, "Form type ID: " + submissionResponse.getData().getId());
 
         formTemplateAttribute.setDetails(selectedFormTemplate);
 
@@ -163,9 +164,12 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
         }
     }
 
-    private FormTemplateApi getSelectedFormTemplate(final String selectedFormType) {
-        return formTemplateAttribute.getFormTemplateList().stream().filter(
-                c -> c.getFormType().equals(selectedFormType)).findFirst().orElse(null);
+    private FormTemplateApi getSelectedFormTemplate(final String selectedFormType, final String selectedCategoryType) {
+        return formTemplateAttribute.getFormTemplateList()
+            .stream()
+            .filter(c -> c.getFormType().equals(selectedFormType) && c.getFormCategory().equals(selectedCategoryType))
+            .findFirst()
+            .orElse(null);
     }
 
     boolean isScottishCompany(String companyNumber) {

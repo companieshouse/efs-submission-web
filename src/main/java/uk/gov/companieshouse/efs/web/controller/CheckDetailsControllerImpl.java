@@ -117,7 +117,9 @@ public class CheckDetailsControllerImpl extends BaseControllerImpl implements Ch
         final Model model, final SubmissionApi submission) {
 
         final String documentType = submission.getSubmissionForm().getFormType();
-        final ApiResponse<FormTemplateApi> formResponse = formTemplateService.getFormTemplate(documentType);
+        final String categoryType = submission.getSubmissionForm().getCategoryType();
+        final ApiResponse<FormTemplateApi> formResponse =
+            formTemplateService.getFormTemplate(documentType, categoryType);
         final String documentTypeDescription = formResponse.getData().getFormName();
         final String documentCategory = formResponse.getData().getFormCategory();
         final CategoryTypeConstants topLevelCategory = categoryTemplateService.getTopLevelCategory(documentCategory);

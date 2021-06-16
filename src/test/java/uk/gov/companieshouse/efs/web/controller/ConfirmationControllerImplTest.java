@@ -20,7 +20,9 @@ import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 @ExtendWith(MockitoExtension.class)
 class ConfirmationControllerImplTest extends BaseControllerImplTest {
 
-    public static final String TEST_FORM = "TestForm";
+    private static final String FORM_TYPE = "form01";
+    private static final String CATEGORY_TYPE = "category01";
+    
     private ConfirmationController testController;
 
     @Mock
@@ -48,11 +50,11 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
     @Test
     void getConfirmationRP() {
         final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
-        submission.setSubmissionForm(new SubmissionFormApi(null, TEST_FORM, null));
+        submission.setSubmissionForm(new SubmissionFormApi(null, FORM_TYPE, CATEGORY_TYPE, null));
         when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, headers, submission));
 
-        when(formTemplateService.getFormTemplate(TEST_FORM)).thenReturn(formTemplateApiResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(formTemplateApiResponse);
         when(formTemplateApiResponse.getData()).thenReturn(formTemplateApi);
         when(formTemplateApi.getFormCategory()).thenReturn("RP");
         when(categoryTemplateService.getTopLevelCategory("RP")).thenReturn(CategoryTypeConstants.REGISTRAR_POWERS);
@@ -66,11 +68,11 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
     @Test
     void getConfirmationNonRP() {
         final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
-        submission.setSubmissionForm(new SubmissionFormApi(null, TEST_FORM, null));
+        submission.setSubmissionForm(new SubmissionFormApi(null, FORM_TYPE, CATEGORY_TYPE, null));
         when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
                 new ApiResponse<>(200, headers, submission));
 
-        when(formTemplateService.getFormTemplate(TEST_FORM)).thenReturn(formTemplateApiResponse);
+        when(formTemplateService.getFormTemplate(FORM_TYPE, CATEGORY_TYPE)).thenReturn(formTemplateApiResponse);
         when(formTemplateApiResponse.getData()).thenReturn(formTemplateApi);
         when(formTemplateApi.getFormCategory()).thenReturn("MA");
         when(categoryTemplateService.getTopLevelCategory("MA")).thenReturn(CategoryTypeConstants.ARTICLES);

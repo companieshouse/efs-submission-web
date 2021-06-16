@@ -81,7 +81,7 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
         SubmissionFormApi submissionFormApi = submission.getSubmissionForm();
 
         ApiResponse<FormTemplateApi> formTemplateApi =
-                formTemplateService.getFormTemplate(submissionFormApi.getFormType());
+            formTemplateService.getFormTemplate(submissionFormApi.getFormType(), submissionFormApi.getCategoryType());
         String formCategory = formTemplateApi.getData().getFormCategory();
         CategoryTypeConstants topLevelCategory = categoryTemplateService.getTopLevelCategory(formCategory);
 

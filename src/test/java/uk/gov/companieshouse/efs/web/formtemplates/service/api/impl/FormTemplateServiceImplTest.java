@@ -1,10 +1,11 @@
 package uk.gov.companieshouse.efs.web.formtemplates.service.api.impl;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImplTest.CAT_TOP_LEVEL;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,9 +81,8 @@ class FormTemplateServiceImplTest {
         when(resourceHandler.formTemplates()).thenReturn(formTemplatesResourceHandler);
         when(formTemplatesResourceHandler.formTemplates()).thenReturn(
                 formTemplatesGetResourceHandler);
-        when(formTemplatesGetResourceHandler.get(BaseApiClientServiceImpl.ROOT_URI
-                + FormTemplateServiceImpl.FORM_TEMPLATES_FRAGMENT)).thenReturn(
-                formTemplatesGet);
+        when(formTemplatesGetResourceHandler.get(MessageFormat.format("{0}{1}", BaseApiClientServiceImpl.ROOT_URI,
+            FormTemplateServiceImpl.FORM_TEMPLATES_FRAGMENT))).thenReturn(formTemplatesGet);
         when(formTemplatesGet.execute()).thenReturn(expected);
 
         final ApiResponse<FormTemplateListApi> result = testService.getFormTemplates();
@@ -100,11 +100,13 @@ class FormTemplateServiceImplTest {
         when(formTemplatesResourceHandler.formTemplate()).thenReturn(
                 formTemplateGetResourceHandler);
         when(formTemplateGetResourceHandler.get(
-            BaseApiClientServiceImpl.ROOT_URI + FormTemplateServiceImpl.FORM_TEMPLATE_FRAGMENT + "?type="
-                + formTemplateApi.getFormType())).thenReturn(formTemplateGet);
+            MessageFormat.format("{0}{1}?type={2}&category={3}", BaseApiClientServiceImpl.ROOT_URI,
+                FormTemplateServiceImpl.FORM_TEMPLATE_FRAGMENT, formTemplateApi.getFormType(),
+                formTemplateApi.getFormCategory()))).thenReturn(formTemplateGet);
         when(formTemplateGet.execute()).thenReturn(expected);
 
-        final ApiResponse<FormTemplateApi> result = testService.getFormTemplate(formTemplateApi.getFormType());
+        final ApiResponse<FormTemplateApi> result =
+            testService.getFormTemplate(formTemplateApi.getFormType(), formTemplateApi.getFormCategory());
 
         assertThat(result, is(expected));
     }
@@ -117,11 +119,13 @@ class FormTemplateServiceImplTest {
         when(resourceHandler.formTemplates()).thenReturn(formTemplatesResourceHandler);
         when(formTemplatesResourceHandler.formTemplate()).thenReturn(formTemplateGetResourceHandler);
         when(formTemplateGetResourceHandler.get(
-            BaseApiClientServiceImpl.ROOT_URI + FormTemplateServiceImpl.FORM_TEMPLATE_FRAGMENT + "?type=O/C%20STAY"))
-            .thenReturn(formTemplateGet);
+            MessageFormat.format("{0}{1}?type=O/C%20STAY&category={2}", BaseApiClientServiceImpl.ROOT_URI,
+                FormTemplateServiceImpl.FORM_TEMPLATE_FRAGMENT, formTemplateApi.getFormCategory()))).thenReturn(
+            formTemplateGet);
         when(formTemplateGet.execute()).thenReturn(expected);
 
-        final ApiResponse<FormTemplateApi> result = testService.getFormTemplate(formTemplateApi2.getFormType());
+        final ApiResponse<FormTemplateApi> result =
+            testService.getFormTemplate(formTemplateApi2.getFormType(), formTemplateApi.getFormCategory());
 
         assertThat(result, is(expected));
     }
@@ -134,11 +138,13 @@ class FormTemplateServiceImplTest {
         when(resourceHandler.formTemplates()).thenReturn(formTemplatesResourceHandler);
         when(formTemplatesResourceHandler.formTemplate()).thenReturn(formTemplateGetResourceHandler);
         when(formTemplateGetResourceHandler.get(
-            BaseApiClientServiceImpl.ROOT_URI + FormTemplateServiceImpl.FORM_TEMPLATE_FRAGMENT + "?type=O%26C%20STAY"))
-            .thenReturn(formTemplateGet);
+            MessageFormat.format("{0}{1}?type=O%26C%20STAY&category={2}", BaseApiClientServiceImpl.ROOT_URI,
+                FormTemplateServiceImpl.FORM_TEMPLATE_FRAGMENT, formTemplateApi.getFormCategory()))).thenReturn(
+            formTemplateGet);
         when(formTemplateGet.execute()).thenReturn(expected);
 
-        final ApiResponse<FormTemplateApi> result = testService.getFormTemplate(formTemplateApi3.getFormType());
+        final ApiResponse<FormTemplateApi> result =
+            testService.getFormTemplate(formTemplateApi3.getFormType(), formTemplateApi.getFormCategory());
 
         assertThat(result, is(expected));
     }

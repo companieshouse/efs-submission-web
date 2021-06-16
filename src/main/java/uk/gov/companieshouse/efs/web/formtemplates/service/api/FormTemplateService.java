@@ -26,12 +26,12 @@ public interface FormTemplateService {
      *
      * @return the form template for the json response
      */
-    ApiResponse<FormTemplateApi> getFormTemplate(String id);
+    ApiResponse<FormTemplateApi> getFormTemplate(String formType, final String categoryType);
 
     /**
      * Form template list response object.
      *
      * @return the form template list for the json response
      */
-    ApiResponse<FormTemplateListApi> getFormTemplatesByCategory(String id);
+    ApiResponse<FormTemplateListApi> getFormTemplatesByCategory(String categoryType);
 }

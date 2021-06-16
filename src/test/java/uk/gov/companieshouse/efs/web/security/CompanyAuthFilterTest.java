@@ -377,6 +377,7 @@ class CompanyAuthFilterTest {
     private SubmissionFormApi createSubmissionForm(final FormTemplateApi formTemplate) {
         SubmissionFormApi submissionForm = new SubmissionFormApi();
         submissionForm.setFormType(formTemplate.getFormType());
+        submissionForm.setCategoryType(formTemplate.getFormCategory());
         return submissionForm;
     }
 
@@ -423,7 +424,8 @@ class CompanyAuthFilterTest {
         when(request.getMethod()).thenReturn("GET");
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(new ApiResponse<>(HttpStatus.OK.value(),
             Collections.emptyMap(), submission));
-        when(formTemplateService.getFormTemplate(formTemplate.getFormType())).thenReturn(
+        when(
+            formTemplateService.getFormTemplate(formTemplate.getFormType(), formTemplate.getFormCategory())).thenReturn(
             new ApiResponse<>(HttpStatus.OK.value(), Collections.emptyMap(), formTemplate));
     }
 

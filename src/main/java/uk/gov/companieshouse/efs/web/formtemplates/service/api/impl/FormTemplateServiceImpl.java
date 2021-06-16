@@ -60,14 +60,17 @@ public class FormTemplateServiceImpl extends BaseApiClientServiceImpl
 
     @Override
     @Cacheable(value = DataCacheConfig.FORM_BY_ID, sync = true)
-    public ApiResponse<FormTemplateApi> getFormTemplate(String id) {
+    public ApiResponse<FormTemplateApi> getFormTemplate(String formType, final String categoryType) {
         final String path = BaseApiClientServiceImpl.ROOT_URI + FORM_TEMPLATE_FRAGMENT;
-        final UriComponents components = UriComponentsBuilder.fromPath(path).query(TYPE_ID_TEMPLATE)
-            .buildAndExpand(id).encode();
+        final UriComponents components = UriComponentsBuilder.fromPath(path)
+            .query(TYPE_ID_TEMPLATE)
+            .query(CATEGORY_TEMPLATE)
+            .buildAndExpand(formType, categoryType)
+            .encode();
 
         final String uri = components.toUriString();
 
-        logger.debug(String.format("Cache miss: fetching FormTemplate [%s]", id));
+        logger.debug(String.format("Cache miss: fetching FormTemplate [%s, %s]", formType, categoryType));
 
         return executeOp("getFormTemplate", uri,
                 getApiClient().privateEfsResourceHandler().formTemplates().formTemplate().get(uri));
@@ -75,15 +78,15 @@ public class FormTemplateServiceImpl extends BaseApiClientServiceImpl
 
     @Override
     @Cacheable(value = DataCacheConfig.FORM_BY_CATEGORY, sync = true)
-    public ApiResponse<FormTemplateListApi> getFormTemplatesByCategory(String id) {
+    public ApiResponse<FormTemplateListApi> getFormTemplatesByCategory(String categoryType) {
 
         final String path = ROOT_URI + FORM_TEMPLATES_FRAGMENT;
         final UriComponents components = UriComponentsBuilder.fromPath(path).query(CATEGORY_TEMPLATE)
-            .buildAndExpand(id).encode();
+            .buildAndExpand(categoryType).encode();
 
         final String uri = components.toUriString();
 
-        logger.debug(String.format("Cache miss: fetching FormTemplate [%s]", id));
+        logger.debug(String.format("Cache miss: fetching FormTemplate [%s]", categoryType));
 
         return executeOp("getFormTemplatesByCategory", uri,
             getApiClient().privateEfsResourceHandler().formTemplates().formTemplatesByCategory().get(uri));

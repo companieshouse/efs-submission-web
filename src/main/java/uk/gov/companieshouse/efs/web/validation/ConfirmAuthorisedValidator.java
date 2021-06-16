@@ -49,7 +49,9 @@ public class ConfirmAuthorisedValidator {
     public void isValid(final SubmissionApi submission, final CheckDetailsModel checkDetailsModel, final BindingResult binding) {
 
         final String documentType = submission.getSubmissionForm().getFormType();
-        final ApiResponse<FormTemplateApi> formResponse = formTemplateService.getFormTemplate(documentType);
+        final String categoryType = submission.getSubmissionForm().getCategoryType();
+        final ApiResponse<FormTemplateApi> formResponse =
+            formTemplateService.getFormTemplate(documentType, categoryType);
         final String documentCategory = formResponse.getData().getFormCategory();
         final CategoryTypeConstants topLevelCategory = categoryTemplateService.getTopLevelCategory(documentCategory);
 
