@@ -58,14 +58,18 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
     public static final CategoryTemplateApi INS_SUB_LEVEL1 = new CategoryTemplateApi(
             "INS_SUB_LEVEL1", "Dummy ins category 1, subcategory level 1", "INS", null, null);
 
-    public static final FormTemplateApi FORM_TEMPLATE_1 = new FormTemplateApi("CC01", "Test01", "CAT1_SUB_LEVEL1",
-            "100", true, true, null);
-    public static final FormTemplateApi FORM_TEMPLATE_2 = new FormTemplateApi("CC02", "Test02", "CAT1_SUB_LEVEL1",
-            "100", true, true, null);
-    public static final FormTemplateApi FORM_TEMPLATE_3 = new FormTemplateApi("CC03", "Test03", "CAT1_SUB_LEVEL1",                          "100", true, true, null);
-    public static final FormTemplateApi INS_TEMPLATE_1 = new FormTemplateApi("INS", "InsTest04", "INS_SUB_LEVEL1",
-            "100", true, true, null);
-    public static final List<FormTemplateApi> FORM_TEMPLATE_LIST = Arrays.asList(FORM_TEMPLATE_1, FORM_TEMPLATE_2, FORM_TEMPLATE_3);
+    public static final FormTemplateApi FORM_TEMPLATE_1 =
+        new FormTemplateApi("CC01", "Test01", "CAT1_SUB_LEVEL1", "100", true, true, null, null);
+    public static final FormTemplateApi FORM_TEMPLATE_2 =
+        new FormTemplateApi("CC02", "Test02", "CAT1_SUB_LEVEL1", "100", true, true, null, null);
+    public static final FormTemplateApi FORM_TEMPLATE_3 =
+        new FormTemplateApi("CC03", "Test03", "CAT1_SUB_LEVEL1", "100", true, true, null, null);
+    public static final FormTemplateApi FORM_TEMPLATE_4 =
+        new FormTemplateApi("RESOLUTIONS_CC", "Res01", "CAT1_SUB_LEVEL1", "100", true, true, "RESOLUTIONS", null);
+    public static final FormTemplateApi INS_TEMPLATE_1 =
+        new FormTemplateApi("INS", "InsTest04", "INS_SUB_LEVEL1", "100", true, true, null, null);
+    public static final List<FormTemplateApi> FORM_TEMPLATE_LIST =
+        Arrays.asList(FORM_TEMPLATE_1, FORM_TEMPLATE_2, FORM_TEMPLATE_3, FORM_TEMPLATE_4);
 
     private FormTemplateController testController;
 
@@ -238,7 +242,6 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
 
         when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
         when(formTemplateAttribute.getFormType()).thenReturn(FORM_TEMPLATE_1.getFormType());
-        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
         when(apiClientService.putFormType(SUBMISSION_ID, new FormTypeApi(FORM_TEMPLATE_1.getFormType()))).
                 thenReturn(new ApiResponse(200, getHeaders(), new SubmissionResponseApi(FORM_TEMPLATE_1.getFormType())));
 
@@ -249,6 +252,24 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
         verifyNoMoreInteractions(bindingResult, apiClientService);
 
         assertThat(result, is(ViewConstants.DOCUMENT_UPLOAD
+                .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+    }
+
+    @Test
+    void postFormTemplateWhenResolutionSelected() {
+
+        when(formTemplateAttribute.getFormType()).thenReturn(FORM_TEMPLATE_4.getFormType());
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(apiClientService.putFormType(SUBMISSION_ID, new FormTypeApi(FORM_TEMPLATE_4.getFormType()))).
+                thenReturn(new ApiResponse(200, getHeaders(), new SubmissionResponseApi(FORM_TEMPLATE_4.getFormType())));
+
+        final String result = testController.postFormTemplate(SUBMISSION_ID, COMPANY_NUMBER,
+                categoryTemplateAttribute, formTemplateAttribute, bindingResult, model, servletRequest);
+
+        verify(bindingResult).hasErrors();
+        verifyNoMoreInteractions(bindingResult, apiClientService);
+
+        assertThat(result, is(ViewConstants.RESOLUTIONS_INFO
                 .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
 

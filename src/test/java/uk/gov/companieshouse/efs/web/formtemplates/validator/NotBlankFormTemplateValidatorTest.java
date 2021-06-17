@@ -1,16 +1,15 @@
 package uk.gov.companieshouse.efs.web.formtemplates.validator;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import javax.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
-
-import javax.validation.ConstraintValidatorContext;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class NotBlankFormTemplateValidatorTest {
@@ -46,8 +45,7 @@ class NotBlankFormTemplateValidatorTest {
     @Test
     void isNotValidWhenValuesBlank() {
 
-        boolean valid = testValidator.isValid(
-                new FormTemplateApi("", "", "", "", false, false, null), context);
+        boolean valid = testValidator.isValid(new FormTemplateApi("", "", "", "", false, false, null, null), context);
         assertThat(valid, is(false));
     }
 
@@ -55,7 +53,7 @@ class NotBlankFormTemplateValidatorTest {
     void isValidWhenValuesNotBlank() {
 
         boolean valid = testValidator.isValid(
-                new FormTemplateApi("CC01", "Test01", "CC02", "CC01", true, true, null), context);
+            new FormTemplateApi("CC01", "Test01", "CC02", "CC01", true, true, null, null), context);
         assertThat(valid, is(true));
     }
 

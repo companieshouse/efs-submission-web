@@ -165,6 +165,7 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
         final String selectedFormType = formTemplateAttribute.getFormType();
         final FormTemplateApi selectedFormTemplate = getSelectedFormTemplate(selectedFormType);
 
+        Objects.requireNonNull(selectedFormTemplate);
         // Call the API layer to persist the form type.
         ApiResponse<SubmissionResponseApi> submissionResponse = apiClientService.putFormType(id,
             new FormTypeApi(selectedFormType));
@@ -172,7 +173,10 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
 
         formTemplateAttribute.setDetails(selectedFormTemplate);
 
-        if (CategoryTypeConstants.nameOf(selectedFormType).orElse(OTHER) == RESOLUTIONS) {
+        final String fesDocType =
+            Optional.ofNullable(selectedFormTemplate.getFesDocType()).orElse(selectedFormTemplate.getFormType());
+        
+        if (CategoryTypeConstants.nameOf(fesDocType).orElse(OTHER) == RESOLUTIONS) {
             return ViewConstants.RESOLUTIONS_INFO.asRedirectUri(chsUrl, id, companyNumber);
         } else {
             return ViewConstants.DOCUMENT_UPLOAD.asRedirectUri(chsUrl, id, companyNumber);

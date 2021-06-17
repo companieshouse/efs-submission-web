@@ -18,7 +18,7 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
 
     public static final FormTemplateApi RESOLUTIONS_FORM = new FormTemplateApi("RESOLUTIONS", "Resolutions",
-        "RESOLUTIONS", "", true, true, null);
+        "RESOLUTIONS", "", true, true, null, null);
 
     private ResolutionsInfoController testController;
 
