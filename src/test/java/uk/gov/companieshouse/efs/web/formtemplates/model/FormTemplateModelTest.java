@@ -22,8 +22,7 @@ class FormTemplateModelTest {
     @BeforeEach
     void setUp() {
 
-        formTemplate = new FormTemplateApi("CC01", "Test01", "CC03",
-                "CC01", true, true, null);
+        formTemplate = new FormTemplateApi("CC01", "Test01", "CC03", "CC01", true, true, null, null);
         testFormTemplate = new FormTemplateModel(formTemplate);
     }
 
