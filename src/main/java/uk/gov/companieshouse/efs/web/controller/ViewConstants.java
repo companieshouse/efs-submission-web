@@ -23,6 +23,7 @@ public enum ViewConstants {
     ACCESSIBILITY("accessibilityStatement", "accessibilityStatement"),
     DOCUMENT_UPLOAD("document-upload", "documentUpload"),
     REMOVE_DOCUMENT("removeDocument", "removeDocument"),
+    SH19_DELIVERY("sh19-delivery", "sh19Delivery"),
     CHECK_DETAILS("check-your-details", "checkDetails"),
     PAYMENT("payment", null),
     PAYMENT_COMPLETE("payment-complete-callback", null),
