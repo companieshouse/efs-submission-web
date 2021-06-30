@@ -45,7 +45,8 @@ class NotBlankFormTemplateValidatorTest {
     @Test
     void isNotValidWhenValuesBlank() {
 
-        boolean valid = testValidator.isValid(new FormTemplateApi("", "", "", "", false, false, null, null), context);
+        boolean valid = testValidator.isValid(
+            new FormTemplateApi("", "", "", "", false, false, null, false, null), context);
         assertThat(valid, is(false));
     }
 
@@ -53,7 +54,8 @@ class NotBlankFormTemplateValidatorTest {
     void isValidWhenValuesNotBlank() {
 
         boolean valid = testValidator.isValid(
-            new FormTemplateApi("CC01", "Test01", "CC02", "CC01", true, true, null, null), context);
+            new FormTemplateApi("CC01", "Test01", "CC02", "CC01", true, true, null, false, null),
+            context);
         assertThat(valid, is(true));
     }
 

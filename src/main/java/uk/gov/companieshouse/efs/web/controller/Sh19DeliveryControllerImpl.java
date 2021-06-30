@@ -1,5 +1,11 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -8,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateListApi;
@@ -16,27 +21,12 @@ import uk.gov.companieshouse.api.model.efs.submissions.FormTypeApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
-import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
-import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
-import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
-import uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.OTHER;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.RESOLUTIONS;
 
 @Controller
 public class Sh19DeliveryControllerImpl extends BaseControllerImpl implements Sh19DeliveryController {
@@ -134,7 +124,7 @@ public class Sh19DeliveryControllerImpl extends BaseControllerImpl implements Sh
 
         sh19TemplateAttribute.setDetails(selectedFormTemplate);
 
-        return ViewConstants.PAYMENT.asRedirectUri(chsUrl, id, companyNumber);
+        return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
     }
 
     private FormTemplateApi getSelectedFormTemplate(final String selectedFormType) {
