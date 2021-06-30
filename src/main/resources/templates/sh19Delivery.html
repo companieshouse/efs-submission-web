@@ -7,50 +7,58 @@
 <head>
     <title th:text="#{insolvency.guidance.title}"></title>
 </head>
-<body class="govuk-template__body js-enabled" layout:fragment="content">
-<div class="govuk-width-container">
-    <a th:href="${@environment.getProperty('start.page.url')}" class="govuk-back-link" th:text="#{link.back}"></a>
-    <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+<body class="govuk-template__body" layout:fragment="content">
+    <form class="formTemplateModel" th:object="${sh19Template}"
+      th:action="@{/efs-submission/{id}/company/{companyNumber}/sh19-delivery(id=*{submissionId}, companyNumber=*{companyNumber})}" method="post">
+        <a class="govuk-back-link"
+           th:href="@{/efs-submission/{id}/company/{companyNumber}/document-upload(id=*{submissionId},companyNumber=*{companyNumber})}"
+           th:text="#{link.back}"></a>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
-                <form class="sh19Delivery" th:object="${sh19Delivery}"
-                      th:action="@{/efs-submission/{id}/company/{companyNumber}/category-selection(id=*{submissionId}, companyNumber=*{companyNumber})}" method="post">
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-fieldset__heading">
-                                    Which service do you require to process your SH19?
-                                </h1>
-                            </legend>
-                            <div class="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="delivery" name="delivery" type="radio" value="Standard service" aria-describedby="delivery-item-hint">
-                                    <label class="govuk-label govuk-radios__label" for="delivery">
-                                        Standard - £10
-                                    </label>
-                                    <div id="delivery-item-hint" class="govuk-hint govuk-radios__hint">
-                                        The SH19 is processed within 10 to 14 days.
-                                    </div>
-                                </div>
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="delivery-2" name="delivery" type="radio" value="Same day service" aria-describedby="delivery-2-item-hint">
-                                    <label class="govuk-label govuk-radios__label" for="delivery-2">
-                                        Same day - £50
-                                    </label>
-                                    <div id="delivery-2-item-hint" class="govuk-hint govuk-radios__hint">
-                                        The SH19 is processed on the same working day if we receive it by 11am. You must also upload the relevant resolution and solvency statement by this time. If you upload the SH19 and relevant documents after 11am, we will process them the next working day.
-                                    </div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" data-required="data-required">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-fieldset__heading" th:text="#{sh19Selection.service}">
+                                Which service do you require to process your SH19?
+                            </h1>
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="delivery-1"
+                                       th:field="*{formType}"
+                                       th:value="*{formTemplateList[0].formType}" type="radio"
+                                       th:id="*{formTemplateList[0].formType}"
+                                       aria-describedby="delivery-1-item-hint">
+                                <label class="govuk-label govuk-radios__label" for="delivery-1" th:text="#{sh19Selection.standard}">
+                                    Same day - £10
+                                </label>
+                                <div id="delivery-1-item-hint" class="govuk-hint govuk-radios__hint" th:text="#{sh19Selection.standard.hint}">
+                                    The SH19 is processed on the same working day if we receive it by 11am. You must also upload the relevant resolution and solvency statement by this time. If you upload the SH19 and relevant documents after 11am, we will process them the next working day.
                                 </div>
                             </div>
-                        </fieldset>
-                    </div>
-                    <button class="govuk-button" data-module="govuk-button">
-                        Continue
-                    </button>
-                </form>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="delivery-2"
+                                       th:field="*{formType}"
+                                       th:value="*{formTemplateList[1].formType}" type="radio"
+                                       th:id="*{formTemplateList[1].formType}"
+                                       aria-describedby="delivery-2-item-hint">
+                                <label class="govuk-label govuk-radios__label" for="delivery-2" th:text="#{sh19Selection.same.day}">
+                                    Same day - £50
+                                </label>
+                                <div id="delivery-2-item-hint" class="govuk-hint govuk-radios__hint" th:text="#{sh19Selection.same.day.hint}">
+                                    The SH19 is processed on the same working day if we receive it by 11am. You must also upload the relevant resolution and solvency statement by this time. If you upload the SH19 and relevant documents after 11am, we will process them the next working day.
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <button data-prevent-double-click="true" id="submit-all" type="submit" class="govuk-button"
+                        name="action" value="submit"
+                        th:text="#{button.continue}"></button>
             </div>
         </div>
     </main>
-</div>
+</form>
 </body>
 </html>

@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
+import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl.ATTRIBUTE_NAME;
 
@@ -28,19 +30,20 @@ import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerIm
 public interface Sh19DeliveryController {
 
     /**
-     * Get request for the category template.
+     * Get request for the form template.
      *
-     * @param categoryTemplateAttribute the category template details see {@link CategoryTemplateModel}
-     * @param model                     the category model
+     * @param sh19TemplateAttribute     the sh19 form template details see {@link FormTemplateModel}
+     * @param model                     the form model
      * @param servletRequest            contains the chs session id
      * @return the view name
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/sh19-delivery"})
     String sh19Delivery(@PathVariable String id, @PathVariable String companyNumber,
-                               @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME) CategoryTemplateModel categoryTemplateAttribute, Model model, HttpServletRequest servletRequest);
+                        @ModelAttribute(ATTRIBUTE_NAME) FormTemplateModel sh19TemplateAttribute,
+                        final Model model, HttpServletRequest servletRequest);
 
     @PostMapping(value = {"{id}/company/{companyNumber}/sh19-delivery"}, params = {"action=submit"})
     String postSh19Delivery(@PathVariable String id, @PathVariable String companyNumber,
-                                   @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME) CategoryTemplateModel categoryTemplateAttribute,
-                                   BindingResult binding, Model model, ServletRequest servletRequest, final HttpSession session);
+                            @Valid @ModelAttribute(ATTRIBUTE_NAME) FormTemplateModel sh19TemplateAttribute,
+                            BindingResult binding, Model model, ServletRequest servletRequest);
 }

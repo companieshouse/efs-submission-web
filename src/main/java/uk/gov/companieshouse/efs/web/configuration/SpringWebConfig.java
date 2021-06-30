@@ -19,6 +19,9 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import uk.gov.companieshouse.efs.web.controller.Sh19DeliveryControllerImpl;
+import uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl;
+import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.NonceServiceFactoryImpl;
 import uk.gov.companieshouse.environment.EnvironmentReader;
@@ -122,6 +125,16 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Bean
     ResourceBundle resourceBundle() {
         return ResourceBundle.getBundle("messages", Locale.UK);
+    }
+
+    @Bean(Sh19DeliveryControllerImpl.ATTRIBUTE_NAME)
+    FormTemplateModel sh19DeliveryModel() {
+        return new FormTemplateModel();
+    }
+
+    @Bean(FormTemplateControllerImpl.ATTRIBUTE_NAME)
+    FormTemplateModel formTemplateModel() {
+        return new FormTemplateModel();
     }
 
 }
