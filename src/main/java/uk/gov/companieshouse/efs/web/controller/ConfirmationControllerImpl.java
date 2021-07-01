@@ -15,6 +15,7 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionFormApi;
+import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
