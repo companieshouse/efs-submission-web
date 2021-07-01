@@ -33,6 +33,8 @@ import uk.gov.companieshouse.logging.Logger;
         CompanyDetailControllerImpl.ATTRIBUTE_NAME})
 public class ConfirmationControllerImpl extends BaseControllerImpl implements ConfirmationController {
 
+    public static final String SH_19_SAMEDAY_FORM_TYPE = "SH19_SAMEDAY";
+
     /**
      * Constructor used by child controllers.
      *
@@ -88,6 +90,8 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
         boolean isRegPowers = topLevelCategory.equals(CategoryTypeConstants.REGISTRAR_POWERS);
         model.addAttribute("registrarsPowers", isRegPowers);
         model.addAttribute("paymentRequired", StringUtils.isNotBlank(submission.getFeeOnSubmission()));
+
+        model.addAttribute("isSH19SameDay", submission.getSubmissionForm().getFormType().equals(SH_19_SAMEDAY_FORM_TYPE));
 
         addTrackingAttributeToModel(model);
         sessionStatus.setComplete();
