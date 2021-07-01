@@ -127,14 +127,4 @@ public class SpringWebConfig implements WebMvcConfigurer {
         return ResourceBundle.getBundle("messages", Locale.UK);
     }
 
-    @Bean(Sh19DeliveryControllerImpl.ATTRIBUTE_NAME)
-    FormTemplateModel sh19DeliveryModel() {
-        return new FormTemplateModel();
-    }
-
-    @Bean(FormTemplateControllerImpl.ATTRIBUTE_NAME)
-    FormTemplateModel formTemplateModel() {
-        return new FormTemplateModel();
-    }
-
 }

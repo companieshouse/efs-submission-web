@@ -25,6 +25,7 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
+import uk.gov.companieshouse.efs.web.model.Sh19TemplateModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
@@ -43,7 +44,7 @@ public class Sh19DeliveryControllerImpl extends BaseControllerImpl implements Sh
 
     public static final String SH_19 = "SH19";
     public static final String SH_19_SAMEDAY = "SH19_SAMEDAY";
-    private FormTemplateModel sh19TemplateAttribute;
+    private Sh19TemplateModel sh19TemplateAttribute;
 
     /**
      * Define the model name for this action.
@@ -58,14 +59,14 @@ public class Sh19DeliveryControllerImpl extends BaseControllerImpl implements Sh
     public Sh19DeliveryControllerImpl(final Logger logger, final SessionService sessionService,
                                       final ApiClientService apiClientService, final FormTemplateService formTemplateService,
                                       final CategoryTemplateService categoryTemplateService,
-                                      @Qualifier(ATTRIBUTE_NAME) final FormTemplateModel sh19TemplateAttribute) {
+                                      @Qualifier(ATTRIBUTE_NAME) final Sh19TemplateModel sh19TemplateAttribute) {
         super(logger, sessionService, apiClientService, formTemplateService,
             categoryTemplateService);
         this.sh19TemplateAttribute = sh19TemplateAttribute;
     }
 
     @ModelAttribute(ATTRIBUTE_NAME)
-    public FormTemplateModel getSh19TemplateAttribute() {
+    public Sh19TemplateModel getSh19TemplateAttribute() {
         return sh19TemplateAttribute;
     }
 
@@ -76,7 +77,7 @@ public class Sh19DeliveryControllerImpl extends BaseControllerImpl implements Sh
 
     @Override
     public String sh19Delivery(@PathVariable String id, @PathVariable String companyNumber,
-           @ModelAttribute(ATTRIBUTE_NAME) FormTemplateModel sh19TemplateAttribute,
+           @ModelAttribute(ATTRIBUTE_NAME) Sh19TemplateModel sh19TemplateAttribute,
            final Model model, HttpServletRequest servletRequest) {
 
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
@@ -114,7 +115,7 @@ public class Sh19DeliveryControllerImpl extends BaseControllerImpl implements Sh
     @PostMapping(value = {"{id}/company/{companyNumber}/sh19-delivery"},
         params = {"action=submit"})
     public String postSh19Delivery(@PathVariable String id, @PathVariable String companyNumber,
-                                   @Valid @ModelAttribute(ATTRIBUTE_NAME) FormTemplateModel sh19TemplateAttribute,
+                                   @Valid @ModelAttribute(ATTRIBUTE_NAME) Sh19TemplateModel sh19TemplateAttribute,
                                    BindingResult binding, Model model, ServletRequest servletRequest) {
 
         if (binding.hasErrors()) {

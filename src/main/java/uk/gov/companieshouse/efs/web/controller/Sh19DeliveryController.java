@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
+import uk.gov.companieshouse.efs.web.model.Sh19TemplateModel;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -39,11 +40,11 @@ public interface Sh19DeliveryController {
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/sh19-delivery"})
     String sh19Delivery(@PathVariable String id, @PathVariable String companyNumber,
-                        @ModelAttribute(ATTRIBUTE_NAME) FormTemplateModel sh19TemplateAttribute,
+                        @ModelAttribute(ATTRIBUTE_NAME) Sh19TemplateModel sh19TemplateAttribute,
                         final Model model, HttpServletRequest servletRequest);
 
     @PostMapping(value = {"{id}/company/{companyNumber}/sh19-delivery"}, params = {"action=submit"})
     String postSh19Delivery(@PathVariable String id, @PathVariable String companyNumber,
-                            @Valid @ModelAttribute(ATTRIBUTE_NAME) FormTemplateModel sh19TemplateAttribute,
+                            @Valid @ModelAttribute(ATTRIBUTE_NAME) Sh19TemplateModel sh19TemplateAttribute,
                             BindingResult binding, Model model, ServletRequest servletRequest);
 }
