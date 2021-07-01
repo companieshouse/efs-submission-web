@@ -19,6 +19,7 @@ public class CheckDetailsModel {
     private List<FileDetailApi> documentUploadedList;
     private String paymentCharge;
     private Boolean confirmAuthorised;
+    private String formType;
 
     public String getSubmissionId() {
         return submissionId;
@@ -76,6 +77,14 @@ public class CheckDetailsModel {
         this.confirmAuthorised = confirmAuthorised;
     }
 
+    public String getFormType() {
+        return formType;
+    }
+
+    public void setFormType(String formType) {
+        this.formType = formType;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -91,21 +100,27 @@ public class CheckDetailsModel {
             .equals(getDocumentTypeDescription(), that.getDocumentTypeDescription()) && Objects
             .equals(getDocumentUploadedList(), that.getDocumentUploadedList()) && Objects
             .equals(getPaymentCharge(), that.getPaymentCharge()) && Objects
-            .equals(getConfirmAuthorised(), that.getConfirmAuthorised());
+            .equals(getConfirmAuthorised(), that.getConfirmAuthorised()) && Objects
+                .equals(getFormType(), that.getFormType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSubmissionId(), getCompanyName(), getCompanyNumber(), getDocumentTypeDescription(),
-            getDocumentUploadedList(), getPaymentCharge(), getConfirmAuthorised());
+        return Objects.hash(getSubmissionId(), getCompanyName(), getCompanyNumber(),
+                getDocumentTypeDescription(), getDocumentUploadedList(), getPaymentCharge(),
+                getConfirmAuthorised(), getFormType());
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("submissionId", submissionId)
-            .append("companyName", companyName).append("companyNumber", companyNumber)
-            .append("documentTypeDescription", documentTypeDescription)
-            .append("documentUploadedList", documentUploadedList).append("paymentCharge", paymentCharge)
-            .append("confirmAuthorised", confirmAuthorised).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("submissionId", submissionId)
+                .append("companyName", companyName)
+                .append("companyNumber", companyNumber)
+                .append("documentTypeDescription", documentTypeDescription)
+                .append("documentUploadedList", documentUploadedList)
+                .append("paymentCharge", paymentCharge)
+                .append("confirmAuthorised", confirmAuthorised)
+                .append("formType", getFormType()).toString();
     }
 }

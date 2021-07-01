@@ -18,6 +18,7 @@ class CheckDetailsModelTest {
     private static final String SUBMISSION_ID = "aaaaaaaaaaaaaaaaaaaaaaaa";
     private static final String COMPANY_NAME = "TEST COMPANY LTD";
     private static final String COMPANY_NUMBER = "11111111";
+    public static final String EXAMPLE_FORM_TYPE = "FORM_TYPE";
 
     private CheckDetailsModel checkDetailsModel;
 
@@ -98,6 +99,15 @@ class CheckDetailsModelTest {
     }
 
     @Test
+    void getSetFormType() {
+        assertThat(checkDetailsModel.getFormType(), is(nullValue()));
+
+        checkDetailsModel.setFormType(EXAMPLE_FORM_TYPE);
+        assertThat(checkDetailsModel.getFormType(), is(EXAMPLE_FORM_TYPE));
+        assertThat(checkDetailsModel.getFormType(), sameInstance(EXAMPLE_FORM_TYPE));
+    }
+
+    @Test
     void equalsAndHashCode() {
         EqualsVerifier.forClass(CheckDetailsModel.class)
                 .usingGetClass().suppress(Warning.NONFINAL_FIELDS).verify();
@@ -107,9 +117,10 @@ class CheckDetailsModelTest {
     @Test
     void toStringTest() {
         final String stringFormat = "CheckDetailsModel[submissionId=%s,companyName=%s,companyNumber=%s," +
-                "documentTypeDescription=%s,documentUploadedList=%s,paymentCharge=%s,confirmAuthorised=%s]";
+                "documentTypeDescription=%s,documentUploadedList=%s,paymentCharge=%s,confirmAuthorised=%s,formType=%s]";
 
         assertThat(checkDetailsModel.toString(),
-                is(String.format(stringFormat, "<null>", "<null>", "<null>", "<null>", "<null>", "<null>", "<null>", "<null>")));
+                is(String.format(stringFormat, "<null>", "<null>", "<null>", "<null>", "<null>",
+                        "<null>", "<null>", "<null>", "<null>")));
     }
 }
