@@ -15,7 +15,6 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionFormApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
@@ -32,6 +31,8 @@ import uk.gov.companieshouse.logging.Logger;
     {FormTemplateControllerImpl.ATTRIBUTE_NAME, CategoryTemplateControllerImpl.ATTRIBUTE_NAME,
         CompanyDetailControllerImpl.ATTRIBUTE_NAME})
 public class ConfirmationControllerImpl extends BaseControllerImpl implements ConfirmationController {
+
+    public static final String SH_19_SAMEDAY_FORM_TYPE = "SH19_SAMEDAY";
 
     /**
      * Constructor used by child controllers.
@@ -88,6 +89,8 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
         boolean isRegPowers = topLevelCategory.equals(CategoryTypeConstants.REGISTRAR_POWERS);
         model.addAttribute("registrarsPowers", isRegPowers);
         model.addAttribute("paymentRequired", StringUtils.isNotBlank(submission.getFeeOnSubmission()));
+
+        model.addAttribute("isSH19SameDay", submission.getSubmissionForm().getFormType().equals(SH_19_SAMEDAY_FORM_TYPE));
 
         addTrackingAttributeToModel(model);
         sessionStatus.setComplete();

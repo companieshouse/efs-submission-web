@@ -32,6 +32,9 @@
                     <p th:text="#{confirmation.next.emailSent}"></p>
                     <p th:text="#{confirmation.next.body1}"></p>
                 </div>
+                <div class="govuk-body" th:if="${isSH19SameDay}">
+                    <p th:text="#{confirmation.sh19.same.day}"></p>
+                </div>
                 <div class="govuk-body" th:if="${registrarsPowers}">
                     <p th:text="#{confirmation.next.body2}"></p>
                 </div>
