@@ -433,6 +433,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
+        when(formTemplateApi.getFormType()).thenReturn(FORM_TYPE_CODE);
         when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
     }
 
