@@ -65,9 +65,11 @@
                         <div th:if="${checkDetails.paymentCharge}" class="govuk-summary-list__row">
                             <dt th:text="#{checkDetails.payment.charge}" class="govuk-summary-list__key"></dt>
                             <dd class="govuk-summary-list__value"  id="paymentCharge">
-<!--                                Span elements get removed and just leaves the text-->
+<!--                                th:remove removes the span elements and leaves the text behind-->
                                 <span th:utext="*{'&pound;' + paymentCharge}" th:remove="tag"></span>
-                                <span th:if="${checkDetails.formType != null}" th:text="#{ checkDetails.service.__${checkDetails.formType}__ }" th:remove="tag"></span>
+
+                                <span th:if="${checkDetails.formType == 'SH19'}" th:text="#{checkDetails.service.standard}" th:remove="tag"></span>
+                                <span th:if="${checkDetails.formType == 'SH19_SAMEDAY'}" th:text="#{checkDetails.service.same.day}" th:remove="tag"></span>
                             </dd>
                         </div>
                     </dl>
