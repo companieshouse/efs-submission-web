@@ -129,7 +129,7 @@ public class CheckDetailsControllerImpl extends BaseControllerImpl implements Ch
         checkDetailsAttribute.setDocumentUploadedList(submission.getSubmissionForm().getFileDetails().getList());
         checkDetailsAttribute.setPaymentCharge(submission.getFeeOnSubmission());
         checkDetailsAttribute.setConfirmAuthorised(submission.getConfirmAuthorised());
-        checkDetailsAttribute.setFormType(submission.getSubmissionForm().getFormType());
+        checkDetailsAttribute.setFormType(documentType);
         model.addAttribute("showAuthStatement", topLevelCategory == INSOLVENCY);
         addTrackingAttributeToModel(model);
     }
