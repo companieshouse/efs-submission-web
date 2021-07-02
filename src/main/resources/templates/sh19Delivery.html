@@ -33,23 +33,23 @@
                                 <input class="govuk-radios__input" id="delivery-1" th:field="*{formType}"
                                        th:value="*{formTemplateList[0].formType}" type="radio"
                                        th:id="*{formTemplateList[0].formType}" aria-describedby="delivery-standard-hint">
-                                <label class="govuk-label govuk-radios__label" for="delivery-1"
+                                <label class="govuk-label govuk-radios__label" th:for="*{formTemplateList[0].formType}"
                                        th:text="#{sh19Selection.standard}">
                                 </label>
-                                <div th:id="delivery-standard-hint" class="govuk-hint govuk-radios__hint"
+                                <span th:id="delivery-standard-hint" class="govuk-hint govuk-radios__hint"
                                      th:text="#{sh19Selection.standard.hint}">
-                                </div>
+                                </span>
                             </div>
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="delivery-2" th:field="*{formType}"
                                        th:value="*{formTemplateList[1].formType}" type="radio"
                                        th:id="*{formTemplateList[1].formType}" aria-describedby="delivery-same-day-hint">
-                                <label class="govuk-label govuk-radios__label" for="delivery-2"
+                                <label class="govuk-label govuk-radios__label" th:for="*{formTemplateList[1].formType}"
                                        th:text="#{sh19Selection.same.day}">
                                 </label>
-                                <div th:id="delivery-same-day-hint" class="govuk-hint govuk-radios__hint"
+                                <span th:id="delivery-same-day-hint" class="govuk-hint govuk-radios__hint"
                                      th:text="#{sh19Selection.same.day.hint}">
-                                </div>
+                                </span>
                             </div>
                         </div>
                     </div>
