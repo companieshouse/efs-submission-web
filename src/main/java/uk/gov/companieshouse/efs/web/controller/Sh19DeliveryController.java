@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
-import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 import uk.gov.companieshouse.efs.web.model.Sh19TemplateModel;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl.ATTRIBUTE_NAME;

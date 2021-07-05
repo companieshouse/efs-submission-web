@@ -30,7 +30,7 @@
                           th:each="e: ${#fields.errors('details')}" th:text="${e}"></span>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="delivery-1" th:field="*{formType}"
+                                <input class="govuk-radios__input" th:field="*{formType}"
                                        th:value="*{formTemplateList[0].formType}" type="radio"
                                        th:id="*{formTemplateList[0].formType}" aria-describedby="delivery-standard-hint">
                                 <label class="govuk-label govuk-radios__label" th:for="*{formTemplateList[0].formType}"
@@ -41,7 +41,7 @@
                                 </span>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="delivery-2" th:field="*{formType}"
+                                <input class="govuk-radios__input" th:field="*{formType}"
                                        th:value="*{formTemplateList[1].formType}" type="radio"
                                        th:id="*{formTemplateList[1].formType}" aria-describedby="delivery-same-day-hint">
                                 <label class="govuk-label govuk-radios__label" th:for="*{formTemplateList[1].formType}"

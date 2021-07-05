@@ -1,11 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -23,12 +17,18 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
-import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.model.Sh19TemplateModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static uk.gov.companieshouse.efs.web.controller.CheckDetailsControllerImpl.ATTRIBUTE_NAME;
 

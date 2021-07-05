@@ -1,17 +1,11 @@
 package uk.gov.companieshouse.efs.web.model;
 
-import org.apache.commons.lang3.builder.RecursiveToStringStyle;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateListApi;
 import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
-import uk.gov.companieshouse.efs.web.formtemplates.validator.NotBlankFormTemplate;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Model class representing on-screen fields. Delegates to {@link FormTemplateApi} for details.
