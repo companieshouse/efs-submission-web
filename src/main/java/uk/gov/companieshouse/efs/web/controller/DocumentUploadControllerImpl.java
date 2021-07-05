@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.OTHER;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.RESOLUTIONS;
 import static uk.gov.companieshouse.efs.web.controller.DocumentUploadControllerImpl.ATTRIBUTE_NAME;
 
 import java.util.List;
