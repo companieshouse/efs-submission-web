@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
@@ -14,6 +15,7 @@ import uk.gov.companieshouse.efs.web.formtemplates.validator.NotBlankFormTemplat
  * Model class representing on-screen fields. Delegates to {@link FormTemplateApi} for details.
  */
 @Component
+@Qualifier("formTemplate")
 @SessionScope
 public class FormTemplateModel {
 

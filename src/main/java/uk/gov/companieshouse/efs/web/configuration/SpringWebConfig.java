@@ -1,11 +1,5 @@
 package uk.gov.companieshouse.efs.web.configuration;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,6 +17,13 @@ import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.NonceServiceFactoryImpl;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Provides configuration for the web application.

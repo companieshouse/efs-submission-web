@@ -10,7 +10,13 @@
 <body class="govuk-template__body" layout:fragment="content">
 <div class="govuk-width-container">
     <form id="lookup-form" th:action="@{/efs-submission/{id}/company/{number}/check-your-details(id=*{submissionId},number=*{companyNumber})}" th:object="${checkDetails}" class="form" method="post">
-        <a class="govuk-back-link" th:href="@{/efs-submission/{id}/company/{companyNumber}/document-upload(id=*{submissionId},companyNumber=*{companyNumber})}" th:text="#{link.back}"></a>
+        <a class="govuk-back-link" th:if="${#strings.startsWith(documentType, 'SH19')}"
+           th:href="@{/efs-submission/{id}/company/{companyNumber}/sh19-delivery(id=*{submissionId},companyNumber=*{companyNumber})}"
+           th:text="#{link.back}"></a>
+        <a class="govuk-back-link" th:unless="${#strings.startsWith(documentType, 'SH19')}"
+           th:href="@{/efs-submission/{id}/company/{companyNumber}/document-upload(id=*{submissionId},companyNumber=*{companyNumber})}"
+           th:text="#{link.back}"></a>
+
         <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -66,6 +72,9 @@
                             <dt th:text="#{checkDetails.payment.charge}" class="govuk-summary-list__key"></dt>
                             <dd class="govuk-summary-list__value"  id="paymentCharge"
                                 th:utext="*{'&pound;' + paymentCharge}">
+                            </dd>
+                            <dd class="govuk-summary-list__value" th:text="''">
+                                Empty 'action' column placeholder
                             </dd>
                         </div>
                     </dl>

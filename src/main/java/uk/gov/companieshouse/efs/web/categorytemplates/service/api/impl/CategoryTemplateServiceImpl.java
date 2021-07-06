@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.efs.web.categorytemplates.service.api.impl;
 
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.OTHER;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.ROOT;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,20 +102,15 @@ public class CategoryTemplateServiceImpl extends BaseApiClientServiceImpl
 
         while (true) {
             final ApiResponse<CategoryTemplateApi> categoryTemplateResponse = getCategoryTemplate(currentCategory);
-            final String parent = categoryTemplateResponse.getData().getParent();
+            final CategoryTemplateApi categoryTemplate = categoryTemplateResponse.getData();
+            final String parent = categoryTemplate == null ? null : categoryTemplate.getParent();
 
-            if (StringUtils.isBlank(parent)) {
+            if (StringUtils.isBlank(parent) || parent.equals(category)) {
                 return result;
             }
 
-            final CategoryTypeConstants parentCategory = CategoryTypeConstants.nameOf(parent).orElse(OTHER);
-
-            if (parentCategory == ROOT) {
-                return result;
-            } else {
-                result = parentCategory;
-                currentCategory = parent;
-            }
+            result = CategoryTypeConstants.nameOf(parent).orElse(OTHER);
+            currentCategory = parent;
         }
     }
 }

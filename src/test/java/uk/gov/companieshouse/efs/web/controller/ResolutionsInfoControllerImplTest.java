@@ -17,8 +17,9 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 @ExtendWith(MockitoExtension.class)
 class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
 
-    public static final FormTemplateApi RESOLUTIONS_FORM = new FormTemplateApi("RESOLUTIONS", "Resolutions",
-        "RESOLUTIONS", "", true, true, null, null);
+    public static final FormTemplateApi RESOLUTIONS_FORM =
+        new FormTemplateApi("RESOLUTIONS", "Resolutions", "RESOLUTIONS", "", true, true, null,
+            false, null);
 
     private ResolutionsInfoController testController;
 

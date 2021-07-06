@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.efs.web.categorytemplates.service.api.impl;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImplTest.CAT1_SUB_LEVEL1;
@@ -206,17 +206,38 @@ class CategoryTemplateServiceImplTest {
         assertThat(topLevelCategory.getValue(), is(INSOLVENCY.getCategoryType()));
     }
 
+    @Test
+    void getTopLevelCategoryWhenCategoryMissing() throws ApiErrorResponseException, URIValidationException {
+        when(resourceHandler.categoryTemplates()).thenReturn(categoryTemplatesResourceHandler);
+        when(categoryTemplatesResourceHandler.categoryTemplate()).thenReturn(categoryTemplateGetResourceHandler);
+        when(categoryTemplateGetResourceHandler.get(anyString())).thenReturn(categoryTemplateGet);
+        when(categoryTemplateGet.execute()).thenReturn(buildApiResponseNotFound());
+
+        final CategoryTypeConstants topLevelCategory = testService.getTopLevelCategory("NO_SUCH_CATEGORY");
+
+        assertThat(topLevelCategory.getValue(), is(OTHER.getValue()));
+    }
+
+    @Test
+    void getTopLevelCategoryWhenParentIsSelf() throws ApiErrorResponseException, URIValidationException {
+        final CategoryTemplateApi category =
+            new CategoryTemplateApi("SELF_PARENT", "parent is self", "SELF_PARENT", null, null);
+
+        expectGetCategoryTemplate();
+        when(categoryTemplateGet.execute()).thenReturn(buildApiResponseOK(category));
+
+        final CategoryTypeConstants topLevelCategory =
+            testService.getTopLevelCategory(category.getCategoryType());
+
+        assertThat(topLevelCategory.getValue(), is(OTHER.getValue()));
+    }
+
     private <T> ApiResponse<T> buildApiResponseOK(final T data) {
         return new ApiResponse<T>(HttpStatus.OK.value(), Collections.emptyMap(), data);
     }
 
-    private void expectGetCategoryTemplate(
-            final CategoryTemplateApi category) throws URIValidationException, ApiErrorResponseException {
-
-        final ApiResponse<CategoryTemplateApi> expected = buildApiResponseOK(category);
-
-        expectGetCategoryTemplate();
-        when(categoryTemplateGet.execute()).thenReturn(expected);
+    private <T> ApiResponse<T> buildApiResponseNotFound() {
+        return new ApiResponse<T>(HttpStatus.NOT_FOUND.value(), Collections.emptyMap());
     }
 
     private void expectGetCategoryTemplates() {
