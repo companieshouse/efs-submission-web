@@ -30,9 +30,11 @@
                           th:each="e: ${#fields.errors('details')}" th:text="${e}"></span>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" th:field="*{formType}"
+                                <input class="govuk-radios__input show-text piwik-event" th:field="*{formType}"
                                        th:value="*{formTemplateList[0].formType}" type="radio"
-                                       th:id="*{formTemplateList[0].formType}" aria-describedby="delivery-standard-hint">
+                                       th:id="*{formTemplateList[0].formType}"
+                                       th:attr="data-event-id=*{formTemplateList[0].formType}"
+                                       aria-describedby="delivery-standard-hint">
                                 <label class="govuk-label govuk-radios__label" th:for="*{formTemplateList[0].formType}"
                                        th:text="#{sh19Selection.standard}">
                                 </label>
@@ -41,9 +43,11 @@
                                 </span>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" th:field="*{formType}"
+                                <input class="govuk-radios__input show-text piwik-event" th:field="*{formType}"
                                        th:value="*{formTemplateList[1].formType}" type="radio"
-                                       th:id="*{formTemplateList[1].formType}" aria-describedby="delivery-same-day-hint">
+                                       th:id="*{formTemplateList[1].formType}"
+                                       th:attr="data-event-id=*{formTemplateList[1].formType}"
+                                       aria-describedby="delivery-same-day-hint">
                                 <label class="govuk-label govuk-radios__label" th:for="*{formTemplateList[1].formType}"
                                        th:text="#{sh19Selection.same.day}">
                                 </label>
