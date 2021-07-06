@@ -10,10 +10,10 @@
 <body class="govuk-template__body" layout:fragment="content">
 <div class="govuk-width-container">
     <form id="lookup-form" th:action="@{/efs-submission/{id}/company/{number}/check-your-details(id=*{submissionId},number=*{companyNumber})}" th:object="${checkDetails}" class="form" method="post">
-        <a class="govuk-back-link" th:if="${#strings.startsWith(documentType, 'SH19')}"
+        <a class="govuk-back-link" th:if="${#strings.startsWith(checkDetails.formType, 'SH19')}"
            th:href="@{/efs-submission/{id}/company/{companyNumber}/sh19-delivery(id=*{submissionId},companyNumber=*{companyNumber})}"
            th:text="#{link.back}"></a>
-        <a class="govuk-back-link" th:unless="${#strings.startsWith(documentType, 'SH19')}"
+        <a class="govuk-back-link" th:unless="${#strings.startsWith(checkDetails.formType, 'SH19')}"
            th:href="@{/efs-submission/{id}/company/{companyNumber}/document-upload(id=*{submissionId},companyNumber=*{companyNumber})}"
            th:text="#{link.back}"></a>
 
