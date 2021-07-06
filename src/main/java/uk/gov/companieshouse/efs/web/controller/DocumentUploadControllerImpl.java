@@ -195,7 +195,11 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
             return ViewConstants.DOCUMENT_UPLOAD.asView();
         }
 
-        return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
+        if (formTemplate.getFormType().startsWith("SH19")) {
+            return ViewConstants.SH19_DELIVERY.asRedirectUri(chsUrl, id, companyNumber);
+        } else {
+            return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
+        }
     }
 
     private FileListApi getUploadedFiles(final SubmissionApi submissionApi) {

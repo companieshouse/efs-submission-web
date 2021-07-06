@@ -131,6 +131,7 @@ public class CheckDetailsControllerImpl extends BaseControllerImpl implements Ch
         checkDetailsAttribute.setConfirmAuthorised(submission.getConfirmAuthorised());
         checkDetailsAttribute.setFormType(documentType);
         model.addAttribute("showAuthStatement", topLevelCategory == INSOLVENCY);
+        model.addAttribute("documentType", documentType);
         addTrackingAttributeToModel(model);
     }
 }

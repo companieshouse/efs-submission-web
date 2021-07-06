@@ -15,6 +15,7 @@ import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -70,7 +71,8 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
     @Autowired
     public FormTemplateControllerImpl(final CategoryTemplateService categoryTemplateService,
         final FormTemplateService formTemplateService, final ApiClientService apiClientService,
-        final SessionService sessionService, final Logger logger, final FormTemplateModel formTemplateAttribute) {
+        final SessionService sessionService, final Logger logger,
+        @Qualifier(ATTRIBUTE_NAME) final FormTemplateModel formTemplateAttribute) {
         super(logger, sessionService, apiClientService, formTemplateService, categoryTemplateService);
         this.formTemplateAttribute = formTemplateAttribute;
     }

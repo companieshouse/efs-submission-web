@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import org.codehaus.plexus.util.cli.Arg;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.support.SessionStatus;
-import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiError;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
@@ -26,6 +24,7 @@ import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateMod
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
+import uk.gov.companieshouse.efs.web.model.Sh19TemplateModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.efs.web.transfer.FileTransferApiClient;
@@ -38,18 +37,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.MessageFormat;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -100,6 +95,8 @@ public abstract class BaseControllerImplTest {
     protected HttpServletRequest servletRequest;
     @Mock
     protected HttpSession httpSession;
+    @Mock
+    protected Sh19TemplateModel sh19TemplateAttribute;
     @Mock
     protected FormTemplateModel formTemplateAttribute;
     @Mock
