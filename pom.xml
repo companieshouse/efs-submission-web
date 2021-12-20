@@ -28,8 +28,8 @@
         <commons-fileupload.version>1.4</commons-fileupload.version>
 
         <!-- Logging -->
-        <log4j-bom.version>2.16.0</log4j-bom.version>
-        <structured-logging.version>1.9.10</structured-logging.version>
+        <log4j-bom.version>2.17.0</log4j-bom.version>
+        <structured-logging.version>1.9.12</structured-logging.version>
 
         <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
         <commons-lang3.version>3.10</commons-lang3.version>
@@ -69,6 +69,7 @@
     <dependencyManagement>
         <dependencies>
             <!-- Fix for CVE-2021-44228 -->
+            <!-- Fix for CVE-2021-45105 -->
             <!-- Required until v2.5.8 springframework & v2.6.2 springboot -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
