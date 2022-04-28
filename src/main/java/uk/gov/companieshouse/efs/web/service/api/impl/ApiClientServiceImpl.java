@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.efs.web.service.api.impl;
 
-import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.IP_ALLOW_LIST;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,8 @@ import uk.gov.companieshouse.efs.web.exception.UrlEncodingException;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.sdk.manager.ApiClientManager;
+
+import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.IP_ALLOW_LIST;
 
 /**
  * Service sends and receives secure REST messages to the api.
@@ -124,6 +124,15 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
 
         return executeOp("completeSubmission", uri,
             getApiClient().privateEfsResourceHandler().submissions().submit().upsert(uri, SubmissionStatus.SUBMITTED));
+    }
+
+    @Override
+    @CacheEvict(value = DataCacheConfig.SUBMISSION_BY_ID, key = "#submissionId")
+    public ApiResponse<Void> putSubmissionPend(final String submissionId) {
+        final String uri = SUB_URI + submissionId + "/pend";
+
+        return executeOp("putPendingSubmissionStatus", uri,
+            getApiClient().privateEfsResourceHandler().submissions().status().pend(uri));
     }
 
     @Override

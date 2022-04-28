@@ -64,7 +64,7 @@ public class ConfirmationControllerImpl extends BaseControllerImpl implements Co
         final SubmissionApi submission = fetchSubmission(id);
         final SubmissionStatus submissionStatus = submission.getStatus();
         final EnumSet<SubmissionStatus> allowedStatuses =
-            EnumSet.of(SubmissionStatus.OPEN, SubmissionStatus.PAYMENT_RECEIVED);
+            EnumSet.of(SubmissionStatus.OPEN, SubmissionStatus.PAYMENT_REQUIRED, SubmissionStatus.SUBMITTED);
 
         if (!allowedStatuses.contains(submissionStatus)) {
             return ViewConstants.GONE.asView();

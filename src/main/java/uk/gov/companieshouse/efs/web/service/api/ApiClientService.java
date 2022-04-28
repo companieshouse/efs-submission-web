@@ -99,6 +99,14 @@ public interface ApiClientService {
     ApiResponse<SubmissionResponseApi> putSubmissionCompleted(final String submissionId);
 
     /**
+     * Update pending submission status.
+     *
+     * @param submissionId the submission ID
+     * @return the api response
+     */
+    ApiResponse<Void> putSubmissionPend(final String submissionId);
+
+    /**
      * Checks if an email address is on the allow list.
      *
      * @param emailAddress the email address to be checked

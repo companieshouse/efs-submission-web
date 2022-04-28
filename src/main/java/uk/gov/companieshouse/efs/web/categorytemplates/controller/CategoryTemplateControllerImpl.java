@@ -1,9 +1,5 @@
 package uk.gov.companieshouse.efs.web.categorytemplates.controller;
 
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl.ATTRIBUTE_NAME;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.INSOLVENCY;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.ROOT;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +23,6 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateApi;
 import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateListApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.controller.BaseControllerImpl;
@@ -36,6 +31,10 @@ import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateServi
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
+
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl.ATTRIBUTE_NAME;
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.INSOLVENCY;
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.ROOT;
 
 @Controller
 @SessionAttributes(ATTRIBUTE_NAME)
@@ -92,7 +91,7 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
 
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
 
-        if (submissionApi.getStatus() != SubmissionStatus.OPEN) {
+        if (!ALLOWED_STATUSES.contains(submissionApi.getStatus())) {
             return ViewConstants.GONE.asView();
         }
 

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
@@ -44,7 +43,7 @@ public class RegistrationsInfoControllerImpl extends BaseControllerImpl implemen
             final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
             model.addAttribute("submissionId", submissionApi.getId());
 
-            if (submissionApi.getStatus() != SubmissionStatus.OPEN) {
+            if (!ALLOWED_STATUSES.contains(submissionApi.getStatus())) {
                 return ViewConstants.GONE.asView();
             }
 

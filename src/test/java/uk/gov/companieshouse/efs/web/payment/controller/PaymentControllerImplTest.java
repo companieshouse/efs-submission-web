@@ -1,12 +1,5 @@
 package uk.gov.companieshouse.efs.web.payment.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +15,13 @@ import uk.gov.companieshouse.efs.web.exception.ServiceException;
 import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.PaymentService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentControllerImplTest extends BaseControllerImplTest {
@@ -126,7 +126,7 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
         final String result = testController.paymentCallback(request, SUBMISSION_ID, COMPANY_NUMBER,
             PAYMENT_STATUS_FAILED, PAYMENT_SESSION_ID, PAYMENT_SESSION_STATE, servletRequest);
 
-        assertThat(paySession.getSessionStatus(), is(PAYMENT_STATUS_PENDING)); // unchanged
+        assertThat(paySession.getSessionStatus(), is(PAYMENT_STATUS_FAILED)); // unchanged
         assertThat(result,
             is(ViewConstants.CHECK_DETAILS.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
