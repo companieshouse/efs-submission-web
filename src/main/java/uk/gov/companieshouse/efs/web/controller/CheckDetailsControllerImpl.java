@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.INSOLVENCY;
-import static uk.gov.companieshouse.efs.web.controller.CheckDetailsControllerImpl.ATTRIBUTE_NAME;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +16,6 @@ import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.submissions.ConfirmAuthorisedApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
@@ -28,6 +24,9 @@ import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.efs.web.validation.ConfirmAuthorisedValidator;
 import uk.gov.companieshouse.logging.Logger;
+
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.INSOLVENCY;
+import static uk.gov.companieshouse.efs.web.controller.CheckDetailsControllerImpl.ATTRIBUTE_NAME;
 
 @Controller
 @SessionAttributes(ATTRIBUTE_NAME)
@@ -83,7 +82,7 @@ public class CheckDetailsControllerImpl extends BaseControllerImpl implements Ch
 
         final SubmissionApi submission = getSubmission(id);
 
-        if (submission.getStatus() != SubmissionStatus.OPEN) {
+        if (!ALLOWED_STATUSES.contains(submission.getStatus())) {
             return ViewConstants.GONE.asView();
         }
 

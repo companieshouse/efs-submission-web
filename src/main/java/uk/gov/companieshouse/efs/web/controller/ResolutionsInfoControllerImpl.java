@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
@@ -44,7 +43,7 @@ public class ResolutionsInfoControllerImpl extends BaseControllerImpl implements
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
         categoryTemplateAttribute.setSubmissionId(submissionApi.getId());
 
-        if (submissionApi.getStatus() != SubmissionStatus.OPEN) {
+        if (!ALLOWED_STATUSES.contains(submissionApi.getStatus())) {
             return ViewConstants.GONE.asView();
         }
 

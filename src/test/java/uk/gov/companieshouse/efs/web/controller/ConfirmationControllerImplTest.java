@@ -1,9 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +12,10 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionFormApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
 import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ConfirmationControllerImplTest extends BaseControllerImplTest {
@@ -83,7 +83,8 @@ class ConfirmationControllerImplTest extends BaseControllerImplTest {
 
     @Test
     void getConfirmationWhenSubmissionStatusNotAllowed() {
-        final SubmissionApi submission = createSubmission(SubmissionStatus.SUBMITTED);
+        final SubmissionApi submission = createSubmission(SubmissionStatus.PAYMENT_FAILED);
+        submission.setSubmissionForm(new SubmissionFormApi(null, TEST_FORM, null));
         when(apiClientService.fetchSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, headers, submission));
 

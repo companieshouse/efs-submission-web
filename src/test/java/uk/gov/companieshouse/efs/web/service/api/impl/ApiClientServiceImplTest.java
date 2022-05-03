@@ -1,11 +1,5 @@
 package uk.gov.companieshouse.efs.web.service.api.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
-
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException;
 import java.io.UnsupportedEncodingException;
@@ -28,8 +22,10 @@ import uk.gov.companieshouse.api.handler.efs.companyauthallowlist.request.Privat
 import uk.gov.companieshouse.api.handler.efs.submissions.PrivateEfsSubmissionsResourceHandler;
 import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateEfsSubmissionGetResourceHandler;
 import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateEfsSubmissionsCreateResourceHandler;
+import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateEfsSubmissionsPendResourceHandler;
 import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateEfsSubmissionsUpsertResourceHandler;
 import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateModelCreate;
+import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateModelPend;
 import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateModelUpsert;
 import uk.gov.companieshouse.api.handler.efs.submissions.request.PrivateSubmissionGet;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -45,6 +41,12 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.api.model.paymentsession.SessionListApi;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.logging.Logger;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApiClientServiceImplTest {
@@ -114,7 +116,13 @@ class ApiClientServiceImplTest {
     private PrivateEfsSubmissionsUpsertResourceHandler upsertResourceHandler;
 
     @Mock
+    private PrivateEfsSubmissionsPendResourceHandler pendResourceHandler;
+
+    @Mock
     private PrivateModelUpsert modelUpsert;
+
+    @Mock
+    private PrivateModelPend modelPend;
 
     @Mock
     private PrivateEfsCompanyAuthAllowListResourceHandler companyAuthAllowListResourceHandler;
@@ -297,6 +305,18 @@ class ApiClientServiceImplTest {
         when(modelUpsert.execute()).thenReturn(EMPTY_OK_RESPONSE);
 
         final ApiResponse<SubmissionResponseApi> response = apiClientService.putSubmissionCompleted(SUBMISSION_ID);
+
+        assertThat(response, is(EMPTY_OK_RESPONSE));
+    }
+
+    @Test
+    void putSubmissionPend() throws ApiErrorResponseException, URIValidationException {
+        when(resourceHandler.submissions()).thenReturn(submissionsResourceHandler);
+        when(submissionsResourceHandler.status()).thenReturn(pendResourceHandler);
+        when(pendResourceHandler.pend(SUBMISSION_URI+"/pend")).thenReturn(modelPend);
+        when(modelPend.execute()).thenReturn(EMPTY_OK_RESPONSE);
+
+        final ApiResponse<Void> response = apiClientService.putSubmissionPend(SUBMISSION_ID);
 
         assertThat(response, is(EMPTY_OK_RESPONSE));
     }

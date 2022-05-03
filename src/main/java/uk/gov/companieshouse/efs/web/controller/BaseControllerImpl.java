@@ -3,9 +3,12 @@ package uk.gov.companieshouse.efs.web.controller;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import uk.gov.companieshouse.api.error.ApiError;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
+import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
@@ -50,7 +54,10 @@ public abstract class BaseControllerImpl implements BaseController {
 
     private static final String GET_APPLICATION = "GET {}";
 
-    private static final Pattern FIELD_INDEX_REGEX = Pattern.compile("\\[\\d+\\]");
+    private static final Pattern FIELD_INDEX_REGEX = Pattern.compile("\\[\\d+]");
+
+    public static final Set<SubmissionStatus> ALLOWED_STATUSES =
+        (Collections.unmodifiableSet(EnumSet.of(SubmissionStatus.OPEN, SubmissionStatus.PAYMENT_REQUIRED)));
 
     protected Logger logger;
     protected SessionService sessionService;
@@ -111,7 +118,7 @@ public abstract class BaseControllerImpl implements BaseController {
      * @param formTemplateService the API form template service
      */
     @Autowired
-    public BaseControllerImpl(final Logger logger, final SessionService sessionService,
+    protected BaseControllerImpl(final Logger logger, final SessionService sessionService,
         final ApiClientService apiClientService, final FormTemplateService formTemplateService,
         final CategoryTemplateService categoryTemplateService) {
         this.logger = logger;
@@ -121,16 +128,16 @@ public abstract class BaseControllerImpl implements BaseController {
         this.categoryTemplateService = categoryTemplateService;
     }
 
-    public BaseControllerImpl(final Logger logger, final SessionService sessionService,
+    protected BaseControllerImpl(final Logger logger, final SessionService sessionService,
         final ApiClientService apiClientService) {
         this(logger, sessionService, apiClientService, null, null);
     }
 
-    public BaseControllerImpl(final Logger logger) {
+    protected BaseControllerImpl(final Logger logger) {
         this(logger, null, null, null, null);
     }
 
-    public BaseControllerImpl() {
+    protected BaseControllerImpl() {
     }
 
     protected <T> void logApiResponse(final ApiResponse<T> response, final String applicationId, final String message) {

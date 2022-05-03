@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import static uk.gov.companieshouse.efs.web.controller.DocumentUploadControllerImpl.ATTRIBUTE_NAME;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -28,7 +26,6 @@ import uk.gov.companieshouse.api.model.efs.submissions.FileListApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionFormApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
 import uk.gov.companieshouse.efs.web.configuration.FileUploadConfiguration;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
@@ -38,6 +35,8 @@ import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.efs.web.transfer.FileTransferApiClient;
 import uk.gov.companieshouse.efs.web.validation.DocumentUploadValidator;
 import uk.gov.companieshouse.logging.Logger;
+
+import static uk.gov.companieshouse.efs.web.controller.DocumentUploadControllerImpl.ATTRIBUTE_NAME;
 
 @Controller
 @SessionAttributes(ATTRIBUTE_NAME)
@@ -104,7 +103,7 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
             return ViewConstants.ERROR.asView();
         }
 
-        if (submissionApi.getStatus() != SubmissionStatus.OPEN) {
+        if (!ALLOWED_STATUSES.contains(submissionApi.getStatus())) {
             return ViewConstants.GONE.asView();
         }
 

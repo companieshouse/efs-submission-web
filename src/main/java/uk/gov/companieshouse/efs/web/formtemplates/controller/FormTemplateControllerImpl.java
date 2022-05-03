@@ -1,10 +1,5 @@
 package uk.gov.companieshouse.efs.web.formtemplates.controller;
 
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.INSOLVENCY;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.OTHER;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.RESOLUTIONS;
-import static uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl.ATTRIBUTE_NAME;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +27,6 @@ import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateListApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FormTypeApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
-import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
@@ -44,6 +38,11 @@ import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateServi
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
+
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.INSOLVENCY;
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.OTHER;
+import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.RESOLUTIONS;
+import static uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl.ATTRIBUTE_NAME;
 
 @Controller
 @SessionAttributes({ATTRIBUTE_NAME, CategoryTemplateControllerImpl.ATTRIBUTE_NAME})
@@ -97,7 +96,7 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
 
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
 
-        if (submissionApi.getStatus() != SubmissionStatus.OPEN) {
+        if (!ALLOWED_STATUSES.contains(submissionApi.getStatus())) {
             return ViewConstants.GONE.asView();
         }
 
