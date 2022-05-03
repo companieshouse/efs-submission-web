@@ -82,23 +82,31 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
             .filter(s -> StringUtils.equals(s.getSessionState(), state))
             .findFirst();
 
-        if (!maybeMatchedSession.isPresent()) {
+        return maybeMatchedSession.map(
+                s -> handleOutcomeAndGetNextView(id, companyNumber, paymentSessions, provisionalSessionStatus
+                    , s))
+            .orElseThrow(() -> createStateError(id));
+    }
 
-            final ServiceException stateServiceException = new ServiceException("State does not match");
-            logger.errorContext(id, null, stateServiceException, null);
-            throw stateServiceException;
+    private ServiceException createStateError(final String id) {
+        final ServiceException stateServiceException = new ServiceException("State does not match");
+        logger.errorContext(id, null, stateServiceException, null);
+
+        return stateServiceException;
+    }
+
+    private String handleOutcomeAndGetNextView(final String id, final String companyNumber, final SessionListApi paymentSessions,
+                                               final SessionStatus provisionalSessionStatus, final SessionApi matchedSession) {
+        if (provisionalSessionStatus.equals(SessionStatus.PAID)) {
+            return ViewConstants.CONFIRMATION.asRedirectUri(chsUrl, id, companyNumber);
         } else {
-            if (provisionalSessionStatus.equals(SessionStatus.PAID)) {
-                return ViewConstants.CONFIRMATION.asRedirectUri(chsUrl, id, companyNumber);
-            } else {
-                logger.debug(String.format(
-                    "Attempting to update payment session %s status %s for "
-                        + "submission with id [%s]", maybeMatchedSession.get().getSessionId(), provisionalSessionStatus, id));
-                maybeMatchedSession.get().setSessionStatus(provisionalSessionStatus.toString());
-                apiClientService.putPaymentSessions(id, paymentSessions);
+            logger.debug(String.format(
+                "Attempting to update payment session %s status %s for "
+                    + "submission with id [%s]", matchedSession.getSessionId(), provisionalSessionStatus, id));
+            matchedSession.setSessionStatus(provisionalSessionStatus.toString());
+            apiClientService.putPaymentSessions(id, paymentSessions);
 
-                return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
-            }
+            return ViewConstants.CHECK_DETAILS.asRedirectUri(chsUrl, id, companyNumber);
         }
     }
 
