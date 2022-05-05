@@ -57,7 +57,8 @@ public abstract class BaseControllerImpl implements BaseController {
     private static final Pattern FIELD_INDEX_REGEX = Pattern.compile("\\[\\d+]");
 
     public static final Set<SubmissionStatus> ALLOWED_STATUSES =
-        (Collections.unmodifiableSet(EnumSet.of(SubmissionStatus.OPEN, SubmissionStatus.PAYMENT_REQUIRED)));
+        (Collections.unmodifiableSet(EnumSet.of(SubmissionStatus.OPEN,
+            SubmissionStatus.PAYMENT_FAILED, SubmissionStatus.PAYMENT_REQUIRED)));
 
     protected Logger logger;
     protected SessionService sessionService;

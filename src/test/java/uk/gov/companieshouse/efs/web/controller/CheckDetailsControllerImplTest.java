@@ -1,12 +1,10 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -23,6 +21,10 @@ import uk.gov.companieshouse.api.model.paymentsession.SessionListApi;
 import uk.gov.companieshouse.efs.web.model.CheckDetailsModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.validation.ConfirmAuthorisedValidator;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CheckDetailsControllerImplTest extends BaseControllerImplTest {
@@ -52,9 +54,10 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
             is(ViewConstants.CHECK_DETAILS.asView()));
     }
 
-    @Test
-    void checkDetails() {
-        final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
+    @ParameterizedTest
+    @EnumSource(value=SubmissionStatus.class, names={"OPEN", "PAYMENT_REQUIRED", "PAYMENT_FAILED"})
+    void checkDetails(final SubmissionStatus status) {
+        final SubmissionApi submission = createSubmission(status);
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, getHeaders(), submission));
         when(formTemplateService.getFormTemplate(FORM_TYPE)).thenReturn(
@@ -64,9 +67,10 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
         assertThat(result, is(ViewConstants.CHECK_DETAILS.asView()));
     }
 
-    @Test
-    void checkDetailsWhenSubmissionNotOpen() {
-        final SubmissionApi submission = createSubmission(SubmissionStatus.SUBMITTED);
+    @ParameterizedTest
+    @EnumSource(value=SubmissionStatus.class, names={"OPEN", "PAYMENT_REQUIRED", "PAYMENT_FAILED"}, mode= EnumSource.Mode.EXCLUDE)
+    void checkDetailsWhenStatusNotAllowed(final SubmissionStatus status) {
+        final SubmissionApi submission = createSubmission(status);
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
             new ApiResponse<>(200, headers, submission));
 
