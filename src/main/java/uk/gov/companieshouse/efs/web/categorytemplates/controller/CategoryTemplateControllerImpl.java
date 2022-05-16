@@ -98,7 +98,6 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
         categorySequenceList = Optional.ofNullable(categorySequenceList)
                 .orElse(new ArrayList<>());
 
-        // TODO: we should probably handle API response failure
         final Boolean isEmailAllowed = apiClientService.isOnAllowList(
                 submissionApi.getPresenter().getEmail()).getData();
         final boolean sequenceHasInsolvency =
