@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseLayout}"
+      lang="en">
+<head>
+    <title th:text="#{reviewSelect.title}"></title>
+</head>
+<body class="govuk-template__body js-enabled" layout:fragment="content">
+<div class="govuk-width-container">
+    <form class="form" id="review-selection" th:object="${formTemplate}"
+          th:action="@{/efs-submission/{id}/company/{companyNumber}/review-selection(id=*{submissionId}, companyNumber=*{companyNumber})}"
+          method="post">
+        <a class="govuk-back-link"
+           th:href="@{/efs-submission/{id}/company/{companyNumber}/document-selection?category={category}
+               (id=*{submissionId}, companyNumber=*{companyNumber},category=*{details.formCategory})}"
+           th:text="#{link.back}"></a>
+        <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds-from-desktop">
+                    <h1 class="govuk-heading-xl" th:text="#{reviewSelect.header}"></h1>
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__header">
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header" th:text="#{reviewSelect.document}"></th>
+                            <td class="govuk-table__cell" th:text="${formTemplate.formName}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h2 class="govuk-heading-s" th:text="#{reviewSelect.text}"></h2>
+                    <!--                        <div class="govuk-warning-text">-->
+                    <!--                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>-->
+                    <!--                            <strong class="govuk-warning-text__text" th:text="#{reviewSelect.text}">-->
+                    <!--                                <span class="govuk-warning-text__assistive">Warning</span>-->
+                    <!--                            </strong>-->
+                    <!--                        </div>-->
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend">
+                                <p class="govuk-!-padding-top-5" th:text="#{reviewSelect.confirm}"></p>
+                            </legend>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="review-yes" name="where-do-you-live"
+                                           type="radio" value="Y">
+                                    <label class="govuk-label govuk-radios__label" for="review-yes"
+                                           th:text="#{boolean.yes}">
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="review-no" name="where-do-you-live"
+                                           type="radio" value="N">
+                                    <label class="govuk-label govuk-radios__label" for="review-no"
+                                           th:text="#{reviewSelect.no}">
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div>
+                        <button data-prevent-double-click="true" id="submit-all" type="submit"
+                                class="govuk-button" name="action" value="submit"
+                                th:text="#{button.continue}"></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </form>
+</div>
+</body>
+</html>
