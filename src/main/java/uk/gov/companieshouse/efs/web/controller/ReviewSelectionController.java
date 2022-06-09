@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
+import uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl;
+import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
+import uk.gov.companieshouse.efs.web.model.ReviewSelectionModel;
 
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
 @SessionAttributes(ATTRIBUTE_NAME)
@@ -33,12 +36,17 @@ import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateMod
      * @return the view name
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/review-selection"})
-    String reviewSelection(@PathVariable String id, @PathVariable String companyNumber, Model model,
+    String reviewSelection(@PathVariable String id, @PathVariable String companyNumber,
+                           @ModelAttribute ReviewSelectionModel reviewSelectedAttribute, Model model,
                            HttpServletRequest servletRequest);
 
     @PostMapping(value = {"{id}/company/{companyNumber}/review-selection"}, params = {"action=submit"})
     String postReviewSelection(@PathVariable String id, @PathVariable String companyNumber,
+                               @ModelAttribute ReviewSelectionModel reviewSelectedAttribute,
                                @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME)
-                               CategoryTemplateModel categoryTemplateAttribute, BindingResult binding, Model model,
+                               CategoryTemplateModel categoryTemplateAttribute,
+                               @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME)
+                               FormTemplateModel formTemplateAttribute,
+                               BindingResult binding, Model model,
                                ServletRequest servletRequest, final HttpSession session);
 }
