@@ -28,13 +28,14 @@ import uk.gov.companieshouse.efs.web.model.DocumentUploadModel;
 public class DocumentUploadValidator implements BiFunction<DocumentUploadModel, BindingResult, List<MultipartFile>> {
     private static final String SELECTED_FILES_FIELD    = "selectedFiles";
     private static final Pattern BYTES_PATTERN =
-            Pattern.compile("(?<significand>\\d(?:[.]\\d{0,9})?)(?<exponentSuffix>[GMK]B)", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("(?<significand>\\d{0,9}(?:[.]\\d{0,9})?)(?<exponentSuffix>[GMK]?B)", Pattern.CASE_INSENSITIVE);
     private static final Map<String, Integer> POWER_MAP = createPowerMap();
     private static Map<String, Integer> createPowerMap() {
         Map<String, Integer> powerMap = new HashMap<>();
         powerMap.put("GB", 3);
         powerMap.put("MB", 2);
         powerMap.put("KB", 1);
+        powerMap.put("B", 0);
 
         return Collections.unmodifiableMap(powerMap);
     }
