@@ -3,6 +3,7 @@ package uk.gov.companieshouse.efs.web.validation;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -25,10 +26,22 @@ import uk.gov.companieshouse.efs.web.model.DocumentUploadModel;
  */
 @Component
 public class DocumentUploadValidator implements BiFunction<DocumentUploadModel, BindingResult, List<MultipartFile>> {
-
     private static final String SELECTED_FILES_FIELD    = "selectedFiles";
+    private static final Pattern BYTES_PATTERN =
+            Pattern.compile("(?<significand>\\d{0,9}(?:[.]\\d{0,9})?)(?<exponentSuffix>[GMK]?B)", Pattern.CASE_INSENSITIVE);
+    private static final Map<String, Integer> POWER_MAP = createPowerMap();
+    private static Map<String, Integer> createPowerMap() {
+        Map<String, Integer> powerMap = new HashMap<>();
+        powerMap.put("GB", 3);
+        powerMap.put("MB", 2);
+        powerMap.put("KB", 1);
+        powerMap.put("B", 0);
+
+        return Collections.unmodifiableMap(powerMap);
+    }
 
     private ResourceBundle bundle;
+
     private FileUploadConfiguration configuration;
 
     @Autowired
@@ -104,23 +117,17 @@ public class DocumentUploadValidator implements BiFunction<DocumentUploadModel, 
 
     private long toByteCount(final String sizeHuman) {
         final int KILOBYTE = 1024;
-
         long returnValue = Long.MAX_VALUE;
 
         if (!"-1".equals(sizeHuman)) {
-            Map<String, Integer> powerMap = new HashMap<>();
-            powerMap.put("GB", 3);
-            powerMap.put("MB", 2);
-            powerMap.put("KB", 1);
-
-            Pattern pattern = Pattern.compile("([\\d.]+)([GMK]B)", Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(sizeHuman);
+            Matcher matcher = BYTES_PATTERN.matcher(sizeHuman);
 
             if (matcher.find()) {
-                String number = matcher.group(1);
-                int pow = powerMap.get(matcher.group(2).toUpperCase());
-                BigDecimal bytes = new BigDecimal(number);
-                bytes = bytes.multiply(BigDecimal.valueOf(KILOBYTE).pow(pow));
+                String significand = matcher.group("significand");
+                int exponent = POWER_MAP.get(matcher.group("exponentSuffix").toUpperCase());
+                BigDecimal bytes =
+                        new BigDecimal(significand).multiply(BigDecimal.valueOf(KILOBYTE).pow(exponent));
+
                 returnValue = bytes.longValue();
             }
         }
