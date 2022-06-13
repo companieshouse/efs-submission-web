@@ -1,10 +1,14 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import static uk.gov.companieshouse.efs.web.controller.ReviewSelectionControllerImpl.ATTRIBUTE_NAME;
+
 import java.util.Objects;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +28,8 @@ import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
 
 @Controller
-@SessionAttributes({FormTemplateControllerImpl.ATTRIBUTE_NAME, CategoryTemplateControllerImpl.ATTRIBUTE_NAME})
+@SessionAttributes(
+        {ATTRIBUTE_NAME, FormTemplateControllerImpl.ATTRIBUTE_NAME, CategoryTemplateControllerImpl.ATTRIBUTE_NAME})
 public class ReviewSelectionControllerImpl extends BaseControllerImpl implements ReviewSelectionController {
 
     /**
@@ -37,6 +42,7 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
     /**
      * Constructor used by child controllers.
      */
+    @Autowired
     public ReviewSelectionControllerImpl(final Logger logger, final SessionService sessionService,
                                          final ApiClientService apiClientService,
                                          final ReviewSelectionModel reviewSelectionAttribute,
@@ -58,7 +64,9 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
 
     @Override
     public String reviewSelection(@PathVariable String id, @PathVariable String companyNumber,
-                                  @ModelAttribute ReviewSelectionModel reviewSelectedAttribute, Model model,
+                                  @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectedAttribute,
+                                  @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME)
+                                  FormTemplateModel formTemplateAttribute, Model model,
                                   HttpServletRequest servletRequest) {
 
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
@@ -66,6 +74,8 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
             return ViewConstants.GONE.asView();
         }
 
+        reviewSelectedAttribute.setSubmissionId(submissionApi.getId());
+        reviewSelectedAttribute.setConfirmed("");
         addTrackingAttributeToModel(model);
 
         return ViewConstants.REVIEW_SELECTION_LIQ13.asView();
@@ -73,10 +83,11 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
 
     @Override
     public String postReviewSelection(@PathVariable String id, @PathVariable String companyNumber,
-                                      @ModelAttribute ReviewSelectionModel reviewSelectionAttribute,
+                                      @Valid @ModelAttribute(ATTRIBUTE_NAME)
+                                      ReviewSelectionModel reviewSelectionAttribute, BindingResult binding,
                                       CategoryTemplateModel categoryTemplateAttribute,
-                                      FormTemplateModel formTemplateAttribute, BindingResult binding,
-                                      Model model, ServletRequest servletRequest, HttpSession session) {
+                                      FormTemplateModel formTemplateAttribute, Model model,
+                                      ServletRequest servletRequest, HttpSession session) {
 
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
 
@@ -93,7 +104,8 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
         if (StringUtils.equals(reviewSelectionAttribute.getConfirmed(), "N")) {
             // Remove preselection of form type on Document selection screen
             formTemplateAttribute.setFormType("");
-            return ViewConstants.DOCUMENT_SELECTION.asRedirectUri(chsUrl, id, companyNumber, categoryTemplateAttribute.getCategoryType() );
+            return ViewConstants.DOCUMENT_SELECTION.asRedirectUri(chsUrl, id, companyNumber,
+                    categoryTemplateAttribute.getCategoryType());
         }
         return redirectUri;
     }

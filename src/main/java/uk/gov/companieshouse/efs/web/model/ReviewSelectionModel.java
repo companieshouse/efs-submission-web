@@ -1,13 +1,20 @@
 package uk.gov.companieshouse.efs.web.model;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 
 @Component
 //@SessionScope
 public class ReviewSelectionModel {
+
+    private String submissionId;
+
+    private String companyNumber;
+
     private String confirmed;
 
     /**
@@ -23,10 +30,27 @@ public class ReviewSelectionModel {
      * @param original the {@link ReviewSelectionModel}
      */
     public ReviewSelectionModel(final ReviewSelectionModel original) {
+        this.submissionId = original.getSubmissionId();
         this.confirmed = original.getConfirmed();
     }
 
-    //    @NotBlank(message = "{removeDocument.error}")
+    public String getSubmissionId() {
+        return submissionId;
+    }
+
+    public void setSubmissionId(final String submissionId) {
+        this.submissionId = submissionId;
+    }
+
+    public String getCompanyNumber() {
+        return companyNumber;
+    }
+
+    public void setCompanyNumber(final String companyNumber) {
+        this.companyNumber = companyNumber;
+    }
+
+    @NotBlank(message = "{reviewSelect.confirm.error}")
     public String getConfirmed() {
         return confirmed;
     }

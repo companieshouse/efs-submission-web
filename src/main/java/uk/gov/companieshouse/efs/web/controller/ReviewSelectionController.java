@@ -37,16 +37,17 @@ import uk.gov.companieshouse.efs.web.model.ReviewSelectionModel;
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/review-selection"})
     String reviewSelection(@PathVariable String id, @PathVariable String companyNumber,
-                           @ModelAttribute ReviewSelectionModel reviewSelectedAttribute, Model model,
+                           @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectedAttribute,
+                           FormTemplateModel formTemplateAttribute, Model model,
                            HttpServletRequest servletRequest);
 
     @PostMapping(value = {"{id}/company/{companyNumber}/review-selection"}, params = {"action=submit"})
     String postReviewSelection(@PathVariable String id, @PathVariable String companyNumber,
-                               @ModelAttribute ReviewSelectionModel reviewSelectedAttribute,
+                               @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectedAttribute,
+                               BindingResult binding,
                                @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME)
                                CategoryTemplateModel categoryTemplateAttribute,
                                @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME)
-                               FormTemplateModel formTemplateAttribute,
-                               BindingResult binding, Model model,
+                               FormTemplateModel formTemplateAttribute, Model model,
                                ServletRequest servletRequest, final HttpSession session);
 }
