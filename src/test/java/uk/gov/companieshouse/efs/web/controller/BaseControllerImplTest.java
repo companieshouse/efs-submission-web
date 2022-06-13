@@ -164,6 +164,8 @@ public abstract class BaseControllerImplTest {
         submission.setId(SUBMISSION_ID);
         submission.setStatus(submitted);
 
+        submission.setPresenter(new PresenterApi("demo@ch"));
+
         CompanyApi company = new CompanyApi();
         company.setCompanyNumber(COMPANY_NAME);
         company.setCompanyName(COMPANY_NUMBER);

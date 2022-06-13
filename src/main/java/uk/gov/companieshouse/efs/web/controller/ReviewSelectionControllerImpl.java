@@ -30,12 +30,13 @@ import uk.gov.companieshouse.logging.Logger;
 @Controller
 @SessionAttributes(
         {ATTRIBUTE_NAME, FormTemplateControllerImpl.ATTRIBUTE_NAME, CategoryTemplateControllerImpl.ATTRIBUTE_NAME})
+@SuppressWarnings("squid:S3753")
 public class ReviewSelectionControllerImpl extends BaseControllerImpl implements ReviewSelectionController {
 
     /**
      * Define the model name for this action.
      */
-    public static final String ATTRIBUTE_NAME = "reviewSelected";
+    public static final String ATTRIBUTE_NAME = "reviewSelection";
 
     private ReviewSelectionModel reviewSelectionAttribute;
 
@@ -64,7 +65,7 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
 
     @Override
     public String reviewSelection(@PathVariable String id, @PathVariable String companyNumber,
-                                  @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectedAttribute,
+                                  @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectionAttribute,
                                   @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME)
                                   FormTemplateModel formTemplateAttribute, Model model,
                                   HttpServletRequest servletRequest) {
@@ -74,8 +75,8 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
             return ViewConstants.GONE.asView();
         }
 
-        reviewSelectedAttribute.setSubmissionId(submissionApi.getId());
-        reviewSelectedAttribute.setConfirmed("");
+        reviewSelectionAttribute.setSubmissionId(submissionApi.getId());
+        reviewSelectionAttribute.setConfirmed("");
         addTrackingAttributeToModel(model);
 
         return ViewConstants.REVIEW_SELECTION_LIQ13.asView();

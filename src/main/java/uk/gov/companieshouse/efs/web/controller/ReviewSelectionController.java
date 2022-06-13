@@ -26,28 +26,45 @@ import uk.gov.companieshouse.efs.web.model.ReviewSelectionModel;
  *
  * The nature of the web journey across several controllers means it's not appropriate to do this. However,
  * setComplete() is properly called in ConfirmationControllerImpl at the end of the submission journey.
- */ public interface ReviewSelectionController {
+ */
+public interface ReviewSelectionController {
 
     /**
-     * Get request for the category template.
+     * Get request for the Review Selection screen
      *
-     * @param model          the category model
-     * @param servletRequest contains the chs session id
-     * @return the view name
+     * @param id                      submission id
+     * @param companyNumber           company number
+     * @param reviewSelectedAttribute confirmation or not of the document selection
+     * @param formTemplateAttribute   form details
+     * @param model                   review selection model
+     * @param servletRequest          contains the chs session id
+     * @return view name
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/review-selection"})
     String reviewSelection(@PathVariable String id, @PathVariable String companyNumber,
                            @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectedAttribute,
-                           FormTemplateModel formTemplateAttribute, Model model,
-                           HttpServletRequest servletRequest);
+                           FormTemplateModel formTemplateAttribute, Model model, HttpServletRequest servletRequest);
 
+    /**
+     * Post request for the Review Selection screen
+     *
+     * @param id                        submission id
+     * @param companyNumber             company number
+     * @param reviewSelectedAttribute   confirmation or not of the document selection
+     * @param binding                   the MVC binding result
+     * @param categoryTemplateAttribute category selected details
+     * @param formTemplateAttribute     form selected details
+     * @param model                     review selection model
+     * @param servletRequest            contains the chs session id
+     * @param session                   the HTTP session
+     * @return view name of next page
+     */
     @PostMapping(value = {"{id}/company/{companyNumber}/review-selection"}, params = {"action=submit"})
     String postReviewSelection(@PathVariable String id, @PathVariable String companyNumber,
                                @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectedAttribute,
-                               BindingResult binding,
-                               @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME)
+                               BindingResult binding, @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME)
                                CategoryTemplateModel categoryTemplateAttribute,
                                @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME)
-                               FormTemplateModel formTemplateAttribute, Model model,
-                               ServletRequest servletRequest, final HttpSession session);
+                               FormTemplateModel formTemplateAttribute, Model model, ServletRequest servletRequest,
+                               final HttpSession session);
 }
