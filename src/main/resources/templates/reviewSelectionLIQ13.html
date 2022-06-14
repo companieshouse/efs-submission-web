@@ -19,8 +19,9 @@
         <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds-from-desktop">
+                    <div th:replace="fragments/errorSummary :: errorSummary"></div>
                     <h1 class="govuk-heading-xl" th:text="#{reviewSelect.header}"></h1>
-                    <table class="govuk-table">
+                    <table class="govuk-table" role="presentation">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__header">
                         </tr>
@@ -47,7 +48,7 @@
                             <legend class="govuk-fieldset__legend">
                                 <span class="govuk-!-padding-top-5" th:text="#{reviewSelect.confirm}"></span>
                             </legend>
-                            <p id="review-selection-confirmed-error" class="govuk-error-message"
+                            <p id="confirmed-error" class="govuk-error-message"
                                th:if="${#fields.hasErrors('*')}" th:text="#{reviewSelect.confirm.error}"></p>
                             <div class="govuk-radios govuk-radios">
                                 <div class="govuk-radios__item">
