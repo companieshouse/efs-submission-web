@@ -21,27 +21,18 @@
                 <div class="govuk-grid-column-two-thirds-from-desktop">
                     <div th:replace="fragments/errorSummary :: errorSummary"></div>
                     <h1 class="govuk-heading-xl" th:text="#{reviewSelect.header}"></h1>
-                    <table class="govuk-table" role="presentation">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__header">
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__header" th:text="#{reviewSelect.document}"></td>
-                            <td class="govuk-table__cell" th:text="${formTemplate.formName}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <dl class="govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key"></dt>
+                            <dd class="govuk-summary-list__value"></dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key" th:text="#{reviewSelect.document}"></dt>
+                            <dd class="govuk-summary-list__value" th:text="#{reviewSelect.document.description}"></dd>
+                        </div>
+                    </dl>
 
                     <h2 class="govuk-heading-s" th:text="#{reviewSelect.text}"></h2>
-<!--                    <div class="govuk-warning-text">-->
-<!--                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>-->
-<!--                        <strong class="govuk-warning-text__text" th:text="#{reviewSelect.text}">-->
-<!--                            <span class="govuk-warning-text__assistive">Warning</span>-->
-<!--                        </strong>-->
-<!--                    </div>-->
-
                     <div id="content-wrapper" class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('*')} ? govuk-form-group--error : noerror">
                         <fieldset class="govuk-fieldset">

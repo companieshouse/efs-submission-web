@@ -73,8 +73,11 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
     public static final FormTemplateApi INS_TEMPLATE_1 =
         new FormTemplateApi("INS", "InsTest04", "INS_SUB_LEVEL1", "100", true, true, null, false,
             null);
+    public static final FormTemplateApi FORM_TEMPLATE_LIQ_13 =
+            new FormTemplateApi("LIQ13", "Liq13", "INS_SUB_LEVEL2", "100", true, true, null, false,
+                    null);
     public static final List<FormTemplateApi> FORM_TEMPLATE_LIST =
-        Arrays.asList(FORM_TEMPLATE_1, FORM_TEMPLATE_2, FORM_TEMPLATE_3, FORM_TEMPLATE_4);
+        Arrays.asList(FORM_TEMPLATE_1, FORM_TEMPLATE_2, FORM_TEMPLATE_3, FORM_TEMPLATE_4, FORM_TEMPLATE_LIQ_13);
 
     private FormTemplateController testController;
 
@@ -275,6 +278,24 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
         verifyNoMoreInteractions(bindingResult, apiClientService);
 
         assertThat(result, is(ViewConstants.RESOLUTIONS_INFO
+                .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
+    }
+
+    @Test
+    void postFormTemplateWhenLIQ13Selected() {
+
+        when(formTemplateAttribute.getFormType()).thenReturn(FORM_TEMPLATE_LIQ_13.getFormType());
+        when(formTemplateAttribute.getFormTemplateList()).thenReturn(FORM_TEMPLATE_LIST);
+        when(apiClientService.putFormType(SUBMISSION_ID, new FormTypeApi(FORM_TEMPLATE_LIQ_13.getFormType()))).
+                thenReturn(new ApiResponse(200, getHeaders(), new SubmissionResponseApi(FORM_TEMPLATE_LIQ_13.getFormType())));
+
+        final String result = testController.postFormTemplate(SUBMISSION_ID, COMPANY_NUMBER,
+                categoryTemplateAttribute, formTemplateAttribute, bindingResult, model, servletRequest);
+
+        verify(bindingResult).hasErrors();
+        verifyNoMoreInteractions(bindingResult, apiClientService);
+
+        assertThat(result, is(ViewConstants.REVIEW_SELECTION_LIQ13
                 .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
     }
 
