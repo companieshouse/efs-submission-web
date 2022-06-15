@@ -54,6 +54,7 @@ import static uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplat
  */
 public class FormTemplateControllerImpl extends BaseControllerImpl implements FormTemplateController {
 
+    public static final String LIQ13_FORM_TYPE = "LIQ13";
     private FormTemplateModel formTemplateAttribute;
 
     /**
@@ -176,10 +177,14 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
 
         final String fesDocType =
             Optional.ofNullable(selectedFormTemplate.getFesDocType()).orElse(selectedFormTemplate.getFormType());
-        
-        if (CategoryTypeConstants.nameOf(fesDocType).orElse(OTHER) == RESOLUTIONS) {
+
+        if (LIQ13_FORM_TYPE.equals(selectedFormType)) {
+            return ViewConstants.REVIEW_SELECTION_LIQ13.asRedirectUri(chsUrl, id, companyNumber);
+        }
+        else if (CategoryTypeConstants.nameOf(fesDocType).orElse(OTHER) == RESOLUTIONS) {
             return ViewConstants.RESOLUTIONS_INFO.asRedirectUri(chsUrl, id, companyNumber);
-        } else {
+        }
+        else {
             return ViewConstants.DOCUMENT_UPLOAD.asRedirectUri(chsUrl, id, companyNumber);
         }
     }

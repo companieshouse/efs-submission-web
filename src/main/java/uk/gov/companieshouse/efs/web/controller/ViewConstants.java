@@ -19,6 +19,7 @@ public enum ViewConstants {
     CATEGORY_SELECTION("category-selection", "categorySelection"),
     DOCUMENT_SELECTION("document-selection", "documentSelection"),
     RESOLUTIONS_INFO("resolutions-info", "resolutionsInfo"),
+    REVIEW_SELECTION_LIQ13("review-selection", "reviewSelectionLIQ13"),
     REGISTRATIONS_INFO("registrations-info", "registrationsInfo"),
     ACCESSIBILITY("accessibilityStatement", "accessibilityStatement"),
     DOCUMENT_UPLOAD("document-upload", "documentUpload"),
