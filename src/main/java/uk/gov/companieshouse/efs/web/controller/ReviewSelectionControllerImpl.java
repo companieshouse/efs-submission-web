@@ -86,7 +86,9 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
     public String postReviewSelection(@PathVariable String id, @PathVariable String companyNumber,
                                       @Valid @ModelAttribute(ATTRIBUTE_NAME)
                                       ReviewSelectionModel reviewSelectionAttribute, BindingResult binding,
+                                      @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME)
                                       CategoryTemplateModel categoryTemplateAttribute,
+                                      @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME)
                                       FormTemplateModel formTemplateAttribute, Model model,
                                       ServletRequest servletRequest, HttpSession session) {
 

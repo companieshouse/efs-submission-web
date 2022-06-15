@@ -43,7 +43,9 @@ public interface ReviewSelectionController {
     @GetMapping(value = {"{id}/company/{companyNumber}/review-selection"})
     String reviewSelection(@PathVariable String id, @PathVariable String companyNumber,
                            @ModelAttribute(ATTRIBUTE_NAME) ReviewSelectionModel reviewSelectedAttribute,
-                           FormTemplateModel formTemplateAttribute, Model model, HttpServletRequest servletRequest);
+                           @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME)
+                           FormTemplateModel formTemplateAttribute,
+                           Model model, HttpServletRequest servletRequest);
 
     /**
      * Post request for the Review Selection screen
