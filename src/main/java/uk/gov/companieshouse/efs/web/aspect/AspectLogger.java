@@ -102,7 +102,7 @@ public class AspectLogger {
                 .ifPresent(formName -> logFields.put("formName", formName));
 
         String id = Optional.ofNullable(logFields.get("id"))
-                .map(obj -> (String) obj)
+                .map(obj -> String.class.cast(obj))
                 .orElse("");
 
         logger.infoContext(id, "Submission completed", logFields);
