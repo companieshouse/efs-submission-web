@@ -15,7 +15,7 @@ public abstract class AuthRequiredValidator extends ValidatorImpl<HttpServletReq
      *
      * @param resourceProvider the object to hold resources used by multiple chain links
      */
-    public AuthRequiredValidator(ValidatorResourceProvider resourceProvider) {
+    protected AuthRequiredValidator(ValidatorResourceProvider resourceProvider) {
         this.resourceProvider = resourceProvider;
     }
 
