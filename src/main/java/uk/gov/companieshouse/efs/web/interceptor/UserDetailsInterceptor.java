@@ -41,7 +41,7 @@ public class UserDetailsInterceptor extends HandlerInterceptorAdapter {
         @Nullable ModelAndView modelAndView) {
 
         if (modelAndView != null && ("GET".equalsIgnoreCase(request.getMethod()) || ("POST".equalsIgnoreCase(
-            request.getMethod()) && !modelAndView.getViewName().startsWith(
+            request.getMethod()) && modelAndView.getViewName() != null && !modelAndView.getViewName().startsWith(
             UrlBasedViewResolver.REDIRECT_URL_PREFIX)))) {
 
             Map<String, Object> sessionData = sessionService.getSessionDataFromContext();

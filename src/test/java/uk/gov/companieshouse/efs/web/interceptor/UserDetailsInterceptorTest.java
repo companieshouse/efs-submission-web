@@ -149,4 +149,16 @@ class UserDetailsInterceptorTest {
         interceptor.postHandle(request, response, handler, null);
         verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
+
+    @Test
+    @DisplayName("Verify the email is not added to the session when the viewName is null")
+    void testViewNameNotNull() {
+        sessionData.put(SIGN_IN_KEY, null);
+        when(request.getMethod()).thenReturn("POST");
+        when(modelAndView.getViewName()).thenReturn(null);
+
+        interceptor.postHandle(request, response, handler, modelAndView);
+        verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
+    }
+
 }
