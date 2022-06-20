@@ -3,6 +3,7 @@ package uk.gov.companieshouse.efs.web.interceptor;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -79,12 +80,12 @@ class UserDetailsInterceptorTest {
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
 
         interceptor.postHandle(request, response, handler, modelAndView);
-        verifyNoInteractions(modelAndView);
+        verify(modelAndView).getViewName();
+        verifyNoMoreInteractions(modelAndView);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "HTTP {0}: Verify the email is added to the session when a user is logged in")
     @ValueSource(strings = {"GET","POST"})
-    @DisplayName("Verify the email is added to the session when a user is logged in")
     void testEmailAddedToSessionForGet(String httpMethod) throws Exception {
         when(request.getMethod()).thenReturn(httpMethod);
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
@@ -93,9 +94,8 @@ class UserDetailsInterceptorTest {
         verify(modelAndView).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "HTTP {0}: Verify the email is not added to the session when no details are provided")
     @ValueSource(strings = {"GET","POST","PUT"})
-    @DisplayName("Verify the email is not added to the session when no details are provided")
     void testEmailNotAddedToSessionWithEmptyModelForGet(String httpMethod) {
         when(request.getMethod()).thenReturn(httpMethod);
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
@@ -125,9 +125,8 @@ class UserDetailsInterceptorTest {
         verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "HTTP {0}: Verify the email is not added to the session when no details are provided")
     @ValueSource(strings = {"POST","PUT"})
-    @DisplayName("Verify the email is not added to the session when the viewName is null")
     void testViewNameNotNull(String httpMethod) {
         when(request.getMethod()).thenReturn(httpMethod);
         when(modelAndView.getViewName()).thenReturn(null);
