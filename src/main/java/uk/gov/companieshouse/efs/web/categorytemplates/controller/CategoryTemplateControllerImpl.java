@@ -104,7 +104,6 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
                 categorySequenceList.contains(
                         INSOLVENCY.getValue());
 
-        // TODO: we should probably handle API response failure
         final CategoryTemplateListApi allCategoryTemplates =
                 categoryTemplateService.getCategoryTemplates().getData();
 

@@ -3,6 +3,7 @@ package uk.gov.companieshouse.efs.web.interceptor;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -77,37 +80,28 @@ class UserDetailsInterceptorTest {
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
 
         interceptor.postHandle(request, response, handler, modelAndView);
-        verifyNoInteractions(modelAndView);
+        verify(modelAndView).getViewName();
+        verifyNoMoreInteractions(modelAndView);
     }
 
-    @Test
-    @DisplayName("Verify the email is added to the session when a user is logged in for a HTTP GET")
-    void testEmailAddedToSessionForGet() throws Exception {
-        when(request.getMethod()).thenReturn("GET");
+    @ParameterizedTest(name = "HTTP {0}: Verify the email is added to the session when a user is logged in")
+    @ValueSource(strings = {"GET","POST"})
+    void testEmailAddedToSessionForGet(String httpMethod) throws Exception {
+        when(request.getMethod()).thenReturn(httpMethod);
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
 
         interceptor.postHandle(request, response, handler, modelAndView);
         verify(modelAndView).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
 
-    @Test
-    @DisplayName("Verify the email is not added to the session when no details are provided for a HTTP GET")
-    void testEmailNotAddedToSessionWithEmptyModelForGet() {
-        when(request.getMethod()).thenReturn("GET");
+    @ParameterizedTest(name = "HTTP {0}: Verify the email is not added to the session when no details are provided")
+    @ValueSource(strings = {"GET","POST","PUT"})
+    void testEmailNotAddedToSessionWithEmptyModelForGet(String httpMethod) {
+        when(request.getMethod()).thenReturn(httpMethod);
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
 
         interceptor.postHandle(request, response, handler, null);
         verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
-    }
-
-    @Test
-    @DisplayName("Verify the email is added when a user is logged in for a non-redirect HTTP POST")
-    void testEmailAddedToSessionForNonRedirectPost() {
-        when(request.getMethod()).thenReturn("POST");
-        when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
-
-        interceptor.postHandle(request, response, handler, modelAndView);
-        verify(modelAndView).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
 
     @Test
@@ -120,33 +114,25 @@ class UserDetailsInterceptorTest {
         verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
 
-    @Test
-    @DisplayName("Verify the email is not added to the session when no details are provided for a HTTP POST")
-    void testEmailNotAddedToSessionWithEmptyModelForPost() {
-        when(request.getMethod()).thenReturn("POST");
-        when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
-
-        interceptor.postHandle(request, response, handler, null);
-        verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
-    }
-
-    @Test
-    @DisplayName("Verify the email is not added to the session when no details are provided for a HTTP PUT")
-    void testEmailNotAddedToSessionForPut() {
+    @ParameterizedTest
+    @ValueSource(strings = {NON_REDIRECT_URL,REDIRECT_URL})
+    @DisplayName("Verify the email is not added to the session for a HTTP PUT")
+    void testEmailNotAddedToSessionForPut(String url) {
         when(request.getMethod()).thenReturn("PUT");
-        when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
+        when(modelAndView.getViewName()).thenReturn(url);
 
         interceptor.postHandle(request, response, handler, modelAndView);
         verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
 
-    @Test
-    @DisplayName("Verify the email is not added to the session when no details are provided for a HTTP PUT")
-    void testEmailNotAddedToSessionWithEmptyModelForPut() {
-        when(request.getMethod()).thenReturn("PUT");
-        when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
+    @ParameterizedTest(name = "HTTP {0}: Verify the email is not added to the session when no details are provided")
+    @ValueSource(strings = {"POST","PUT"})
+    void testViewNameNotNull(String httpMethod) {
+        when(request.getMethod()).thenReturn(httpMethod);
+        when(modelAndView.getViewName()).thenReturn(null);
 
-        interceptor.postHandle(request, response, handler, null);
+        interceptor.postHandle(request, response, handler, modelAndView);
         verify(modelAndView, never()).addObject(MODEL_EMAIL_KEY, USER_EMAIL);
     }
+
 }
