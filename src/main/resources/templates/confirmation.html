@@ -62,7 +62,7 @@
                 </ul>
                 <p class="govuk-body govuk-!-margin-top-7">
                     <span th:text="#{confirmation.new.service}"></span>
-                    <a class="piwik-event" data-event-id="confirmation-feedback-link" th:href="${@environment.getProperty('feedback.url')}" target="_blank">
+                    <a class="piwik-event" data-event-id="confirmation-feedback-link" th:href="${@environment.getProperty('confirmation.feedback.url')}" target="_blank">
                         <span class="govuk-visually-hidden" th:text="#{confirmation.new.service}"></span>
                         <span th:text="#{confirmation.survey.link}"></span>
                     </a>
