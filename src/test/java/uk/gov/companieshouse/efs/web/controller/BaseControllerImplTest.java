@@ -125,7 +125,7 @@ public abstract class BaseControllerImplTest {
     PresenterApi presenter;
 
     @Mock
-    private SubmissionApi submission;
+    SubmissionApi submission;
 
     protected void setUpHeaders() {
         headers = new HashMap<>();

@@ -107,6 +107,8 @@ class ProposedCompanyControllerImplTest extends BaseControllerImplTest {
         when(proposedCompanyAttribute.getNameRequired()).thenReturn(Boolean.FALSE);
         when(proposedCompanyAttribute.getNumber()).thenReturn(
             ProposedCompanyControllerImpl.TEMP_COMPANY_NUMBER);
+        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
+                getSubmissionOkResponse(submission));
 
         final String result =
             testController.process(SUBMISSION_ID, proposedCompanyAttribute, bindingResult, model,
@@ -122,6 +124,8 @@ class ProposedCompanyControllerImplTest extends BaseControllerImplTest {
         when(proposedCompanyAttribute.getNameRequired()).thenReturn(Boolean.TRUE);
         when(proposedCompanyAttribute.getNumber()).thenReturn(
             ProposedCompanyControllerImpl.TEMP_COMPANY_NUMBER);
+        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
+                getSubmissionOkResponse(submission));
 
         final String result =
             testController.process(SUBMISSION_ID, proposedCompanyAttribute, bindingResult, model,
@@ -130,6 +134,6 @@ class ProposedCompanyControllerImplTest extends BaseControllerImplTest {
 
         verify(proposedCompanyAttribute).setName("");
         assertThat(result, is(ViewConstants.CATEGORY_SELECTION.asRedirectUri(CHS_URL, SUBMISSION_ID,
-            ProposedCompanyControllerImpl.TEMP_COMPANY_NUMBER)));
+            ProposedCompanyControllerImpl.TEMP_COMPANY_NUMBER, "INC")));
     }
 }
