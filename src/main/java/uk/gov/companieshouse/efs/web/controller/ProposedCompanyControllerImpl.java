@@ -14,10 +14,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
+import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.efs.web.model.ProposedCompanyModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
+import java.util.Objects;
 
 @Controller
 @SessionAttributes(ATTRIBUTE_NAME)
@@ -89,9 +92,13 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
         // Update our persistent model with the latest response.
         resetNameRequiredIfNotUsed(proposedCompany);
 
+        final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
+            apiClientService.putCompany(submissionApi.getId(),
+                    new CompanyApi(proposedCompany.getNumber(), proposedCompany.getName()));
+
         return Boolean.TRUE.equals(proposedCompanyAttribute.getNameRequired())
             ? ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id,
-            proposedCompany.getNumber())
+            proposedCompany.getNumber(),"INC")
             : ViewConstants.REGISTRATIONS_INFO.asRedirectUri(chsUrl, id,
                 proposedCompany.getNumber());
     }
