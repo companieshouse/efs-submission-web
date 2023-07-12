@@ -1,11 +1,14 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import java.text.MessageFormat;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,6 +30,8 @@ import uk.gov.companieshouse.logging.Logger;
  * setComplete() is properly called in ConfirmationControllerImpl at the end of the submission journey.
  */
 public class NewSubmissionControllerImpl extends BaseControllerImpl implements NewSubmissionController {
+    @Value("${registrations.enabled:false}")
+    private boolean registrationsEnabled;
 
     @Autowired
     public NewSubmissionControllerImpl(final Logger logger, final SessionService sessionService,
@@ -40,7 +45,7 @@ public class NewSubmissionControllerImpl extends BaseControllerImpl implements N
     }
 
     @Override
-    public String newSubmission(
+    public String newSubmission(@RequestParam(name = "entrypoint") Optional<String> entryPoint,
         @ModelAttribute(CompanyDetailControllerImpl.ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute,
         final SessionStatus sessionStatus, final HttpServletRequest request, RedirectAttributes attributes) {
 
@@ -51,6 +56,11 @@ public class NewSubmissionControllerImpl extends BaseControllerImpl implements N
         newSubmissionId = createNewSubmission();
         companyDetailAttribute.setSubmissionId(newSubmissionId);
         storeOriginalSubmissionId(newSubmissionId);
+
+
+        if(entryPoint.isPresent() && entryPoint.get().equalsIgnoreCase("inc")) {
+            return ViewConstants.PROPOSED_COMPANY.asRedirectUri(chsUrl, newSubmissionId, "noCompany");
+        }
 
         attributes.addAttribute("forward",
             String.format("/efs-submission/%s/company/{companyNumber}/details", newSubmissionId));

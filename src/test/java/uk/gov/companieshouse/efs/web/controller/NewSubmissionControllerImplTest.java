@@ -68,7 +68,7 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
     void newSubmission() {
         expectCreateSubmission();
 
-        final String result = testController.newSubmission(companyDetail, sessionStatus, request, attributes);
+        final String result = testController.newSubmission(null,companyDetail, sessionStatus, request, attributes);
 
         verify(companyDetail).clear();
         verify(attributes)

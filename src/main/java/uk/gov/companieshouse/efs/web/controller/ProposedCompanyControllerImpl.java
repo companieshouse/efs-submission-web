@@ -96,18 +96,12 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
             apiClientService.putCompany(submissionApi.getId(),
                     new CompanyApi(proposedCompany.getNumber(), proposedCompany.getName()));
 
-        return Boolean.TRUE.equals(proposedCompanyAttribute.getNameRequired())
-            ? ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id,
-            proposedCompany.getNumber(),"INC")
-            : ViewConstants.REGISTRATIONS_INFO.asRedirectUri(chsUrl, id,
-                proposedCompany.getNumber());
+        return ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id, proposedCompany.getNumber(),"INC");
     }
 
     private void resetNameRequiredIfNotUsed(final ProposedCompanyModel proposedCompany) {
         final Boolean nameRequired = proposedCompany.getNameRequired();
-        final String proposedName = Boolean.TRUE.equals(nameRequired) ? StringUtils.defaultIfBlank(
-            proposedCompany.getName(), "") : null;
-
+        final String proposedName = StringUtils.defaultIfBlank(proposedCompany.getName(), null);
         proposedCompany.setName(proposedName);
     }
 

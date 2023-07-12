@@ -26,6 +26,17 @@ public interface StaticPageController {
     String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus);
 
     /**
+     * Directs user to the start page.
+     *
+     * @param model the start page model
+     * @param servletRequest contains the chs session id
+     * @param sessionStatus the Spring Web session status
+     * @return page to be displayed
+     */
+    @GetMapping("/incorporation-start")
+    String incorporationStart(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus);
+
+    /**
      * Directs user to the guidance page.
      *
      * @param model the guidance page model

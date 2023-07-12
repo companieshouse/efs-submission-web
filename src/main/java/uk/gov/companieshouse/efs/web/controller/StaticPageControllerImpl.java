@@ -46,6 +46,14 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
     }
 
     @Override
+    public String incorporationStart(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus) {
+        sessionStatus.setComplete(); // invalidate the user's previous session if they have signed out
+        model.addAttribute(TEMPLATE_NAME, ViewConstants.INCORPORATION_START.asView());
+
+        return ViewConstants.INCORPORATION_START.asView();
+    }
+
+    @Override
     public String guidance(Model model, ServletRequest servletRequest) {
         model.addAttribute(TEMPLATE_NAME, ViewConstants.GUIDANCE.asView());
 

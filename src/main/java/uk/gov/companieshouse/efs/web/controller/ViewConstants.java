@@ -10,6 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 public enum ViewConstants {
     START("start", "start"),
+    INCORPORATION_START("incorporation-start", "incorporationStart"),
     GUIDANCE("guidance", "guidance"),
     INSOLVENCY_GUIDANCE("insolvency-guidance", "insolvencyGuidance"),
     NEW_SUBMISSION("new-submission", null),

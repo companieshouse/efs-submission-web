@@ -1,13 +1,13 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
+
+import java.util.Optional;
 
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
 public interface NewSubmissionController {
@@ -20,7 +20,7 @@ public interface NewSubmissionController {
      * @return the view to show
      */
     @GetMapping("/new-submission")
-    String newSubmission(
+    String newSubmission(@RequestParam(name = "entrypoint") Optional<String> entryPoint,
         @ModelAttribute(CompanyDetailControllerImpl.ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute,
         SessionStatus sessionStatus, HttpServletRequest request, RedirectAttributes attributes);
 
