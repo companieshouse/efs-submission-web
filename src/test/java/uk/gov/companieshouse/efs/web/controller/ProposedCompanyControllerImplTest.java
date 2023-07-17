@@ -17,6 +17,7 @@ import uk.gov.companieshouse.efs.web.model.ProposedCompanyModel;
 
 @ExtendWith(MockitoExtension.class)
 class ProposedCompanyControllerImplTest extends BaseControllerImplTest {
+    private static final String INCORPORATION_CATEGORY = "INC";
     private ProposedCompanyController testController;
 
     @Mock
@@ -115,8 +116,8 @@ class ProposedCompanyControllerImplTest extends BaseControllerImplTest {
                 request, session);
 
         verify(proposedCompanyAttribute).setName(null);
-        assertThat(result, is(ViewConstants.REGISTRATIONS_INFO.asRedirectUri(CHS_URL, SUBMISSION_ID,
-            ProposedCompanyControllerImpl.TEMP_COMPANY_NUMBER)));
+        assertThat(result, is(ViewConstants.CATEGORY_SELECTION.asRedirectUri(CHS_URL, SUBMISSION_ID,
+            ProposedCompanyControllerImpl.TEMP_COMPANY_NUMBER,INCORPORATION_CATEGORY)));
     }
 
     @Test
@@ -132,7 +133,7 @@ class ProposedCompanyControllerImplTest extends BaseControllerImplTest {
                 request, session);
 
 
-        verify(proposedCompanyAttribute).setName("");
+        verify(proposedCompanyAttribute).setName(null);
         assertThat(result, is(ViewConstants.CATEGORY_SELECTION.asRedirectUri(CHS_URL, SUBMISSION_ID,
             ProposedCompanyControllerImpl.TEMP_COMPANY_NUMBER, "INC")));
     }

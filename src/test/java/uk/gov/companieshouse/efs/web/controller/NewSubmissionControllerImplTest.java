@@ -36,6 +36,7 @@ import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -65,14 +66,27 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void newSubmission() {
+    void newSubmissionForCompanyFiling() {
         expectCreateSubmission();
 
-        final String result = testController.newSubmission(null,companyDetail, sessionStatus, request, attributes);
+        Optional<String> entryPoint = Optional.ofNullable(null);
+
+        final String result = testController.newSubmission(entryPoint,companyDetail, sessionStatus, request, attributes);
 
         verify(companyDetail).clear();
         verify(attributes)
             .addAttribute("forward", "/efs-submission/" + SUBMISSION_ID + "/company/{companyNumber}/details");
+        assertThat(result, is(ViewConstants.COMPANY_LOOKUP.asRedirectUri(CHS_URL, SUBMISSION_ID)));
+    }
+
+    @Test
+    void newSubmissionForRegistrationFiling() {
+        expectCreateSubmission();
+        final String result = testController.newSubmission(Optional.ofNullable(null),companyDetail, sessionStatus, request, attributes);
+
+        verify(companyDetail).clear();
+        verify(attributes)
+                .addAttribute("forward", "/efs-submission/" + SUBMISSION_ID + "/company/{companyNumber}/details");
         assertThat(result, is(ViewConstants.COMPANY_LOOKUP.asRedirectUri(CHS_URL, SUBMISSION_ID)));
     }
 
