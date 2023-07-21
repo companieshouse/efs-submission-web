@@ -84,6 +84,7 @@ public class ProposedCompanyControllerImpl extends BaseControllerImpl implements
         if (!registrationsEnabled) {
             return ViewConstants.MISSING.asView();
         }
+        proposedCompany.setNameRequired(Boolean.TRUE);
         if (binding.hasErrors()) {
             addTrackingAttributeToModel(model);
             return getViewName();

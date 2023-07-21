@@ -54,7 +54,7 @@ public class ProposedCompanyModel {
     }
 
     public String getName() {
-       return details.getCompanyName();
+        return Boolean.TRUE.equals(nameRequired) ? details.getCompanyName() : null;
     }
 
     public void setName(final String name) {
@@ -69,6 +69,7 @@ public class ProposedCompanyModel {
         details.setCompanyNumber(number);
     }
 
+    @NotNull
     public Boolean getNameRequired() {
         return nameRequired;
     }

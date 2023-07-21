@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.efs.web.controller.DocumentUploadControllerImpl.FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS;
 
@@ -338,6 +337,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         uploadedFiles.add(new MockMultipartFile("data", "testfile.txt", "text/plain", "some text".getBytes()));
 
         documentUploadAttribute.getSelectedFiles().addAll(uploadedFiles);
+        when(documentUploadAttribute.getIncorporationComponent()).thenReturn("Inc component");
 
         FileTransferApiClientResponse fileUploadResponse = mock(FileTransferApiClientResponse.class);
         when(fileUploadResponse.getFileId()).thenReturn("my-file-upload-response-guid");
@@ -353,7 +353,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         when(putFileResponse.getData()).thenReturn(submissionResponseApi);
 
         List<FileApi> fileList = new ArrayList<>();
-        fileList.add(new FileApi("my-file-upload-response-guid", "testfile.txt", 9L));
+        fileList.add(new FileApi("my-file-upload-response-guid", "testfile.txt", 9L, "Inc component"));
 
         FileListApi fileListApi = new FileListApi(fileList);
 
@@ -378,7 +378,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         expectFormTypeSelection(submissionApi);
 
         List<FileApi> fileList = new ArrayList<>();
-        fileList.add(new FileApi("my-file-upload-response-guid", "testfile.txt", 9L));
+        fileList.add(new FileApi("my-file-upload-response-guid", "testfile.txt", 9L, "Inc component"));
 
         when(documentUploadAttribute.getDetails()).thenReturn(new FileListApi(fileList));
 

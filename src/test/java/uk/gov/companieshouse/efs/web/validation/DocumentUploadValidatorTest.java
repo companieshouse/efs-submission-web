@@ -119,7 +119,7 @@ class DocumentUploadValidatorTest {
         IntStream.rangeClosed(1, filesToCreate).boxed().forEach(index -> {
             String fileId = UUID.randomUUID().toString();
 
-            files.add(new FileApi(fileId, String.format("uploaded-file-%d.pdf", index), 100L));
+            files.add(new FileApi(fileId, String.format("uploaded-file-%d.pdf", index), 100L, "Inc component"));
         });
 
         return new FileListApi(files);

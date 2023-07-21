@@ -166,7 +166,7 @@ public class RemoveDocumentControllerImpl extends BaseControllerImpl implements 
                 // Update the application with the selected document files removed.
                 List<FileApi> fileApiList = submissionFormApi.getFileDetails().getList().stream()
                         .filter(file -> !file.getFileId().equals(fileId))
-                        .map(file -> new FileApi(file.getFileId(), file.getFileName(), file.getFileSize()))
+                        .map(file -> new FileApi(file.getFileId(), file.getFileName(), file.getFileSize(), file.getIncorporationComponent()))
                         .collect(Collectors.toList());
 
                 ApiResponse<SubmissionResponseApi> response = apiClientService.putFileList(id, new FileListApi(fileApiList));

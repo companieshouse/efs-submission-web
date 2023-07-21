@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,7 @@ import static uk.gov.companieshouse.efs.web.controller.DocumentUploadControllerI
  */
 public class DocumentUploadControllerImpl extends BaseControllerImpl implements DocumentUploadController {
 
+    static final Integer FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS_INCORPORATION = 5;
     static final Integer FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS = 1;
 
     /**
@@ -153,14 +155,16 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
 
         // Build the FileListApi from our uploaded files.
         final List<FileApi> fileApiList = uploadedFiles.entrySet().stream().map(file ->
-                new FileApi(file.getKey(), file.getValue().getOriginalFilename(), file.getValue().getSize())
+                new FileApi(file.getKey(), file.getValue().getOriginalFilename(), file.getValue().getSize(),
+                        documentUploadAttribute.getIncorporationComponent())
         ).collect(Collectors.toList());
 
         // Merge existing files with the new uploaded files at a later date.
         SubmissionFormApi submissionFormApi = submissionApi.getSubmissionForm();
         if ((submissionFormApi != null) && (submissionFormApi.getFileDetails() != null)) {
             submissionFormApi.getFileDetails().getList().forEach(
-                file -> fileApiList.add(new FileApi(file.getFileId(), file.getFileName(), file.getFileSize()))
+                file -> fileApiList.add(new FileApi(file.getFileId(), file.getFileName(), file.getFileSize(),
+                        file.getIncorporationComponent()))
             );
         }
 
@@ -211,7 +215,8 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
 
         // Files have been added previously, so map them to our required model.
         List<FileApi> uploadedFiles = submissionForm.get().getFileDetails().getList().stream()
-            .map(file -> new FileApi(file.getFileId(), file.getFileName(), file.getFileSize()))
+            .map(file -> new FileApi(file.getFileId(), file.getFileName(), file.getFileSize(),
+                    file.getIncorporationComponent()))
             .collect(Collectors.toList());
 
         return new FileListApi(uploadedFiles);
@@ -220,14 +225,21 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
     private void addDataToPrepareModel(final DocumentUploadModel documentUploadAttribute,
         final SubmissionApi submissionApi, @NonNull FormTemplateApi formTemplate, final FileListApi uploadedFiles) {
         final boolean isFesEnabled = formTemplate.isFesEnabled();
+        final boolean isIncorporationForm = StringUtils.equals("INC01", formTemplate.getFormCategory());
 
         /*
          * Have to ascertain how many uploads can be supplied as part of a submission.
          * Depending on the type of form we are using, we may need to override the basic
          * configuration to restrict it to a single file (for FES enabled forms).
          */
-        Integer maximumUploadsAllowed = isFesEnabled ? FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS :
-            fileUploadConfiguration.getMaximumFilesAllowed();
+        Integer maximumUploadsAllowed;
+        if (isFesEnabled && isIncorporationForm) {
+            maximumUploadsAllowed = FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS_INCORPORATION;
+        }
+        else {
+            maximumUploadsAllowed = isFesEnabled ? FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS :
+                    fileUploadConfiguration.getMaximumFilesAllowed();
+        }
         Boolean maximumUploadsLimitReached = (uploadedFiles.getFiles().size() == maximumUploadsAllowed);
 
         documentUploadAttribute.setSubmissionId(submissionApi.getId());

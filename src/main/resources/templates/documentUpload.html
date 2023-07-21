@@ -37,6 +37,17 @@
                                 <span id="selectedFiles-error" th:text="${e.message}" class="govuk-error-message"></span>
                             </li>
                         </ul>
+                        <div th:if="${formType == 'IN01'}" class="govuk-form-group">
+                            <label class="govuk-label" for="incorporation-component">
+                                Select which Incorporation document:
+                            </label>
+                            <select class="govuk-select" id="incorporation-component" name="incorporationComponent">
+                                <option value="IN01" selected>IN01 form</option>
+                                <option value="MemAndArts">Memorandum and Articles</option>
+                                <option value="SuppEvidence">Supplementary Evidence</option>
+                                <option value="CoveringLetter">Covering letter</option>
+                            </select>
+                        </div>
                         <input id="file-uploader" name="selectedFiles" type="file" accept="application/pdf" class="govuk-file-upload" onchange="uploadFilesAndDisableSubmitButton()">
                     </div>
                 </div>
@@ -48,6 +59,7 @@
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">File name</th>
+                            <th class="govuk-table__header" scope="col" th:if="${formType == 'IN01'}">Document</th>
                             <th class="govuk-table__header" scope="col">Size</th>
                             <th class="govuk-table__header" scope="col">Action</th>
                         </tr>
@@ -55,6 +67,7 @@
                         <tbody class="govuk-table__body" th:each="document: *{details.getFiles()}">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__cell" style="word-break: break-word" th:text="${#strings.replace(document.fileName, '-', '&#8209;')}" scope="row"></th>
+                            <th class="govuk-table__cell" th:if="${formType == 'IN01'}" th:text="${document.incorporationComponent}" scope="row"></th>
                             <td class="govuk-table__cell" th:text="${T(uk.gov.companieshouse.efs.web.model.DocumentUploadModel).displayFileSizeAsHuman(document)}"></td>
                             <td class="govuk-table__cell">
                                 <a th:href="@{/efs-submission/{id}/company/{companyNumber}/remove-document/{fileId}(id=*{submissionId}, companyNumber=*{companyNumber}, fileId=${document.fileId})}">Remove<span

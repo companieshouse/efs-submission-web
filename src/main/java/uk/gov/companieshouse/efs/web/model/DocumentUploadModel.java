@@ -35,6 +35,7 @@ public class DocumentUploadModel {
 
     private List<MultipartFile> selectedFiles;
     private FileListApi details;
+    private String incorporationComponent;
 
     /**
      * Constructor.
@@ -112,6 +113,14 @@ public class DocumentUploadModel {
         this.details = details;
     }
 
+    public String getIncorporationComponent() {
+        return incorporationComponent;
+    }
+
+    public void setIncorporationComponent(String incorporationComponent) {
+        this.incorporationComponent = incorporationComponent;
+    }
+
     /**
      * Adds file details to model.
      *
@@ -125,7 +134,7 @@ public class DocumentUploadModel {
 
         if (submissionForm != null && submissionForm.getFileDetails() != null) {
             files = submissionForm.getFileDetails().stream().map(
-                    d -> new FileApi(d.getFileId(), d.getFileName(), d.getFileSize())
+                    d -> new FileApi(d.getFileId(), d.getFileName(), d.getFileSize(), d.getIncorporationComponent())
             ).collect(Collectors.toList());
         }
 
