@@ -56,12 +56,12 @@ public class SpringWebConfig implements WebMvcConfigurer {
     /**
      * Create a local validator factory bean.
      *
-     * @return the LocalValidatorFactoryBean bean.
+     * @return the LocalValidatorFactoryBeanExtended bean.
      */
     @Override
     @Bean
     public LocalValidatorFactoryBean getValidator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBeanExtended();
         bean.setValidationMessageSource(messageSource());
         return bean;
     }

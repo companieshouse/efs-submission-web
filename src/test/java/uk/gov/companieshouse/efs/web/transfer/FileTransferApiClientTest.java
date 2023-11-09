@@ -11,11 +11,9 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -44,9 +42,6 @@ class FileTransferApiClientTest {
 
     @InjectMocks
     private FileTransferApiClient fileTransferApiClient;
-
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
 
     private MultipartFile file;
 
