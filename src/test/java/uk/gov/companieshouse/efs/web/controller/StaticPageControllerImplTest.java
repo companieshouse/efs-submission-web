@@ -28,7 +28,7 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
     @BeforeEach
     protected void setUp() {
         setUpHeaders();
-        testController = new StaticPageControllerImpl(logger);
+        testController = new StaticPageControllerImpl(logger, apiClientService);
         ((StaticPageControllerImpl) testController).setChsUrl(CHS_URL);
         ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
     }

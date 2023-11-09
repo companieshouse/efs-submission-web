@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
+import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.logging.Logger;
 
 /**
@@ -33,12 +34,14 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
      * @param logger           the CH logger
      */
     @Autowired
-    public StaticPageControllerImpl(final Logger logger) {
-        super(logger);
+    public StaticPageControllerImpl(final Logger logger, final ApiClientService apiClientService) {
+        super(logger, apiClientService);
     }
 
     @Override
     public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus) {
+
+
         sessionStatus.setComplete(); // invalidate the user's previous session if they have signed out
         model.addAttribute(TEMPLATE_NAME, ViewConstants.START.asView());
 
@@ -65,6 +68,14 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
         model.addAttribute(TEMPLATE_NAME, ViewConstants.ACCESSIBILITY.asView());
 
         return ViewConstants.ACCESSIBILITY.asView();
+    }
+
+    @Override
+    public String serviceUnavailable(Model model, ServletRequest servletRequest) {
+
+        model.addAttribute(TEMPLATE_NAME, ViewConstants.UNAVAILABLE.asView());
+
+        return ViewConstants.UNAVAILABLE.asView();
     }
 
     @Override

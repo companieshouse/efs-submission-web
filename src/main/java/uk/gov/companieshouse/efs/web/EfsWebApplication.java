@@ -19,6 +19,7 @@ public class EfsWebApplication implements WebMvcConfigurer {
     private final String guidancePageUrl;
     private final String insolvencyGuidancePageUrl;
     private final String accessibilityStatementPageUrl;
+    private final String serviceUnavailablePageUrl;
 
     /**
      * Constructor for EfsWebApplication.
@@ -31,13 +32,15 @@ public class EfsWebApplication implements WebMvcConfigurer {
         @Value("${start.page.url}") final String startPageUrl,
         @Value("${guidance.page.url}") final String guidancePageUrl,
         @Value("${insolvency.guidance.page.url}") final String insolvencyGuidancePageUrl,
-        @Value("${accessibility.statement.page.url}") final String accessibilityStatementPageUrl) {
+        @Value("${accessibility.statement.page.url}") final String accessibilityStatementPageUrl,
+        @Value("${service.unavailable.page.url}") final String serviceUnavailablePageUrl) {
         this.userDetailsInterceptor = userDetailsInterceptor;
         this.loggingInterceptor = loggingInterceptor;
         this.startPageUrl = startPageUrl;
         this.guidancePageUrl = guidancePageUrl;
         this.insolvencyGuidancePageUrl = insolvencyGuidancePageUrl;
         this.accessibilityStatementPageUrl = accessibilityStatementPageUrl;
+        this.serviceUnavailablePageUrl = serviceUnavailablePageUrl;
     }
 
     /**
@@ -51,7 +54,8 @@ public class EfsWebApplication implements WebMvcConfigurer {
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(loggingInterceptor);
         registry.addInterceptor(userDetailsInterceptor)
-                .excludePathPatterns(startPageUrl, guidancePageUrl, insolvencyGuidancePageUrl, accessibilityStatementPageUrl);
+                .excludePathPatterns(startPageUrl, guidancePageUrl, insolvencyGuidancePageUrl,
+                        accessibilityStatementPageUrl, serviceUnavailablePageUrl);
     }
 
     /**

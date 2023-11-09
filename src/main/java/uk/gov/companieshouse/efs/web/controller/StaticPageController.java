@@ -56,6 +56,16 @@ public interface StaticPageController {
     String accessibilityStatement(Model model, ServletRequest request);
 
     /**
+     * Directs user to the service unavailable page.
+     *
+     * @param model   the service unavailable model
+     * @param request contains the chs session id
+     * @return page to be displayed
+     */
+    @GetMapping("/unavailable")
+    String serviceUnavailable(Model model, ServletRequest request);
+
+    /**
      * Directs user to company lookup service and sets the return URL to COMPANY_DETAIL view.
      */
     @GetMapping("{id}/companyLookup")
