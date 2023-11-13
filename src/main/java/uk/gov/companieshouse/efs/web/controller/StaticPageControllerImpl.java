@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import java.text.MessageFormat;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.ServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.healthcheck.HealthcheckApi;
+import uk.gov.companieshouse.api.model.efs.healthcheck.HealthcheckStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
@@ -40,7 +44,16 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
 
     @Override
     public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus) {
+        ApiResponse<HealthcheckApi> response = apiClientService.getHealthcheck();
 
+        if (response.getData().getStatus().equals(HealthcheckStatus.OUT_OF_SERVICE)) {
+            DateTimeFormatter inputDateFormat = DateTimeFormatter.ISO_INSTANT;
+            DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a z 'on' EEEE d MMMM yyyy");
+            model.addAttribute("date", displayDateFormat.format(
+                        inputDateFormat.parse("2020-07-10T12:10:00Z")));
+
+            return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
+        }
 
         sessionStatus.setComplete(); // invalidate the user's previous session if they have signed out
         model.addAttribute(TEMPLATE_NAME, ViewConstants.START.asView());

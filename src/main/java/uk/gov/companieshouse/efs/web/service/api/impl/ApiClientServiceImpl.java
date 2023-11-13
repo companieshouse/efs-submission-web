@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.healthcheck.HealthcheckApi;
 import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.ConfirmAuthorisedApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileListApi;
@@ -153,5 +154,12 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
 
         return executeOp("getIsOnAllowList", uri,
             getApiClient().privateEfsResourceHandler().companyAuthAllowList().isOnAllowList().get(uri));
+    }
+
+    @Override
+    public ApiResponse<HealthcheckApi> getHealthcheck() {
+        final String uri = ROOT_URI + "/healthcheck";
+
+        return executeOp("getHealthcheck", uri, getApiClient().privateEfsResourceHandler().healthcheck().get(uri));
     }
 }
