@@ -2,7 +2,7 @@ package uk.gov.companieshouse.efs.web.service.api;
 
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.api.model.efs.healthcheck.HealthcheckApi;
+import uk.gov.companieshouse.api.model.efs.maintenance.MaintenanceCheckApi;
 import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.ConfirmAuthorisedApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileListApi;
@@ -116,10 +116,10 @@ public interface ApiClientService {
     ApiResponse<Boolean> isOnAllowList(final String emailAddress);
 
     /**
-     * Get healthcheck.
+     * Get maintenance check.
      *
-     * @return the model for the healthcheck json response
+     * @return the model for the MaintenanceCheck json response
      */
-    ApiResponse<HealthcheckApi> getHealthcheck();
+    ApiResponse<MaintenanceCheckApi> getMaintenanceCheck();
 
 }

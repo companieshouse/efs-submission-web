@@ -35,7 +35,8 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
 
     @Test
     void startPage() {
-        assertThat(testController.start(categoryTemplateAttribute, model, servletRequest, sessionStatus), is(ViewConstants.START.asView()));
+        assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
+                is(ViewConstants.START.asView()));
     }
 
     @Test

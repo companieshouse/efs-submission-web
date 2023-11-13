@@ -23,7 +23,8 @@ public interface StaticPageController {
      * @return page to be displayed
      */
     @GetMapping("/start")
-    String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus);
+    String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
+                 RedirectAttributes redirectAttributes, ServletRequest servletRequest, SessionStatus sessionStatus);
 
     /**
      * Directs user to the guidance page.

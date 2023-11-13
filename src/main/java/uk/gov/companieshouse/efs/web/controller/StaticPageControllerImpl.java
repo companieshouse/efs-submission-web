@@ -1,6 +1,9 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import java.text.MessageFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import javax.servlet.ServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +17,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.api.model.efs.healthcheck.HealthcheckApi;
-import uk.gov.companieshouse.api.model.efs.healthcheck.HealthcheckStatus;
+import uk.gov.companieshouse.api.model.efs.maintenance.MaintenanceCheckApi;
+import uk.gov.companieshouse.api.model.efs.maintenance.ServiceStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
@@ -43,14 +46,17 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
     }
 
     @Override
-    public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus) {
-        ApiResponse<HealthcheckApi> response = apiClientService.getHealthcheck();
+    public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
+                        RedirectAttributes redirectAttributes, ServletRequest servletRequest,
+                        SessionStatus sessionStatus) {
+        ApiResponse<MaintenanceCheckApi> response = apiClientService.getMaintenanceCheck();
 
-        if (response.getData().getStatus().equals(HealthcheckStatus.OUT_OF_SERVICE)) {
-            DateTimeFormatter inputDateFormat = DateTimeFormatter.ISO_INSTANT;
-            DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a z 'on' EEEE d MMMM yyyy");
-            model.addAttribute("date", displayDateFormat.format(
-                        inputDateFormat.parse("2020-07-10T12:10:00Z")));
+        if (response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
+            DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
+            final String maintenanceEnd = response.getData().getMaintenanceEnd();
+            final Instant parsed = Instant.parse(maintenanceEnd);
+            LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
+            redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
 
             return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
         }
