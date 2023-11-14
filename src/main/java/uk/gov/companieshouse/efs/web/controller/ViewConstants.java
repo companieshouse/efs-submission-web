@@ -31,7 +31,8 @@ public enum ViewConstants {
     CONFIRMATION("confirmation", "confirmation"),
     ERROR("error", "error"),
     MISSING("error/404", "error/404"),
-    GONE("/error/410", "error/410");
+    GONE("/error/410", "error/410"),
+    UNAVAILABLE("unavailable", "serviceUnavailable");
 
     private static final String SUBMISSION = "/efs-submission/";
     private static final String COMPANY = "company/{0}";

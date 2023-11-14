@@ -35,7 +35,8 @@ class EfsWebApplicationTest {
             "/efs-submission/start",
             "/efs-submission/guidance",
             "/efs-submission/insolvency-guidance",
-            "/efs-submission/accessibility-statement"
+            "/efs-submission/accessibility-statement",
+            "/efs-submission/unavailable"
             );
     }
 
@@ -49,6 +50,7 @@ class EfsWebApplicationTest {
         verify(registry).addInterceptor(userDetailsInterceptor);
         verify(interceptorRegistration)
             .excludePathPatterns("/efs-submission/start", "/efs-submission/guidance",
-                "/efs-submission/insolvency-guidance", "/efs-submission/accessibility-statement");
+                "/efs-submission/insolvency-guidance", "/efs-submission/accessibility-statement",
+                "/efs-submission/unavailable");
     }
 }

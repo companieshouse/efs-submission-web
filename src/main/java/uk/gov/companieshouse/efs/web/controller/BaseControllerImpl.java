@@ -138,6 +138,10 @@ public abstract class BaseControllerImpl implements BaseController {
         this(logger, null, null, null, null);
     }
 
+    protected BaseControllerImpl(final Logger logger, final ApiClientService apiClientService) {
+        this(logger, null, apiClientService, null, null);
+    }
+
     protected BaseControllerImpl() {
     }
 
