@@ -131,8 +131,27 @@ public class WebApplicationSecurity {
         }
     }
 
+    /**
+     * static nested class for service unavailable page security.
+     */
     @Configuration
     @Order(6)
+    public static class ServiceUnavailablePageSecurityConfig extends WebSecurityConfigurerAdapter {
+        private String serviceUnavailablePageUrl;
+
+        public ServiceUnavailablePageSecurityConfig(
+                @Value("${service.unavailable.page.url}") final String serviceUnavailablePageUrl) {
+            this.serviceUnavailablePageUrl = serviceUnavailablePageUrl;
+        }
+
+        @Override
+        protected void configure(final HttpSecurity http) {
+            http.antMatcher(serviceUnavailablePageUrl);
+        }
+    }
+
+    @Configuration
+    @Order(7)
     public class CompanyAuthFilterSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
@@ -154,7 +173,7 @@ public class WebApplicationSecurity {
      * static nested class for resource level security.
      */
     @Configuration
-    @Order(7)
+    @Order(8)
     public class EfsWebResourceFilterConfig extends WebSecurityConfigurerAdapter {
 
         @Override

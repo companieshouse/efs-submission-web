@@ -88,6 +88,16 @@ class WebApplicationSecurityTest {
     }
 
     @Test
+    void serviceUnavailablePageConfig() {
+        final WebApplicationSecurity.ServiceUnavailablePageSecurityConfig testConfig =
+                new WebApplicationSecurity.ServiceUnavailablePageSecurityConfig("service unavailable page");
+
+        testConfig.configure(httpSecurity);
+
+        verify(httpSecurity).antMatcher("service unavailable page");
+    }
+
+    @Test
     void companyAuthFilterSecurityConfigTest() {
 
         final WebApplicationSecurity webApplicationSecurity = new WebApplicationSecurity(

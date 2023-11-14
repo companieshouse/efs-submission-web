@@ -3,6 +3,7 @@ package uk.gov.companieshouse.efs.web.controller;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.maintenance.MaintenanceCheckApi;
+import uk.gov.companieshouse.api.model.efs.maintenance.ServiceStatus;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -25,17 +29,41 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
     @Mock
     private RedirectAttributes attributes;
 
+    @Mock
+    private ApiResponse<MaintenanceCheckApi> maintenanceCheckApiApiResponse;
+    @Mock
+    private MaintenanceCheckApi maintenanceCheckApi;
+
     @BeforeEach
     protected void setUp() {
         setUpHeaders();
-        testController = new StaticPageControllerImpl(logger);
+        testController = new StaticPageControllerImpl(logger, apiClientService);
         ((StaticPageControllerImpl) testController).setChsUrl(CHS_URL);
         ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
     }
 
     @Test
-    void startPage() {
-        assertThat(testController.start(categoryTemplateAttribute, model, servletRequest, sessionStatus), is(ViewConstants.START.asView()));
+    void startPageWhenApiServiceUp() {
+        when(apiClientService.getMaintenanceCheck()).thenReturn(maintenanceCheckApiApiResponse);
+        when(maintenanceCheckApiApiResponse.getData()).thenReturn(maintenanceCheckApi);
+        when(maintenanceCheckApi.getStatus()).thenReturn(ServiceStatus.UP);
+        assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
+                is(ViewConstants.START.asView()));
+    }
+
+    @Test
+    void startPageWhenApiServiceNotAvailable() {
+        when(apiClientService.getMaintenanceCheck()).thenReturn(maintenanceCheckApiApiResponse);
+        when(maintenanceCheckApiApiResponse.getData()).thenReturn(maintenanceCheckApi);
+        when(maintenanceCheckApi.getStatus()).thenReturn(ServiceStatus.OUT_OF_SERVICE);
+        when(maintenanceCheckApi.getMaintenanceEnd()).thenReturn("2023-11-14T17:04:00Z");
+        assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
+                is(ViewConstants.UNAVAILABLE.asRedirectUri(CHS_URL)));
+    }
+
+    @Test
+    void unavailablePage() {
+        assertThat(testController.serviceUnavailable(model, servletRequest), is(ViewConstants.UNAVAILABLE.asView()));
     }
 
     @Test

@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.efs.web.service.api.impl;
 
+import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.IP_ALLOW_LIST;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.maintenance.MaintenanceCheckApi;
 import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.ConfirmAuthorisedApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileListApi;
@@ -23,8 +26,6 @@ import uk.gov.companieshouse.efs.web.exception.UrlEncodingException;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.sdk.manager.ApiClientManager;
-
-import static uk.gov.companieshouse.efs.web.configuration.DataCacheConfig.IP_ALLOW_LIST;
 
 /**
  * Service sends and receives secure REST messages to the api.
@@ -153,5 +154,13 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
 
         return executeOp("getIsOnAllowList", uri,
             getApiClient().privateEfsResourceHandler().companyAuthAllowList().isOnAllowList().get(uri));
+    }
+
+    @Override
+    public ApiResponse<MaintenanceCheckApi> getMaintenanceCheck() {
+        final String uri = ROOT_URI + "/maintenance";
+
+        return executeOp("getMaintenance", uri,
+                getApiClient().privateEfsResourceHandler().maintenanceCheck().check().get(uri));
     }
 }

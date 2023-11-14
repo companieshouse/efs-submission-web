@@ -23,7 +23,8 @@ public interface StaticPageController {
      * @return page to be displayed
      */
     @GetMapping("/start")
-    String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus);
+    String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
+                 RedirectAttributes redirectAttributes, ServletRequest servletRequest, SessionStatus sessionStatus);
 
     /**
      * Directs user to the guidance page.
@@ -54,6 +55,16 @@ public interface StaticPageController {
      */
     @GetMapping("/accessibility-statement")
     String accessibilityStatement(Model model, ServletRequest request);
+
+    /**
+     * Directs user to the service unavailable page.
+     *
+     * @param model   the service unavailable model
+     * @param request contains the chs session id
+     * @return page to be displayed
+     */
+    @GetMapping("/unavailable")
+    String serviceUnavailable(Model model, ServletRequest request);
 
     /**
      * Directs user to company lookup service and sets the return URL to COMPANY_DETAIL view.

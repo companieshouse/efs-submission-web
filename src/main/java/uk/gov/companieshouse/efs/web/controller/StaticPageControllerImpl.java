@@ -1,6 +1,10 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import java.text.MessageFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.ServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +16,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.maintenance.MaintenanceCheckApi;
+import uk.gov.companieshouse.api.model.efs.maintenance.ServiceStatus;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
+import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.logging.Logger;
 
 /**
@@ -33,12 +41,26 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
      * @param logger           the CH logger
      */
     @Autowired
-    public StaticPageControllerImpl(final Logger logger) {
-        super(logger);
+    public StaticPageControllerImpl(final Logger logger, final ApiClientService apiClientService) {
+        super(logger, apiClientService);
     }
 
     @Override
-    public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model, ServletRequest servletRequest, SessionStatus sessionStatus) {
+    public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
+                        RedirectAttributes redirectAttributes, ServletRequest servletRequest,
+                        SessionStatus sessionStatus) {
+        ApiResponse<MaintenanceCheckApi> response = apiClientService.getMaintenanceCheck();
+
+        if (response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
+            DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
+            final String maintenanceEnd = response.getData().getMaintenanceEnd();
+            final Instant parsed = Instant.parse(maintenanceEnd);
+            LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
+            redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
+
+            return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
+        }
+
         sessionStatus.setComplete(); // invalidate the user's previous session if they have signed out
         model.addAttribute(TEMPLATE_NAME, ViewConstants.START.asView());
 
@@ -65,6 +87,14 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
         model.addAttribute(TEMPLATE_NAME, ViewConstants.ACCESSIBILITY.asView());
 
         return ViewConstants.ACCESSIBILITY.asView();
+    }
+
+    @Override
+    public String serviceUnavailable(Model model, ServletRequest servletRequest) {
+
+        model.addAttribute(TEMPLATE_NAME, ViewConstants.UNAVAILABLE.asView());
+
+        return ViewConstants.UNAVAILABLE.asView();
     }
 
     @Override
