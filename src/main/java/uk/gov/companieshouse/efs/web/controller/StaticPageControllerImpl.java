@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import javax.servlet.ServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -90,8 +91,12 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
     }
 
     @Override
-    public String serviceUnavailable(Model model, ServletRequest servletRequest) {
+    public String serviceUnavailable(Model model, ServletRequest servletRequest,
+                                     @ModelAttribute("date") final String date) {
 
+        if (StringUtils.isBlank(date)) {
+            return ViewConstants.START.asRedirectUri(chsUrl);
+        }
         model.addAttribute(TEMPLATE_NAME, ViewConstants.UNAVAILABLE.asView());
 
         return ViewConstants.UNAVAILABLE.asView();
