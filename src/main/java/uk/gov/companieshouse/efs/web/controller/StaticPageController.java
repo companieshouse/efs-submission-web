@@ -60,11 +60,12 @@ public interface StaticPageController {
      * Directs user to the service unavailable page.
      *
      * @param model   the service unavailable model
-     * @param request contains the chs session id
+     * @param servletRequest contains the chs session id
+     * @param date  maintenance end date
      * @return page to be displayed
      */
     @GetMapping("/unavailable")
-    String serviceUnavailable(Model model, ServletRequest request);
+    String serviceUnavailable(Model model, ServletRequest servletRequest, @ModelAttribute("date") String date);
 
     /**
      * Directs user to company lookup service and sets the return URL to COMPANY_DETAIL view.
