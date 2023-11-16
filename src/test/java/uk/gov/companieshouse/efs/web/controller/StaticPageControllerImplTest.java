@@ -62,8 +62,13 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void unavailablePage() {
-        assertThat(testController.serviceUnavailable(model, servletRequest), is(ViewConstants.UNAVAILABLE.asView()));
+    void unavailablePageWhenDirectedFromStart() {
+        assertThat(testController.serviceUnavailable(model, servletRequest, "dummyDate"), is(ViewConstants.UNAVAILABLE.asView()));
+    }
+
+    @Test
+    void unavailablePageWhenRefreshed() {
+        assertThat(testController.serviceUnavailable(model, servletRequest, null), is(ViewConstants.START.asRedirectUri(CHS_URL)));
     }
 
     @Test
