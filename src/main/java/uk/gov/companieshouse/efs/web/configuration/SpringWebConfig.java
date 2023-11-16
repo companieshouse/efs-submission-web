@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.efs.web.configuration;
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -123,6 +124,11 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Bean
     ResourceBundle resourceBundle() {
         return ResourceBundle.getBundle("messages", Locale.UK);
+    }
+
+    @Bean
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
     }
 
 }
