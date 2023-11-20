@@ -2,12 +2,11 @@ package uk.gov.companieshouse.efs.web.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,13 +34,13 @@ class ReviewSelectionControllerImplTest extends BaseControllerImplTest {
 
     @Test
     void getViewName() {
-        MatcherAssert.assertThat(((ReviewSelectionControllerImpl) testController).getViewName(),
+        assertThat(((ReviewSelectionControllerImpl) testController).getViewName(),
                 is(ViewConstants.REVIEW_SELECTION_LIQ13.asView()));
     }
 
     @Test
     void getReviewSelectedAttribute() {
-        MatcherAssert.assertThat(((ReviewSelectionControllerImpl) testController).getReviewSelectionAttribute(),
+        assertThat(((ReviewSelectionControllerImpl) testController).getReviewSelectionAttribute(),
                 is(sameInstance(reviewSelectionModel)));
     }
 

@@ -1,5 +1,17 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,19 +25,6 @@ import uk.gov.companieshouse.api.model.efs.submissions.PresenterApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class Sh19DeliveryControllerTest extends BaseControllerImplTest{
@@ -56,13 +55,13 @@ class Sh19DeliveryControllerTest extends BaseControllerImplTest{
     @Test
     void getSH19TemplateAttribute() {
         assertThat(((Sh19DeliveryControllerImpl) testController).getSh19TemplateAttribute(),
-            is(sameInstance(sh19TemplateAttribute)));
+                is(sameInstance(sh19TemplateAttribute)));
     }
 
     @Test
     void getViewName() {
         assertThat(((Sh19DeliveryControllerImpl) testController).getViewName(),
-            is(ViewConstants.SH19_DELIVERY.asView()));
+                is(ViewConstants.SH19_DELIVERY.asView()));
     }
 
     @Test

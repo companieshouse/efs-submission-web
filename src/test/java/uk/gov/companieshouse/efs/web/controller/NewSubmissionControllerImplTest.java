@@ -1,8 +1,8 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
-import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
@@ -10,11 +10,14 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,11 +36,6 @@ import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.PresenterApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 class NewSubmissionControllerImplTest extends BaseControllerImplTest {
@@ -61,7 +59,7 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
     @Test
     void getViewName() {
         assertThat(((NewSubmissionControllerImpl) testController).getViewName(),
-            is(ViewConstants.NEW_SUBMISSION.asView()));
+                is(ViewConstants.NEW_SUBMISSION.asView()));
     }
 
     @Test

@@ -1,10 +1,9 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +32,7 @@ class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
 
     @Test
     void getViewName() {
-        MatcherAssert.assertThat(((ResolutionsInfoControllerImpl) testController).getViewName(),
+        assertThat(((ResolutionsInfoControllerImpl) testController).getViewName(),
             is(ViewConstants.RESOLUTIONS_INFO.asView()));
     }
 

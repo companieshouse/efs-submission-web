@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.efs.web.formtemplates.service.api.impl;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImplTest.CAT_TOP_LEVEL;
 

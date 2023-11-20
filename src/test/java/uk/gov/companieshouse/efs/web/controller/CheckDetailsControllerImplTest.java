@@ -23,7 +23,7 @@ import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.validation.ConfirmAuthorisedValidator;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +51,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
     @Test
     void getViewName() {
         assertThat(((CheckDetailsControllerImpl) testController).getViewName(),
-            is(ViewConstants.CHECK_DETAILS.asView()));
+                is(ViewConstants.CHECK_DETAILS.asView()));
     }
 
     @ParameterizedTest

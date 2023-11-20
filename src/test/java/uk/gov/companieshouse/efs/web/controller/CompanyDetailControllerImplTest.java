@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,8 +52,8 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
 
     @Test
     void getViewName() {
-        Assert.assertThat(((CompanyDetailControllerImpl) testController).getViewName(),
-            is(ViewConstants.COMPANY_DETAIL.asView()));
+        assertThat(((CompanyDetailControllerImpl) testController).getViewName(),
+                is(ViewConstants.COMPANY_DETAIL.asView()));
 
     }
 
