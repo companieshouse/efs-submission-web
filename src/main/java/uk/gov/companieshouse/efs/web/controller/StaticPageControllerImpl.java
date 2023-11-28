@@ -9,12 +9,14 @@ import javax.servlet.ServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -50,16 +52,26 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
     public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
                         RedirectAttributes redirectAttributes, ServletRequest servletRequest,
                         SessionStatus sessionStatus) {
-        ApiResponse<MaintenanceCheckApi> response = apiClientService.getMaintenanceCheck();
+        final ApiResponse<MaintenanceCheckApi> response;
+        HttpStatus status;
 
-        if (response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
-            DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
-            final String maintenanceEnd = response.getData().getMaintenanceEnd();
-            final Instant parsed = Instant.parse(maintenanceEnd);
-            LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
-            redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
+        try {
+            response = apiClientService.getMaintenanceCheck();
+            status = HttpStatus.valueOf(response.getStatusCode());
+            logger.debug(String.format("Maintenance check response status: %s", status));
+            if (!status.isError() && response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
+                DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
+                final String maintenanceEnd = response.getData().getMaintenanceEnd();
+                final Instant parsed = Instant.parse(maintenanceEnd);
+                LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
+                redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
 
-            return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
+                return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
+            }
+        } catch (ResponseStatusException e) {
+            status = e.getStatus();
+            logger.debug(String.format("Maintenance check response status: %s", status));
+            // maintenance check failure should not obstruct users so ignore any errors here
         }
 
         sessionStatus.setComplete(); // invalidate the user's previous session if they have signed out
