@@ -2,6 +2,7 @@ package uk.gov.companieshouse.efs.web.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,14 +69,17 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
     @Test
     void startPageWhenMaintenanceCheckFailsWithException() {
         when(apiClientService.getMaintenanceCheck()).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
-        assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
-                is(ViewConstants.START.asView()));
+        assertThrows(ResponseStatusException.class,
+            () -> testController.start(categoryTemplateAttribute, model, attributes, servletRequest,
+                sessionStatus));
     }
 
     @Test
     void startPageWhenMaintenanceCheckFailsWithStatusCode() {
         when(apiClientService.getMaintenanceCheck()).thenReturn(maintenanceCheckApiApiResponse);
         when(maintenanceCheckApiApiResponse.getStatusCode()).thenReturn(HttpStatus.NOT_FOUND.value());
+        when(maintenanceCheckApiApiResponse.getData()).thenReturn(maintenanceCheckApi);
+        when(maintenanceCheckApi.getStatus()).thenReturn(ServiceStatus.DOWN);
         assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
             is(ViewConstants.START.asView()));
     }
