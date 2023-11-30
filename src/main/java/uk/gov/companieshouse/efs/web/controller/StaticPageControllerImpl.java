@@ -53,25 +53,27 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
                         RedirectAttributes redirectAttributes, ServletRequest servletRequest,
                         SessionStatus sessionStatus) {
         final ApiResponse<MaintenanceCheckApi> response;
-        HttpStatus status;
 
         try {
             response = apiClientService.getMaintenanceCheck();
-            status = HttpStatus.valueOf(response.getStatusCode());
-            logger.debug(String.format("Maintenance check response status: %s", status));
-            if (!status.isError() && response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
-                DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
-                final String maintenanceEnd = response.getData().getMaintenanceEnd();
-                final Instant parsed = Instant.parse(maintenanceEnd);
-                LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
-                redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
 
-                return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
-            }
-        } catch (ResponseStatusException e) {
-            status = e.getStatus();
+            final HttpStatus status = HttpStatus.valueOf(response.getStatusCode());
+
             logger.debug(String.format("Maintenance check response status: %s", status));
-            // maintenance check failure should not obstruct users so ignore any errors here
+        } catch (ResponseStatusException e) {
+            logger.error(String.format("Maintenance check response status: %s", e.getStatus()), e);
+
+            throw e;
+        }
+        if (response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
+            final DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern(
+                "h:mm a 'on' EEEE d MMMM yyyy");
+            final String maintenanceEnd = response.getData().getMaintenanceEnd();
+            final Instant parsed = Instant.parse(maintenanceEnd);
+            LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
+            redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
+
+            return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
         }
 
         sessionStatus.setComplete(); // invalidate the user's previous session if they have signed out
