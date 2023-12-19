@@ -3,6 +3,8 @@ package uk.gov.companieshouse.efs.web.configuration;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -35,6 +37,9 @@ public class SpringWebConfig implements WebMvcConfigurer {
     private String algorithm;
     @Value("${rng.provider}")
     private String provider;
+
+    @Value("${company.number.prefix.blocked}")
+    private List<String> prefixBlockList;
 
     /**
      * Manage the messages bundle required by models.
@@ -128,6 +133,11 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Bean
     public LayoutDialect layoutDialect() {
         return new LayoutDialect();
+    }
+
+    @Bean("prefix-block-list")
+    List<String> prefixBlockList() {
+        return Collections.unmodifiableList(prefixBlockList);
     }
 
 }

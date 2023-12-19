@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseLayout}"
+      lang="en">
+<head>
+    <title th:text="#{companyTypeUnsuitable.title}"></title>
+</head>
+<body class="govuk-template__body js-enabled" layout:fragment="content">
+    <div class="govuk-width-container" th:object="${companyDetail}">
+        <a class="govuk-back-link" th:href="@{/efs-submission/{id}/companyLookup(id=*{submissionId})}"
+           th:text="#{link.back}"></a>
+        <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds-from-desktop">
+                    <h1 class="govuk-heading-l" th:text="#{companyTypeUnsuitable.heading}"></h1>
+                    <p class="govuk-body-l"
+                       th:text="#{companyTypeUnsuitable.description(*{companyName},${companyNumber},${articleForType},*{#strings.capitalizeWords(#strings.replace(companyType,'-',' '))})}"></p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

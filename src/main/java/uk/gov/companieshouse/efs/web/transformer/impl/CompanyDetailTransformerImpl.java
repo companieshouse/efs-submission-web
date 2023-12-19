@@ -13,12 +13,16 @@ import uk.gov.companieshouse.efs.web.transformer.CompanyDetailTransformer;
 public class CompanyDetailTransformerImpl implements CompanyDetailTransformer {
 
     @Override
-    public void getCompanyDetail(final CompanyDetail companyDetailAttribute, CompanyProfileApi companyProfile) {
+    public void getCompanyDetail(final CompanyDetail companyDetailAttribute,
+        final CompanyProfileApi companyProfile) {
 
         companyDetailAttribute.setCompanyName(companyProfile.getCompanyName());
         companyDetailAttribute.setCompanyNumber(companyProfile.getCompanyNumber());
+        companyDetailAttribute.setCompanyStatus(companyProfile.getCompanyStatus());
+        companyDetailAttribute.setCompanyType(companyProfile.getType());
 
-        RegisteredOfficeAddressApi registeredOfficeAddress = companyProfile.getRegisteredOfficeAddress();
+        final RegisteredOfficeAddressApi registeredOfficeAddress =
+            companyProfile.getRegisteredOfficeAddress();
 
         if (registeredOfficeAddress != null) {
 
