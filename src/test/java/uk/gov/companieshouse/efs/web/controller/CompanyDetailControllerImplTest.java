@@ -27,6 +27,9 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 import uk.gov.companieshouse.efs.web.service.company.CompanyService;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 @ExtendWith(MockitoExtension.class)
 class CompanyDetailControllerImplTest extends BaseControllerImplTest {
@@ -37,13 +40,17 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     @Mock
     private CompanyDetail companyDetailAttribute;
 
+    private final List<String> prefixBlockList = Arrays.asList("OE");
+    private static final String OVERSEAS_ENTITY_COMPANY_NUMBER = "OE123456";
+
     @BeforeEach
     private void setup() {
         setUpHeaders();
         testController = new CompanyDetailControllerImpl(companyService, sessionService, apiClientService, logger,
                 companyDetailAttribute);
         ((CompanyDetailControllerImpl) testController).setChsUrl(CHS_URL);
-        ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
+
+        ReflectionTestUtils.setField(testController, "prefixBlockList", prefixBlockList);
 
         mockMvc = MockMvcBuilders.standaloneSetup(testController)
                 .setControllerAdvice(new GlobalExceptionHandler(logger))
@@ -142,4 +149,26 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
                 .andExpect(view().name(ViewConstants.ERROR.asView()))
                 .andReturn();
     }
+
+    @Test
+    void getCompanyDetailWhenOverseasEntityCompany() throws Exception {
+        final String viewName = testController
+                .getCompanyDetail(SUBMISSION_ID, OVERSEAS_ENTITY_COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
+
+        verify(companyService).getCompanyDetail(companyDetailAttribute, OVERSEAS_ENTITY_COMPANY_NUMBER);
+        assertThat(viewName,
+                is(ViewConstants.RESTRICTED_COMPANY_TYPE.asRedirectUri(CHS_URL, SUBMISSION_ID, OVERSEAS_ENTITY_COMPANY_NUMBER)));
+
+    }
+
+    @Test
+    void getCompanyDetailWhenOverseasEntityNullBlockList()throws Exception {
+        ReflectionTestUtils.setField(testController, "prefixBlockList", null);
+        final String viewName = testController
+                .getCompanyDetail(SUBMISSION_ID, OVERSEAS_ENTITY_COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
+
+        verify(companyService).getCompanyDetail(companyDetailAttribute, OVERSEAS_ENTITY_COMPANY_NUMBER);
+        assertThat(viewName, is(ViewConstants.COMPANY_DETAIL.asView()));
+    }
+
 }

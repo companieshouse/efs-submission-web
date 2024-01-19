@@ -18,8 +18,6 @@ public class CompanyDetailTransformerImpl implements CompanyDetailTransformer {
 
         companyDetailAttribute.setCompanyName(companyProfile.getCompanyName());
         companyDetailAttribute.setCompanyNumber(companyProfile.getCompanyNumber());
-        companyDetailAttribute.setCompanyStatus(companyProfile.getCompanyStatus());
-        companyDetailAttribute.setCompanyType(companyProfile.getType());
 
         final RegisteredOfficeAddressApi registeredOfficeAddress =
             companyProfile.getRegisteredOfficeAddress();

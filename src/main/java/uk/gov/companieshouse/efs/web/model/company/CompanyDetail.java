@@ -14,8 +14,6 @@ public class CompanyDetail {
     private String submissionId;
     private String companyName;
     private String companyNumber;
-    private String companyStatus;
-    private String companyType;
     private String registeredOfficeAddress;
     private LocalDate incorporationDate;
 
@@ -43,22 +41,6 @@ public class CompanyDetail {
         this.companyNumber = companyNumber;
     }
 
-    public String getCompanyStatus() {
-        return companyStatus;
-    }
-
-    public void setCompanyStatus(final String companyStatus) {
-        this.companyStatus = companyStatus;
-    }
-
-    public String getCompanyType() {
-        return companyType;
-    }
-
-    public void setCompanyType(final String companyType) {
-        this.companyType = companyType;
-    }
-
     public String getRegisteredOfficeAddress() {
         return registeredOfficeAddress;
     }
@@ -82,44 +64,37 @@ public class CompanyDetail {
         submissionId = null;
         companyName = null;
         companyNumber = null;
-        companyStatus = null;
-        companyType = null;
         registeredOfficeAddress = null;
         incorporationDate = null;
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         final CompanyDetail that = (CompanyDetail) o;
-        return Objects.equals(getSubmissionId(),
-            that.getSubmissionId()) && Objects.equals(getCompanyName(),
-            that.getCompanyName()) && Objects.equals(getCompanyNumber(),
-            that.getCompanyNumber()) && Objects.equals(getCompanyStatus(),
-            that.getCompanyStatus()) && Objects.equals(getCompanyType(),
-            that.getCompanyType()) && Objects.equals(getRegisteredOfficeAddress(),
-            that.getRegisteredOfficeAddress()) && Objects.equals(getIncorporationDate(),
-            that.getIncorporationDate());
+        return Objects.equals(getSubmissionId(), that.getSubmissionId()) && Objects
+            .equals(getCompanyName(), that.getCompanyName()) && Objects
+            .equals(getCompanyNumber(), that.getCompanyNumber()) && Objects
+            .equals(getRegisteredOfficeAddress(), that.getRegisteredOfficeAddress()) && Objects
+            .equals(getIncorporationDate(), that.getIncorporationDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSubmissionId(), getCompanyName(), getCompanyNumber(),
-            getCompanyStatus(), getCompanyType(), getRegisteredOfficeAddress(),
+        return Objects.hash(getSubmissionId(), getCompanyName(), getCompanyNumber(), getRegisteredOfficeAddress(),
             getIncorporationDate());
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-            .append("submissionId", submissionId)
-            .append("companyName", companyName)
-            .append("companyNumber", companyNumber)
-            .append("companyStatus", companyStatus)
-            .append("companyType", companyType)
-            .append("registeredOfficeAddress", registeredOfficeAddress)
-            .append("incorporationDate", incorporationDate)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("submissionId", submissionId)
+            .append("companyName", companyName).append("companyNumber", companyNumber)
+            .append("registeredOfficeAddress", registeredOfficeAddress).append("incorporationDate", incorporationDate)
             .toString();
     }
 }

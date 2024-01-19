@@ -3,7 +3,10 @@ package uk.gov.companieshouse.efs.web.controller;
 import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl.ATTRIBUTE_NAME;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,11 +88,13 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
         companyService.getCompanyDetail(companyDetailAttribute, companyNumber);
         addTrackingAttributeToModel(model);
 
-        final boolean hasBlockedPrefix = prefixBlockList.stream()
-            .anyMatch(companyNumber::startsWith);
+        final boolean hasBlockedPrefix = Optional.ofNullable(prefixBlockList)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .anyMatch(companyNumber::startsWith);
 
         if (hasBlockedPrefix) {
-            return ViewConstants.RESTRICTED_TYPE_UNSUITABLE.asRedirectUri(chsUrl, id,
+            return ViewConstants.RESTRICTED_COMPANY_TYPE.asRedirectUri(chsUrl, id,
                 companyNumber);
         }
 
@@ -110,15 +115,12 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
     }
 
     @Override
-    public String unsuitableType(final String id, final String companyNumber,
+    public String restrictedCompanyType(final String id, final String companyNumber,
         final CompanyDetail companyDetailAttribute, final Model model, final HttpServletRequest request) {
-        final String articleForType = companyDetailAttribute.getCompanyType()
-            .matches("(?i)^[aeiou].+") ? "an" : "a";
 
         companyDetailAttribute.setSubmissionId(id);
         addTrackingAttributeToModel(model);
-        model.addAttribute("articleForType", articleForType);
 
-        return ViewConstants.RESTRICTED_TYPE_UNSUITABLE.asView();
+        return ViewConstants.RESTRICTED_COMPANY_TYPE.asView();
     }
 }

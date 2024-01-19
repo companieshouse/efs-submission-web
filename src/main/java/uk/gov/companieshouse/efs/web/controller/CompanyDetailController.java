@@ -43,7 +43,7 @@ public interface CompanyDetailController {
         @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
 
     @GetMapping("{id}/company/{companyNumber}/restricted")
-    String unsuitableType(@PathVariable String id, @PathVariable String companyNumber,
+    String restrictedCompanyType(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
 
 }
