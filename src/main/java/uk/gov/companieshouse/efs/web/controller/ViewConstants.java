@@ -32,6 +32,7 @@ public enum ViewConstants {
     ERROR("error", "error"),
     MISSING("error/404", "error/404"),
     GONE("/error/410", "error/410"),
+    RESTRICTED_COMPANY_TYPE("restricted", "companyTypeRestricted"),
     UNAVAILABLE("unavailable", "serviceUnavailable");
 
     private static final String SUBMISSION = "/efs-submission/";

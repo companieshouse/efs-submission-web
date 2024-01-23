@@ -41,4 +41,9 @@ public interface CompanyDetailController {
     @PostMapping(value = {"{id}/company/{companyNumber}/details"}, params = {"action=submit"})
     String postCompanyDetail(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
+
+    @GetMapping("{id}/company/{companyNumber}/restricted")
+    String restrictedCompanyType(@PathVariable String id, @PathVariable String companyNumber,
+        @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
+
 }

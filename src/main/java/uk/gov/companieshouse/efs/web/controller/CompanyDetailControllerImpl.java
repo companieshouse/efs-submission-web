@@ -3,9 +3,14 @@ package uk.gov.companieshouse.efs.web.controller;
 import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl.ATTRIBUTE_NAME;
 
 import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +36,10 @@ import uk.gov.companieshouse.logging.Logger;
 public class CompanyDetailControllerImpl extends BaseControllerImpl implements CompanyDetailController {
     @Value("${registrations.enabled:false}")
     private boolean registrationsEnabled;
+
+    @Autowired
+    @Qualifier("prefix-block-list")
+    private List<String> prefixBlockList;
 
     private final CompanyService companyService;
     private final CompanyDetail companyDetailAttribute;
@@ -71,14 +80,23 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
     public String getCompanyDetail(final String id, final String companyNumber,
         final CompanyDetail companyDetailAttribute, final Model model, final HttpServletRequest request) {
 
-            if (StringUtils.equals(companyNumber, "noCompany")) {
-                return registrationsEnabled ? ViewConstants.PROPOSED_COMPANY.asRedirectUri(chsUrl,
-                    id, "noCompany") : ViewConstants.MISSING.asView();
-            }
-            companyDetailAttribute.setSubmissionId(id);
-            companyService.getCompanyDetail(companyDetailAttribute, companyNumber);
-
+        if (StringUtils.equals(companyNumber, "noCompany")) {
+            return registrationsEnabled ? ViewConstants.PROPOSED_COMPANY.asRedirectUri(chsUrl,
+                id, "noCompany") : ViewConstants.MISSING.asView();
+        }
+        companyDetailAttribute.setSubmissionId(id);
+        companyService.getCompanyDetail(companyDetailAttribute, companyNumber);
         addTrackingAttributeToModel(model);
+
+        final boolean hasBlockedPrefix = Optional.ofNullable(prefixBlockList)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .anyMatch(companyNumber::startsWith);
+
+        if (hasBlockedPrefix) {
+            return ViewConstants.RESTRICTED_COMPANY_TYPE.asRedirectUri(chsUrl, id,
+                companyNumber);
+        }
 
         return ViewConstants.COMPANY_DETAIL.asView();
     }
@@ -94,5 +112,15 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
 
 
         return ViewConstants.CATEGORY_SELECTION.asRedirectUri(chsUrl, id, companyNumber);
+    }
+
+    @Override
+    public String restrictedCompanyType(final String id, final String companyNumber,
+        final CompanyDetail companyDetailAttribute, final Model model, final HttpServletRequest request) {
+
+        companyDetailAttribute.setSubmissionId(id);
+        addTrackingAttributeToModel(model);
+
+        return ViewConstants.RESTRICTED_COMPANY_TYPE.asView();
     }
 }
