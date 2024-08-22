@@ -43,16 +43,6 @@ variable "required_memory" {
   default = 512 # defaulted low for node service in dev environments, override for production
 }
 
-variable "eric_cpus" {
-  type = number
-  description = "The required cpu resource for eric. 1024 here is 1 vCPU"
-  default = 256
-}
-variable "eric_memory" {
-  type = number
-  description = "The required memory for eric"
-  default = 512
-}
 variable "max_task_count" {
   type        = number
   description = "The maximum number of tasks for this service."
@@ -124,8 +114,4 @@ variable "use_set_environment_files" {
 variable "efs_submission_web_version" {
   type        = string
   description = "The version of the efs-submission-web container to run."
-}
-variable "eric_version" {
-  type        = string
-  description = "The version of the eric container to run."
 }

@@ -5,7 +5,6 @@ locals {
   global_prefix              = "global-${var.environment}"
   service_name               = "efs-submission-web"
   container_port             = "8080"
-  eric_port                  = "10000"
   docker_repo                = "efs-submission-web"
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
   lb_listener_rule_priority  = 
@@ -64,10 +63,5 @@ locals {
     { "name" : "PORT", "value" : local.container_port }
   ])
 
-# get eric secrets from global secrets map
-  eric_secrets = [
-    { "name": "API_KEY", "valueFrom": local.global_secrets_arn_map.eric_api_key },
-    { "name": "AES256_KEY", "valueFrom": local.global_secrets_arn_map.eric_aes256_key }
-  ]
-  eric_environment_filename = "eric.env"
+
 }
