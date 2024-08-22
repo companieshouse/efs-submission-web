@@ -7,7 +7,7 @@ locals {
   container_port             = "8080"
   docker_repo                = "efs-submission-web"
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
-  lb_listener_rule_priority  = 
+  lb_listener_rule_priority  = 70
   lb_listener_paths          = [""]
   healthcheck_path           = "/healthcheck" # healthcheck path for efs-submission-web
   healthcheck_matcher        = "200"
