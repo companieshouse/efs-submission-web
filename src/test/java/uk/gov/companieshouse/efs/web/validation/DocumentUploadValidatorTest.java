@@ -64,14 +64,14 @@ class DocumentUploadValidatorTest {
     private DocumentUploadValidator toTest;
 
     @BeforeEach
-    private void start() {
-        MockitoAnnotations.initMocks(this);
+    public void start() {
+        MockitoAnnotations.openMocks(this);
 
         //ReflectionTestUtils.setField(toTest, "bundle", resourceBundle);
     }
 
     @AfterEach
-    private void finish() {
+    public void finish() {
 
     }
 
