@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 import uk.gov.companieshouse.efs.web.model.Sh19TemplateModel;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl.ATTRIBUTE_NAME;
 

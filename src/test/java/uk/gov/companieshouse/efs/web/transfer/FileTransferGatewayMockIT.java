@@ -83,7 +83,7 @@ class FileTransferGatewayMockIT {
                 new MockMultipartFile("file", "file.txt", "text/plain", "test".getBytes());
 
         mockServerExpectation("/", "POST").respond(HttpResponse.response()
-                .withStatusCode(201).withBody("", MediaType.JSON_UTF_8));
+                .withStatusCode(201).withBody(""));
 
         assertThrows(HttpServerErrorException.class, () -> gateway.upload(mockFile));
     }

@@ -2,12 +2,15 @@ package uk.gov.companieshouse.efs.web.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import uk.gov.companieshouse.auth.filter.CompanyAuthFilter;
 import uk.gov.companieshouse.auth.filter.HijackFilter;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
@@ -47,13 +50,20 @@ public class WebApplicationSecurity {
     /**
      * static nested class for root level security.
      */
+    /**
+     * static nested class for root level security.
+     */
     @Configuration
     @Order(1)
-    public static class RootLevelSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static class RootLevelSecurityConfig {
 
-        @Override
-        protected void configure(final HttpSecurity http) {
-            http.antMatcher("/efs-submission");
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            http
+                    .authorizeHttpRequests(auth -> auth.requestMatchers("/efs-submission")
+                            .authenticated()
+                    );
+            return http.build();
         }
     }
 
@@ -62,16 +72,17 @@ public class WebApplicationSecurity {
      */
     @Configuration
     @Order(2)
-    public static class StartPageSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static class StartPageSecurityConfig {
         private final String startPageUrl;
 
         public StartPageSecurityConfig(@Value("${start.page.url}") final String startPageUrl) {
             this.startPageUrl = startPageUrl;
         }
 
-        @Override
-        protected void configure(final HttpSecurity http) {
-            http.antMatcher(startPageUrl);
+        @Bean
+        public SecurityFilterChain startPageSecurityChain(HttpSecurity http) throws Exception {
+            return http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers(new AntPathRequestMatcher(startPageUrl)).authenticated()).build();
         }
     }
 
@@ -80,7 +91,7 @@ public class WebApplicationSecurity {
      */
     @Configuration
     @Order(3)
-    public static class AccessibilityStatementPageSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static class AccessibilityStatementPageSecurityConfig {
         private final String accessibilityStatementPageUrl;
 
         public AccessibilityStatementPageSecurityConfig(
@@ -88,9 +99,10 @@ public class WebApplicationSecurity {
             this.accessibilityStatementPageUrl = accessibilityStatementPageUrl;
         }
 
-        @Override
-        protected void configure(final HttpSecurity http) {
-            http.antMatcher(accessibilityStatementPageUrl);
+        @Bean
+        public SecurityFilterChain accessibilityStatementPageSecurityChain(HttpSecurity http) throws Exception {
+            return http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers(new AntPathRequestMatcher(accessibilityStatementPageUrl)).authenticated()).build();
         }
     }
 
@@ -99,16 +111,17 @@ public class WebApplicationSecurity {
      */
     @Configuration
     @Order(4)
-    public static class GuidancePageSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static class GuidancePageSecurityConfig {
         private final String guidancePageUrl;
 
         public GuidancePageSecurityConfig(@Value("${guidance.page.url}") final String guidancePageUrl) {
             this.guidancePageUrl = guidancePageUrl;
         }
 
-        @Override
-        protected void configure(final HttpSecurity http) {
-            http.antMatcher(guidancePageUrl);
+        @Bean
+        public SecurityFilterChain guidancePageSecurityChain(HttpSecurity http) throws Exception {
+            return http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers(new AntPathRequestMatcher(guidancePageUrl)).authenticated()).build();
         }
     }
 
@@ -117,7 +130,7 @@ public class WebApplicationSecurity {
      */
     @Configuration
     @Order(5)
-    public static class InsolvencyGuidancePageSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static class InsolvencyGuidancePageSecurityConfig {
         private String insolvencyGuidancePageUrl;
 
         public InsolvencyGuidancePageSecurityConfig(
@@ -125,9 +138,10 @@ public class WebApplicationSecurity {
             this.insolvencyGuidancePageUrl = insolvencyGuidancePageUrl;
         }
 
-        @Override
-        protected void configure(final HttpSecurity http) {
-            http.antMatcher(insolvencyGuidancePageUrl);
+        @Bean
+        public SecurityFilterChain insolvencyGuidancePageSecurityChain(HttpSecurity http) throws Exception {
+            return http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers(new AntPathRequestMatcher(insolvencyGuidancePageUrl)).authenticated()).build();
         }
     }
 
@@ -136,7 +150,7 @@ public class WebApplicationSecurity {
      */
     @Configuration
     @Order(6)
-    public static class ServiceUnavailablePageSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static class ServiceUnavailablePageSecurityConfig {
         private String serviceUnavailablePageUrl;
 
         public ServiceUnavailablePageSecurityConfig(
@@ -144,29 +158,43 @@ public class WebApplicationSecurity {
             this.serviceUnavailablePageUrl = serviceUnavailablePageUrl;
         }
 
-        @Override
-        protected void configure(final HttpSecurity http) {
-            http.antMatcher(serviceUnavailablePageUrl);
+        @Bean
+        public SecurityFilterChain serviceUnavailablePageSecurityChain(HttpSecurity http) throws Exception {
+            return http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers(new AntPathRequestMatcher(serviceUnavailablePageUrl)).authenticated()).build();
         }
     }
 
     @Configuration
     @Order(7)
-    public class CompanyAuthFilterSecurityConfig extends WebSecurityConfigurerAdapter {
+    public class CompanyAuthFilterSecurityConfig {
 
-        @Override
-        protected void configure(HttpSecurity http) {
+        @Bean
+        public SecurityFilterChain companyAuthFilterChain(HttpSecurity http) throws Exception {
             final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
             final CompanyAuthFilter companyAuthFilter =
-                new CompanyAuthFilter(environmentReader, apiClientService, formTemplateService,
-                    categoryTemplateService);
+                new CompanyAuthFilter();
 
-            http.antMatcher("/efs-submission/*/company/**")
-                .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
-                .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
-                .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(companyAuthFilter, BasicAuthenticationFilter.class);
+            return http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers(new AntPathRequestMatcher("/efs-submission/*/company/**")).authenticated())
+                    .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
+                    .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
+                    .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
+                    .addFilterBefore(companyAuthFilter, BasicAuthenticationFilter.class).build();
         }
+//        @Override
+//        protected void configure(HttpSecurity http) {
+//            final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
+//            final CompanyAuthFilter companyAuthFilter =
+//                new CompanyAuthFilter(environmentReader, apiClientService, formTemplateService,
+//                    categoryTemplateService);
+//
+//            http.antMatcher("/efs-submission/*/company/**")
+//                .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
+//                .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
+//                .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
+//                .addFilterBefore(companyAuthFilter, BasicAuthenticationFilter.class);
+//        }
     }
 
     /**
@@ -174,16 +202,27 @@ public class WebApplicationSecurity {
      */
     @Configuration
     @Order(8)
-    public class EfsWebResourceFilterConfig extends WebSecurityConfigurerAdapter {
+    public class EfsWebResourceFilterConfig {
 
-        @Override
-        protected void configure(final HttpSecurity http) {
+        @Bean
+        public SecurityFilterChain efsWebResourceFilterChain(HttpSecurity http) throws Exception {
             final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
 
-            http.antMatcher("/efs-submission/**")
-                .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
-                .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
-                .addFilterBefore(authFilter, BasicAuthenticationFilter.class);
+            return http.authorizeHttpRequests(auth -> auth
+                            .requestMatchers(new AntPathRequestMatcher("/efs-submission/**")).authenticated())
+                    .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
+                    .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
+                    .addFilterBefore(authFilter, BasicAuthenticationFilter.class).build();
         }
+
+//        @Override
+//        protected void configure(final HttpSecurity http) {
+//            final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
+//
+//            http.antMatcher("/efs-submission/**")
+//                .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
+//                .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
+//                .addFilterBefore(authFilter, BasicAuthenticationFilter.class);
+//        }
     }
 }

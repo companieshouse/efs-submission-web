@@ -44,7 +44,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     private static final String OVERSEAS_ENTITY_COMPANY_NUMBER = "OE123456";
 
     @BeforeEach
-    private void setup() {
+    public void setup() {
         setUpHeaders();
         testController = new CompanyDetailControllerImpl(companyService, sessionService, apiClientService, logger,
                 companyDetailAttribute);

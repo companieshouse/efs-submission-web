@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.gov.companieshouse.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -45,8 +45,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private void logResponseStatusException(ResponseStatusException ex, final String submissionID) {
         Map<String, Object> logDetails = new HashMap<>();
-        logDetails.put("statusCode", ex.getStatus().value());
-        logDetails.put("statusMessage", ex.getStatus().getReasonPhrase());
+        logDetails.put("statusCode", ex.getStatusCode().value());
+        logDetails.put("statusMessage", ex.getStatusCode());
 
         structuredLogger.errorContext(submissionID, "Received non 200 series response from API",
                 ex, logDetails);

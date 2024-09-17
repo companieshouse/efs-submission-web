@@ -3,10 +3,10 @@ package uk.gov.companieshouse.efs.web.controller;
 import static uk.gov.companieshouse.efs.web.controller.ReviewSelectionControllerImpl.ATTRIBUTE_NAME;
 
 import java.util.Objects;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

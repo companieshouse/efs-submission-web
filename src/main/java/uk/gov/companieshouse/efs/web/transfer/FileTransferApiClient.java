@@ -76,7 +76,7 @@ public class FileTransferApiClient {
                 responseEntity -> {
                     FileTransferApiClientResponse fileTransferApiClientResponse = new FileTransferApiClientResponse();
                     if (responseEntity != null) {
-                        fileTransferApiClientResponse.setHttpStatus(responseEntity.getStatusCode());
+                        fileTransferApiClientResponse.setHttpStatus((HttpStatus) responseEntity.getStatusCode());
                         FileTransferApiResponse apiResponse = responseEntity.getBody();
                         if (apiResponse != null) {
                             fileTransferApiClientResponse.setFileId(apiResponse.getId());
@@ -112,7 +112,7 @@ public class FileTransferApiClient {
                 responseEntity -> {
                     FileTransferApiClientResponse fileTransferApiClientResponse = new FileTransferApiClientResponse();
                     if (responseEntity != null) {
-                        fileTransferApiClientResponse.setHttpStatus(responseEntity.getStatusCode());
+                        fileTransferApiClientResponse.setHttpStatus((HttpStatus) responseEntity.getStatusCode());
                     } else {
                         fileTransferApiClientResponse.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
                     }
