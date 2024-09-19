@@ -31,8 +31,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
 
     private CheckDetailsController testController;
     private static final String FORM_TYPE = "AM01";
-    @Mock
-    private ApiClientService apiClientService;
+
     @Mock
     private CheckDetailsModel checkDetailsAttribute;
     @Mock

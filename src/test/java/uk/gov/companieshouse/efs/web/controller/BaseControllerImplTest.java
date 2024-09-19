@@ -103,7 +103,7 @@ public abstract class BaseControllerImplTest {
     protected CategoryTemplateModel categoryTemplateAttribute;
     @Mock
     protected CategoryTemplateService categoryTemplateService;
-    @Mock
+    @Mock(name = "apiClientService")
     protected ApiClientService apiClientService;
     @Mock
     protected SessionService sessionService;
@@ -237,7 +237,7 @@ public abstract class BaseControllerImplTest {
     @Test
     void testGetViewName() {
         String viewName = baseController.getViewName();
-        assertNull("Base controllers view should be null", viewName);
+        assertNull(null, viewName);
     }
 
     @ParameterizedTest

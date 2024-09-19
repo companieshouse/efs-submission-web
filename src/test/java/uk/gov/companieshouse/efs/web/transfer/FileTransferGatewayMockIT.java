@@ -3,7 +3,6 @@ package uk.gov.companieshouse.efs.web.transfer;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.github.stefanbirkner.systemlambda.SystemLambda;
-import com.google.common.net.MediaType;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

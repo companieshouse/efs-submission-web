@@ -37,8 +37,6 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
     private PaymentController testController;
 
     @Mock
-    private ApiClientService apiClientService;
-    @Mock
     private PaymentService paymentService;
     @Mock
     private NonceService nonceService;
