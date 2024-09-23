@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import uk.gov.companieshouse.auth.filter.CompanyAuthFilter;
 import uk.gov.companieshouse.auth.filter.HijackFilter;
+import uk.gov.companieshouse.auth.filter.UserAuthFilter;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
@@ -59,11 +60,7 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http
-                    .authorizeHttpRequests(auth -> auth.requestMatchers("/efs-submission")
-                            .authenticated()
-                    );
-            return http.build();
+            return http.securityMatcher("/efs-submission").build();
         }
     }
 
@@ -81,8 +78,7 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain startPageSecurityChain(HttpSecurity http) throws Exception {
-            return http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers(new AntPathRequestMatcher(startPageUrl)).authenticated()).build();
+            return http.securityMatcher(startPageUrl).build();
         }
     }
 
@@ -101,8 +97,7 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain accessibilityStatementPageSecurityChain(HttpSecurity http) throws Exception {
-            return http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers(new AntPathRequestMatcher(accessibilityStatementPageUrl)).authenticated()).build();
+            return http.securityMatcher(accessibilityStatementPageUrl).build();
         }
     }
 
@@ -120,8 +115,7 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain guidancePageSecurityChain(HttpSecurity http) throws Exception {
-            return http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers(new AntPathRequestMatcher(guidancePageUrl)).authenticated()).build();
+            return http.securityMatcher(guidancePageUrl).build();
         }
     }
 
@@ -140,8 +134,7 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain insolvencyGuidancePageSecurityChain(HttpSecurity http) throws Exception {
-            return http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers(new AntPathRequestMatcher(insolvencyGuidancePageUrl)).authenticated()).build();
+            return http.securityMatcher(insolvencyGuidancePageUrl).build();
         }
     }
 
@@ -160,8 +153,7 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain serviceUnavailablePageSecurityChain(HttpSecurity http) throws Exception {
-            return http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers(new AntPathRequestMatcher(serviceUnavailablePageUrl)).authenticated()).build();
+            return http.securityMatcher(serviceUnavailablePageUrl).build();
         }
     }
 
@@ -171,16 +163,15 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain companyAuthFilterChain(HttpSecurity http) throws Exception {
-            final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
-            final CompanyAuthFilter companyAuthFilter =
-                new CompanyAuthFilter();
+//            final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
+//            final CompanyAuthFilter companyAuthFilter =
+//                new CompanyAuthFilter();
 
-            return http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers(new AntPathRequestMatcher("/efs-submission/*/company/**")).authenticated())
+            return http.securityMatcher("/efs-submission/*/company/**")
                     .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                     .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
-                    .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
-                    .addFilterBefore(companyAuthFilter, BasicAuthenticationFilter.class).build();
+                    .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class)
+                    .addFilterBefore(new CompanyAuthFilter(), BasicAuthenticationFilter.class).build();
         }
 //        @Override
 //        protected void configure(HttpSecurity http) {
@@ -206,13 +197,12 @@ public class WebApplicationSecurity {
 
         @Bean
         public SecurityFilterChain efsWebResourceFilterChain(HttpSecurity http) throws Exception {
-            final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
+//            final LoggingAuthFilter authFilter = new LoggingAuthFilter(signoutRedirectPath);
 
-            return http.authorizeHttpRequests(auth -> auth
-                            .requestMatchers(new AntPathRequestMatcher("/efs-submission/**")).authenticated())
+            return http.securityMatcher("/efs-submission/**")
                     .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                     .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
-                    .addFilterBefore(authFilter, BasicAuthenticationFilter.class).build();
+                    .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class).build();
         }
 
 //        @Override
