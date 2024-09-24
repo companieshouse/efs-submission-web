@@ -22,6 +22,7 @@ import uk.gov.companieshouse.session.handler.SessionHandler;
  * Customises web security.
  */
 @EnableWebSecurity
+@Configuration
 public class WebApplicationSecurity {
 
     private final String signoutRedirectPath;
@@ -30,10 +31,6 @@ public class WebApplicationSecurity {
     private final String guidancePageUrl;
     private final String insolvencyGuidancePageUrl;
     private final String serviceUnavailablePageUrl;
-    private ApiClientService apiClientService;
-    private FormTemplateService formTemplateService;
-    private CategoryTemplateService categoryTemplateService;
-    private EnvironmentReader environmentReader;
 
     /**
      * Constructor.
@@ -52,10 +49,6 @@ public class WebApplicationSecurity {
             @Value("${guidance.page.url}") String guidancePageUrl,
             @Value("${insolvency.guidance.page.url}") String insolvencyGuidancePageUrl,
             @Value("${service.unavailable.page.url}") String serviceUnavailablePageUrl) {
-        this.apiClientService = apiClientService;
-        this.formTemplateService = formTemplateService;
-        this.categoryTemplateService = categoryTemplateService;
-        this.environmentReader = environmentReader;
         this.signoutRedirectPath = signoutRedirectPath;
         this.startPageUrl = startPageUrl;
         this.accessibilityStatementPageUrl = accessibilityStatementPageUrl;
