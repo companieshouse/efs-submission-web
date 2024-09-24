@@ -77,6 +77,7 @@
             ${project.basedir}/target/dependency-check-report.html
         </sonar.dependencyCheck.htmlReportPath>
         <sonar.java.binaries>${project.basedir}/target</sonar.java.binaries>
+        <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
     </properties>
 
     <dependencyManagement>
@@ -136,6 +137,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -376,14 +382,13 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
                     <excludes>
                         <exclude>**/*ITest.java</exclude>
                     </excludes>
                     <skipTests>${skip.unit.tests}</skipTests>
                     <trimStackTrace>false</trimStackTrace>
                     <environmentVariables>
-                        <DOCUMENT_API_LOCAL_URL>chs.local</DOCUMENT_API_LOCAL_URL>
+                        <DOCUMENT_API_LOCAL_URL>chs.local</DOCUMENT_API_LOCAL_URL>cle
                     </environmentVariables>
                 </configuration>
             </plugin>
@@ -393,11 +398,14 @@
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
                     <!--suppress UnresolvedMavenProperty -->
-                    <argLine>${failsafeArgLine}</argLine>
+                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
 
                     <!--This is a workaround for failsafe not running integration tests-->
                     <!-- https://stackoverflow.com/a/52532095 -->
                     <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                    <environmentVariables>
+                        <DOCUMENT_API_LOCAL_URL>chs.local</DOCUMENT_API_LOCAL_URL>
+                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -436,33 +444,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>pre-integration-test</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <destFile>${sonar.jacoco.reports}/jacoco-it.exec</destFile>
-                            <propertyName>failsafeArgLine</propertyName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>post-integration-test</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <dataFile>${sonar.jacoco.reports}/jacoco-it.exec</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${sonar.jacoco.reports}/jacoco-it</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>

@@ -40,7 +40,7 @@ public class WebApplicationSecurity {
      * @param categoryTemplateService categoryTemplate service
      */
     @Autowired
-    public WebApplicationSecurity (
+    public WebApplicationSecurity(
             final ApiClientService apiClientService, FormTemplateService formTemplateService,
             final CategoryTemplateService categoryTemplateService, final EnvironmentReader environmentReader,
             @Value("${chs.signout.redirect.path}") String signoutRedirectPath,

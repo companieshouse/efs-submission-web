@@ -19,7 +19,6 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.api.model.paymentsession.SessionListApi;
 import uk.gov.companieshouse.efs.web.model.CheckDetailsModel;
-import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.validation.ConfirmAuthorisedValidator;
 
 import static org.hamcrest.CoreMatchers.is;

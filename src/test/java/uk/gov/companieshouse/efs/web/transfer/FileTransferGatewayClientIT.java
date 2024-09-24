@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,10 +46,10 @@ import uk.gov.companieshouse.efs.web.util.IntegrationTestHelper;
  * FileTransferGatewayClientIT
  */
 @Tag("integration")
-//@TestPropertySource
 @ActiveProfiles("test")
 @SpringBootTest
 class FileTransferGatewayClientIT {
+
     private static Map<String, String> storedEnvironment;
     public static SystemLambda.WithEnvironmentVariables springEnvironment;
 
@@ -114,49 +115,45 @@ class FileTransferGatewayClientIT {
         }
     }
 
-//    @Test
-//    void willUploadFile() throws Exception {
-//        final String filename = "test.png";
-//        final String fileFolder = "./src/test/resources/file-upload/";
-//        final String uploadFilePath = fileFolder + filename;
-//        final String downloadFilePath = fileFolder + "download-" + filename;
-//
-//        // Prepare upload
-//        FileTransferApiResponse mockResponse = new FileTransferApiResponse();
-//        mockResponse.setId(UUID.randomUUID()
-//                .toString());
-//
-//        final String responseBody = new ObjectMapper().writeValueAsString(mockResponse);
-//
-//        mockServerExpectation("/", "POST").respond(
-//                response().withBody(responseBody)
-//                        .withStatusCode(201));
-//
-//        // Upload
-//        File uploadFile = new File(uploadFilePath);
-//        FileTransferApiClientResponse uploadResponse = uploadFile(uploadFile);
-//
-//        assertEquals(HttpStatus.CREATED, uploadResponse.getHttpStatus());
-//        assertTrue(StringUtils.isNotBlank(uploadResponse.getFileId()));
-//    }
+    @Test
+    void willUploadFile() throws Exception {
+        final String filename = "test.png";
+        final String fileFolder = "./src/test/resources/file-upload/";
+        final String uploadFilePath = fileFolder + filename;
+        final String downloadFilePath = fileFolder + "download-" + filename;
 
-//    private FileTransferApiClientResponse uploadFile(final File uploadFile) throws Exception {
-//        FileItem fileItem =
-//                new DiskFileItem("file", Files.probeContentType(uploadFile.toPath()), false,
-//                        uploadFile.getName(), (int) uploadFile.length(),
-//                        uploadFile.getParentFile());
-//        try {
-//            IOUtils.copy(new FileInputStream(uploadFile), fileItem.getOutputStream());
-//        } catch (Exception e) {
-//            fail(e.getMessage());
-//        }
-//
-//        MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
-//
-//        System.out.println("Calling upload...");
-//
-//        return fileTransferApiClient.upload(multipartFile);
-//    }
+        // Prepare upload
+        FileTransferApiResponse mockResponse = new FileTransferApiResponse();
+        mockResponse.setId(UUID.randomUUID()
+                .toString());
+
+        final String responseBody = new ObjectMapper().writeValueAsString(mockResponse);
+
+        mockServerExpectation("/", "POST").respond(
+                response().withBody(responseBody)
+                        .withStatusCode(201));
+
+        // Upload
+        File uploadFile = new File(uploadFilePath);
+        FileTransferApiClientResponse uploadResponse = uploadFile(uploadFile);
+
+        assertEquals(HttpStatus.CREATED, uploadResponse.getHttpStatus());
+        assertTrue(StringUtils.isNotBlank(uploadResponse.getFileId()));
+    }
+
+    private FileTransferApiClientResponse uploadFile(final File uploadFile) throws Exception {
+
+        MultipartFile multipartFile = new MockMultipartFile(
+                "file",
+                uploadFile.getName(),
+                Files.probeContentType(uploadFile.toPath()),
+                new FileInputStream(uploadFile)
+        );
+
+        System.out.println("Calling upload...");
+
+        return fileTransferApiClient.upload(multipartFile);
+    }
 
     private ForwardChainExpectation mockServerExpectation(String path, String httpMethod) throws IOException {
         return mockServer.when(HttpRequest.request().withMethod(httpMethod).withPath(path).withKeepAlive(true));

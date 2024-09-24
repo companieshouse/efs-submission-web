@@ -3,7 +3,6 @@ package uk.gov.companieshouse.efs.web.util;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 
 import com.github.stefanbirkner.systemlambda.SystemLambda;
-import java.util.Properties;
 import java.util.concurrent.Callable;
 
 
