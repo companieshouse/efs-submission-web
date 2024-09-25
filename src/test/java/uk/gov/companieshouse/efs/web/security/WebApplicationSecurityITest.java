@@ -72,5 +72,10 @@ public class WebApplicationSecurityITest {
             mockMvc.perform(get(insolvencyGuidancePageUrl))
                     .andExpect(status().isOk());
 
+            mockMvc.perform(get(serviceUnavailablePageUrl))
+                    .andExpect(status().isFound());
+
+            mockMvc.perform(get(signoutRedirectPath))
+                    .andExpect(status().isOk());
         }
 }
