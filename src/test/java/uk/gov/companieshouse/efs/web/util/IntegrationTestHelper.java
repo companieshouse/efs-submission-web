@@ -29,6 +29,7 @@ public class IntegrationTestHelper {
                 .and("OAUTH2_REQUEST_KEY", "oauth2_request_key")
                 .and("PAYMENTS_API_URL", "http://api-payments.chs.local:4001")
                 .and("EFS_REGISTRATIONS_ENABLED", "false")
-                .and("COMPANY_NUMBER_PREFIX_BLOCKED","OE");
+                .and("COMPANY_NUMBER_PREFIX_BLOCKED","OE")
+                .and("CHS_API_KEY", "MGQ1MGNlYmFkYzkxZTM2MzlkNGVmMzg4ZjgxMmEz");
     }
 }
