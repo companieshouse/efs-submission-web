@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private void logResponseStatusException(ResponseStatusException ex, final String submissionID) {
         Map<String, Object> logDetails = new HashMap<>();
         logDetails.put("statusCode", ex.getStatusCode().value());
-        logDetails.put("statusMessage", ex.getStatusCode());
+        logDetails.put("statusMessage", ex.getMessage());
 
         structuredLogger.errorContext(submissionID, "Received non 200 series response from API",
                 ex, logDetails);

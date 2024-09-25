@@ -31,14 +31,23 @@
         <nimbus-jose-jwt.version>9.41.1</nimbus-jose-jwt.version>
 
         <!-- Logging -->
-        <log4j-bom.version>3.0.0-alpha1</log4j-bom.version>
+        <log4j-bom.version>2.24.0</log4j-bom.version>
         <structured-logging.version>3.0.14</structured-logging.version>
+        <jboss-logging.version>3.6.1.Final</jboss-logging.version>
 
         <thymeleaf-layout-dialect.version>3.3.0</thymeleaf-layout-dialect.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <equalsverifier.version>3.16.2</equalsverifier.version>
         <system-lambda.version>1.2.1</system-lambda.version>
 
+        <!-- Mockito -->
+        <mockito-core.version>5.13.0</mockito-core.version>
+        <mockito-junit-jupiter.version>5.13.0</mockito-junit-jupiter.version>
+
+        <junit-jupiter-params.version>5.10.0</junit-jupiter-params.version>
+        <junit-platform-engine.version>1.10.0</junit-platform-engine.version>
+        <junit-platform-launcher.version>1.10.0</junit-platform-launcher.version>
+        <junit-platform-commons.version>1.10.0</junit-platform-commons.version>
         <mock-server.version>5.15.0</mock-server.version>
 
         <!-- Security -->
@@ -60,7 +69,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <junit-jupiter-params.version>5.10.0</junit-jupiter-params.version>
         <!-- Sonar dependency -->
         <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -95,7 +103,7 @@
             <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
-                <version>3.6.0.Final</version>
+                <version>${jboss-logging.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -146,7 +154,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.13.0</version>
+            <version>${mockito-core.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -158,7 +166,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.13.0</version>
+            <version>${mockito-junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -297,19 +305,19 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-commons</artifactId>
-            <version>1.10.0</version>
+            <version>${junit-platform-commons.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-engine</artifactId>
-            <version>1.10.0</version>
+            <version>${junit-platform-engine.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
-            <version>1.10.0</version>
+            <version>${junit-platform-launcher.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -388,7 +396,7 @@
                     <skipTests>${skip.unit.tests}</skipTests>
                     <trimStackTrace>false</trimStackTrace>
                     <environmentVariables>
-                        <DOCUMENT_API_LOCAL_URL>chs.local</DOCUMENT_API_LOCAL_URL>cle
+                        <DOCUMENT_API_LOCAL_URL>chs.local</DOCUMENT_API_LOCAL_URL>
                     </environmentVariables>
                 </configuration>
             </plugin>

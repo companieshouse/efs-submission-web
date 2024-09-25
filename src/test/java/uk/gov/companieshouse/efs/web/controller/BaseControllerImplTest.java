@@ -237,7 +237,7 @@ public abstract class BaseControllerImplTest {
     @Test
     void testGetViewName() {
         String viewName = baseController.getViewName();
-        assertNull(null, viewName);
+        assertNull(viewName, "Base controllers view should be null");
     }
 
     @ParameterizedTest

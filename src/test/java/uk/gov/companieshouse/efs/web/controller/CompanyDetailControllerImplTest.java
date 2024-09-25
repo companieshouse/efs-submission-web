@@ -34,7 +34,6 @@ import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     private CompanyDetailController testController;
 
