@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.efs.web.categorytemplates.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateApi;

@@ -18,7 +18,7 @@ class RegistrationsInfoControllerImplTest extends BaseControllerImplTest {
     private RegistrationsInfoController testController;
 
     @BeforeEach
-    private void setup() {
+    public void setup() {
         setUpHeaders();
         testController = new RegistrationsInfoControllerImpl(logger, sessionService, apiClientService,
             formTemplateService, categoryTemplateService);

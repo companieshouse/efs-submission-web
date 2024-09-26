@@ -1,15 +1,15 @@
 package uk.gov.companieshouse.efs.web.interceptor;
 
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import uk.gov.companieshouse.efs.web.service.session.SessionService;
 
@@ -17,7 +17,7 @@ import uk.gov.companieshouse.efs.web.service.session.SessionService;
  * Adds the user profile information to the {@link ModelAndView}.
  */
 @Component
-public class UserDetailsInterceptor extends HandlerInterceptorAdapter {
+public class UserDetailsInterceptor implements HandlerInterceptor {
 
     private static final String USER_EMAIL = "userEmail";
 

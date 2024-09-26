@@ -9,7 +9,7 @@ import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.session.model.SignInInfo;
 import uk.gov.companieshouse.session.model.UserProfile;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

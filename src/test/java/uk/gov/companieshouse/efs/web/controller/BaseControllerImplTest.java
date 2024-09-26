@@ -33,8 +33,8 @@ import uk.gov.companieshouse.session.Session;
 import uk.gov.companieshouse.session.SessionImpl;
 import uk.gov.companieshouse.session.handler.SessionHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.Arrays;
@@ -44,8 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -103,7 +103,7 @@ public abstract class BaseControllerImplTest {
     protected CategoryTemplateModel categoryTemplateAttribute;
     @Mock
     protected CategoryTemplateService categoryTemplateService;
-    @Mock
+    @Mock(name = "apiClientService")
     protected ApiClientService apiClientService;
     @Mock
     protected SessionService sessionService;
@@ -237,7 +237,7 @@ public abstract class BaseControllerImplTest {
     @Test
     void testGetViewName() {
         String viewName = baseController.getViewName();
-        assertNull("Base controllers view should be null", viewName);
+        assertNull(viewName, "Base controllers view should be null");
     }
 
     @ParameterizedTest

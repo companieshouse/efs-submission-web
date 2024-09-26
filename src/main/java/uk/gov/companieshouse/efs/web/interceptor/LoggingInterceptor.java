@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.efs.web.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.util.RequestLogger;
 
@@ -13,7 +13,7 @@ import uk.gov.companieshouse.logging.util.RequestLogger;
  * Logs out information about the {@link HttpServletRequest} and {@link HttpServletResponse}.
  */
 @Component
-public class LoggingInterceptor extends HandlerInterceptorAdapter implements RequestLogger {
+public class LoggingInterceptor implements HandlerInterceptor, RequestLogger {
 
     @SuppressWarnings("squid:S1312") // Loggers should be private static final; here logger is singleton bean
     private Logger logger;

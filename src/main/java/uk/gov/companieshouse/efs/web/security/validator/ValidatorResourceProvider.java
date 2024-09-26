@@ -10,7 +10,7 @@ import uk.gov.companieshouse.session.Session;
 import uk.gov.companieshouse.session.handler.SessionHandler;
 import uk.gov.companieshouse.session.model.SignInInfo;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
