@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 @Import({WebApplicationSecurity.class, StaticPageControllerImpl.class})
-public class WebApplicationSecurityITest {
+class WebApplicationSecurityITest {
 
     private static Map<String, String> storedEnvironment;
     public static SystemLambda.WithEnvironmentVariables springEnvironment;
