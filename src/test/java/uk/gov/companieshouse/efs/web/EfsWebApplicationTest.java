@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import uk.gov.companieshouse.efs.web.controller.BaseControllerImplTest;
 import uk.gov.companieshouse.efs.web.interceptor.LoggingInterceptor;
 import uk.gov.companieshouse.efs.web.interceptor.UserDetailsInterceptor;
 

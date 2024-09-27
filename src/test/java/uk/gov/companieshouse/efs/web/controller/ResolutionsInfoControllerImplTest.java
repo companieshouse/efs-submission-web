@@ -23,7 +23,7 @@ class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
     private ResolutionsInfoController testController;
 
     @BeforeEach
-    private void setup() {
+    public void setup() {
         setUpHeaders();
         testController = new ResolutionsInfoControllerImpl(logger, sessionService, apiClientService,
             formTemplateService, categoryTemplateService);

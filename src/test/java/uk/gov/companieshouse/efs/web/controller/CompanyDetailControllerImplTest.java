@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -44,7 +46,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     private static final String OVERSEAS_ENTITY_COMPANY_NUMBER = "OE123456";
 
     @BeforeEach
-    private void setup() {
+    public void setup() {
         setUpHeaders();
         testController = new CompanyDetailControllerImpl(companyService, sessionService, apiClientService, logger,
                 companyDetailAttribute);

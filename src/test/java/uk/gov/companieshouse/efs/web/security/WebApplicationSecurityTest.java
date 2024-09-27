@@ -1,148 +1,105 @@
 package uk.gov.companieshouse.efs.web.security;
 
+import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.github.stefanbirkner.systemlambda.Statement;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import com.github.stefanbirkner.systemlambda.Statement;
+import uk.gov.companieshouse.auth.filter.CompanyAuthFilter;
 import uk.gov.companieshouse.auth.filter.HijackFilter;
+import uk.gov.companieshouse.auth.filter.UserAuthFilter;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.session.handler.SessionHandler;
 
-import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class WebApplicationSecurityTest {
+
     @Mock
     private ApiClientService apiClientService;
+
     @Mock
     private FormTemplateService formTemplateService;
+
     @Mock
     private CategoryTemplateService categoryTemplateService;
+
     @Mock
     private EnvironmentReader environmentReader;
+
     @Mock
     private HttpSecurity httpSecurity;
+
+    @InjectMocks
+    private WebApplicationSecurity webApplicationSecurity;
 
     static final String randomEncryptionKey = "3T3L6iAEFscijkJZnOK0bYu/pH9jZeJqC1j59ZROKu8=";
 
     @Test
-    void rootLevelConfig() {
-        final WebApplicationSecurity.RootLevelSecurityConfig testConfig =
-            new WebApplicationSecurity.RootLevelSecurityConfig();
+    void securityFilterChainTest() throws Exception {
 
-        testConfig.configure(httpSecurity);
+        HttpSecurity httpSecurityMock = mock(HttpSecurity.class);
+        when(httpSecurity.securityMatcher(any(String[].class))).thenReturn(httpSecurityMock);
+        when(httpSecurityMock.authorizeHttpRequests(any())).thenReturn(httpSecurityMock);
 
-        verify(httpSecurity).antMatcher("/efs-submission");
+        webApplicationSecurity.securityFilterChain(httpSecurity);
+
+        verify(httpSecurity).securityMatcher(any(String[].class));
+        verify(httpSecurityMock).authorizeHttpRequests(any());
+        verify(httpSecurityMock).build();
     }
 
     @Test
-    void startPageConfig() {
-        final WebApplicationSecurity.StartPageSecurityConfig testConfig =
-            new WebApplicationSecurity.StartPageSecurityConfig("start page");
+    void companyAuthFilterChainTest() throws Exception {
 
-        testConfig.configure(httpSecurity);
+        HttpSecurity httpSecurityMock = mock(HttpSecurity.class);
+        when(httpSecurity.securityMatcher(any(String[].class))).thenReturn(httpSecurityMock);
+        when(httpSecurityMock.addFilterBefore(any(), any())).thenReturn(httpSecurityMock);
 
-        verify(httpSecurity).antMatcher("start page");
+        withLoggingAuthFilterEnvironment(() -> webApplicationSecurity.companyAuthFilterChain(httpSecurity));
+
+        verify(httpSecurity).securityMatcher("/efs-submission/*/company/**");
+        verify(httpSecurityMock).addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).addFilterBefore(any(UserAuthFilter.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).addFilterBefore(any(CompanyAuthFilter.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).build();
     }
 
     @Test
-    void accessibilityPageConfig() {
-        final WebApplicationSecurity.AccessibilityStatementPageSecurityConfig testConfig =
-            new WebApplicationSecurity.AccessibilityStatementPageSecurityConfig("access page");
+    void efsWebResourceFilterChainTest() throws Exception {
 
-        testConfig.configure(httpSecurity);
+        HttpSecurity httpSecurityMock = mock(HttpSecurity.class);
+        when(httpSecurity.securityMatcher(any(String[].class))).thenReturn(httpSecurityMock);
+        when(httpSecurityMock.addFilterBefore(any(), any())).thenReturn(httpSecurityMock);
 
-        verify(httpSecurity).antMatcher("access page");
-    }
+        withLoggingAuthFilterEnvironment(() -> webApplicationSecurity.efsWebResourceFilterChain(httpSecurity));
 
-    @Test
-    void guidancePageConfig() {
-        final WebApplicationSecurity.GuidancePageSecurityConfig testConfig =
-            new WebApplicationSecurity.GuidancePageSecurityConfig("guidance page");
-
-        testConfig.configure(httpSecurity);
-
-        verify(httpSecurity).antMatcher("guidance page");
-    }
-
-    @Test
-    void insolvencyGuidancePageConfig() {
-        final WebApplicationSecurity.InsolvencyGuidancePageSecurityConfig testConfig =
-            new WebApplicationSecurity.InsolvencyGuidancePageSecurityConfig("insolvency page");
-
-        testConfig.configure(httpSecurity);
-
-        verify(httpSecurity).antMatcher("insolvency page");
-    }
-
-    @Test
-    void serviceUnavailablePageConfig() {
-        final WebApplicationSecurity.ServiceUnavailablePageSecurityConfig testConfig =
-                new WebApplicationSecurity.ServiceUnavailablePageSecurityConfig("service unavailable page");
-
-        testConfig.configure(httpSecurity);
-
-        verify(httpSecurity).antMatcher("service unavailable page");
-    }
-
-    @Test
-    void companyAuthFilterSecurityConfigTest() {
-
-        final WebApplicationSecurity webApplicationSecurity = new WebApplicationSecurity(
-                apiClientService, formTemplateService, categoryTemplateService, environmentReader);
-
-        final WebApplicationSecurity.CompanyAuthFilterSecurityConfig testConfig =
-                webApplicationSecurity.new CompanyAuthFilterSecurityConfig();
-
-        when(httpSecurity.antMatcher(anyString())).thenReturn(httpSecurity);
-        when(httpSecurity.addFilterBefore(any(), any())).thenReturn(httpSecurity);
-
-        withLoggingAuthFilterEnvironment(() ->
-                testConfig.configure(httpSecurity));
-
-        verify(httpSecurity).antMatcher("/efs-submission/*/company/**");
-        verify(httpSecurity)
-                .addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class));
-        verify(httpSecurity)
-                .addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class));
-        verify(httpSecurity)
-                .addFilterBefore(any(LoggingAuthFilter.class), eq(BasicAuthenticationFilter.class));
-        verify(httpSecurity)
-                .addFilterBefore(any(CompanyAuthFilter.class), eq(BasicAuthenticationFilter.class));
-    }
-
-    @Test
-    void efsWebResourceFilterConfigTest() {
-        final WebApplicationSecurity webApplicationSecurity = new WebApplicationSecurity(
-                apiClientService, formTemplateService, categoryTemplateService, environmentReader);
-
-        final WebApplicationSecurity.EfsWebResourceFilterConfig testConfig =
-                webApplicationSecurity.new EfsWebResourceFilterConfig();
-
-        when(httpSecurity.antMatcher(anyString())).thenReturn(httpSecurity);
-        when(httpSecurity.addFilterBefore(any(), any())).thenReturn(httpSecurity);
-
-        withLoggingAuthFilterEnvironment(() -> testConfig.configure(httpSecurity));
-
-        verify(httpSecurity).antMatcher("/efs-submission/**");
-        verify(httpSecurity)
-                .addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class));
-        verify(httpSecurity)
-                .addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class));
-        verify(httpSecurity)
-                .addFilterBefore(any(LoggingAuthFilter.class), eq(BasicAuthenticationFilter.class));
+        verify(httpSecurity).securityMatcher("/efs-submission/**");
+        verify(httpSecurityMock).addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).addFilterBefore(any(UserAuthFilter.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).build();
     }
 
     void withLoggingAuthFilterEnvironment(Statement callback) {

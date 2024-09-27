@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.efs.web.controller.DocumentUploadControllerImpl.FILE_UPLOADS_ALLOWED_FOR_FES_ENABLED_FORMS;
 
@@ -72,10 +71,10 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
     private DocumentUploadControllerImpl toTest;
 
     @BeforeEach
-    private void start() {
+    public void start() {
         setUpHeaders();
 
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         ReflectionTestUtils.setField(toTest, "chsUrl", CHS_URL);
 
@@ -83,7 +82,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
     }
 
     @AfterEach
-    private void finish() {
+    public void finish() {
 
     }
 

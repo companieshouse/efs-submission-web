@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.efs.web.security.validator;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Contains fields used by all company auth validators

@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.efs.web.security.validator;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.regex.Matcher;
 

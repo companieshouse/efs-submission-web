@@ -1,11 +1,10 @@
 package uk.gov.companieshouse.efs.web.model;
 
 import java.util.Objects;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
 
 @Component
 //@SessionScope

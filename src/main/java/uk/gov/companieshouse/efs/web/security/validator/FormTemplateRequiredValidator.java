@@ -3,7 +3,7 @@ package uk.gov.companieshouse.efs.web.security.validator;
 
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**

@@ -14,7 +14,6 @@ import uk.gov.companieshouse.efs.web.controller.ViewConstants;
 import uk.gov.companieshouse.efs.web.exception.ServiceException;
 import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.PaymentService;
-import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,8 +35,6 @@ class PaymentControllerImplTest extends BaseControllerImplTest {
 
     private PaymentController testController;
 
-    @Mock
-    private ApiClientService apiClientService;
     @Mock
     private PaymentService paymentService;
     @Mock

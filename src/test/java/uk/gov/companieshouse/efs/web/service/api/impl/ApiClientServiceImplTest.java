@@ -180,7 +180,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.getSubmission(SUBMISSION_ID));
 
-        assertThat(exception.getStatus(), is(HttpStatus.NOT_FOUND));
+        assertThat(exception.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -197,7 +197,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.getSubmission(SUBMISSION_ID));
 
-        assertThat(exception.getStatus(), is(HttpStatus.BAD_REQUEST));
+        assertThat(exception.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
@@ -214,7 +214,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.getSubmission(SUBMISSION_ID));
 
-        assertThat(exception.getStatus(), is(HttpStatus.NOT_FOUND));
+        assertThat(exception.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -232,7 +232,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.getSubmission(SUBMISSION_ID));
 
-        assertThat(exception.getStatus(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(exception.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
@@ -344,7 +344,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.isOnAllowList(EMAIL_ADDRESS));
 
-        assertThat(exception.getStatus(), is(HttpStatus.NOT_FOUND));
+        assertThat(exception.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -360,7 +360,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.isOnAllowList(EMAIL_ADDRESS));
 
-        assertThat(exception.getStatus(), is(HttpStatus.BAD_REQUEST));
+        assertThat(exception.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
@@ -376,7 +376,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.isOnAllowList(EMAIL_ADDRESS));
 
-        assertThat(exception.getStatus(), is(HttpStatus.NOT_FOUND));
+        assertThat(exception.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -393,7 +393,7 @@ class ApiClientServiceImplTest {
         final ResponseStatusException exception = assertThrows(ResponseStatusException.class,
             () -> apiClientService.isOnAllowList(EMAIL_ADDRESS));
 
-        assertThat(exception.getStatus(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(exception.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     private void stubApiClientStatic() {
