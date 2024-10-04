@@ -19,7 +19,7 @@
         <skip.unit.tests>false</skip.unit.tests>
 
         <java.version>21</java.version>
-        <java-session-handler.version>4.1.0</java-session-handler.version>
+        <java-session-handler.version>4.1.1</java-session-handler.version>
         <private-api-sdk-java.version>4.0.195</private-api-sdk-java.version>
         <sdk-manager-java.version>3.0.9</sdk-manager-java.version>
         <rest-service-common-library.version>2.0.2</rest-service-common-library.version>
@@ -31,9 +31,7 @@
         <nimbus-jose-jwt.version>9.41.1</nimbus-jose-jwt.version>
 
         <!-- Logging -->
-        <log4j-bom.version>2.24.0</log4j-bom.version>
         <structured-logging.version>3.0.14</structured-logging.version>
-        <jboss-logging.version>3.6.1.Final</jboss-logging.version>
 
         <thymeleaf-layout-dialect.version>3.3.0</thymeleaf-layout-dialect.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
@@ -90,21 +88,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Fix for CVE-2021-44228 -->
-            <!-- Fix for CVE-2021-45105 -->
-            <!-- Required until v2.5.8 springframework & v2.6.2 springboot -->
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-bom</artifactId>
-                <version>${log4j-bom.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging</artifactId>
-                <version>${jboss-logging.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -120,6 +103,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -240,6 +233,12 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>structured-logging</artifactId>
             <version>${structured-logging.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Security dependencies -->
