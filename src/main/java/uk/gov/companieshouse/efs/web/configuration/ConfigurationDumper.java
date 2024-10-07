@@ -45,7 +45,7 @@ public class ConfigurationDumper {
 
         SortedMap<String, Object> map = new TreeMap<>();
         for (final PropertySource<?> source : ((AbstractEnvironment) env).getPropertySources()) {
-            if (source instanceof MapPropertySource) {
+            if ((PropertySource) source instanceof MapPropertySource) {
                 final Map<String, Object> sourceMap = ((MapPropertySource) source).getSource();
 
                 map.putAll(sourceMap.entrySet().stream()
