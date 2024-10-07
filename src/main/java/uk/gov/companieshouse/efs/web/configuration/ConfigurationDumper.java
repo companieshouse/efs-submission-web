@@ -45,7 +45,7 @@ public class ConfigurationDumper {
 
         SortedMap<String, Object> map = new TreeMap<>();
         for (final PropertySource<?> source : ((AbstractEnvironment) env).getPropertySources()) {
-            if ((PropertySource) source instanceof MapPropertySource) {
+            if (source instanceof MapPropertySource) {
                 final Map<String, Object> sourceMap = ((MapPropertySource) source).getSource();
 
                 map.putAll(sourceMap.entrySet().stream()
@@ -54,6 +54,5 @@ public class ConfigurationDumper {
             }
         }
         logger.trace("Active profiles: " + activeProfiles);
-        logger.trace("PROPERTIES", map);
     }
 }
