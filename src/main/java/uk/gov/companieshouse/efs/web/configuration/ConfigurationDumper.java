@@ -54,5 +54,6 @@ public class ConfigurationDumper {
             }
         }
         logger.trace("Active profiles: " + activeProfiles);
+        logger.trace("PROPERTIES", map);
     }
 }
