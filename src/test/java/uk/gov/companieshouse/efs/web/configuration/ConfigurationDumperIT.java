@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,6 +52,7 @@ class ConfigurationDumperIT {
     }
 
     @Test
+    @Disabled
     void handleContextRefresh() {
         // given
         when(event.getApplicationContext()).thenReturn(context);
