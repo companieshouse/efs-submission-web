@@ -61,6 +61,7 @@ public class WebApplicationSecurity {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.securityMatcher("/efs-submission",
+                "/efs-submission-web/**",
                 signoutRedirectPath,
                 startPageUrl,
                 accessibilityStatementPageUrl,
