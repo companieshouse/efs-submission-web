@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -21,7 +22,10 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import uk.gov.companieshouse.efs.web.interceptor.LoggingInterceptor;
+import uk.gov.companieshouse.efs.web.interceptor.UserDetailsInterceptor;
 import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.NonceServiceFactoryImpl;
 import uk.gov.companieshouse.environment.EnvironmentReader;
@@ -38,8 +42,45 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Value("${rng.provider}")
     private String provider;
 
+    @Autowired
+    private UserDetailsInterceptor userDetailsInterceptor;
+
+    @Autowired
+    private LoggingInterceptor loggingInterceptor;
+
+    @Value("${start.page.url}")
+    private  String startPageUrl;
+
+    @Value("${guidance.page.url}")
+    private  String guidancePageUrl;
+
+    @Value("${insolvency.guidance.page.url}")
+    private  String insolvencyGuidancePageUrl;
+
+    @Value("${accessibility.statement.page.url}")
+    private  String accessibilityStatementPageUrl;
+
+    @Value("${service.unavailable.page.url}")
+    private  String serviceUnavailablePageUrl;
+
     @Value("${company.number.prefix.blocked}")
     private List<String> prefixBlockList;
+
+
+    /**
+     * Adds interceptors for User Sign in.
+     * But exclude initial start / (insolvency) guidance / contact-us pages because they don't need to be and will
+     * get move out to gov.uk
+     *
+     * @param registry the Interceptor registry
+     */
+    @Override
+    public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(loggingInterceptor);
+        registry.addInterceptor(userDetailsInterceptor)
+                .excludePathPatterns(startPageUrl, guidancePageUrl, insolvencyGuidancePageUrl,
+                        accessibilityStatementPageUrl, serviceUnavailablePageUrl);
+    }
 
     /**
      * Manage the messages bundle required by models.
