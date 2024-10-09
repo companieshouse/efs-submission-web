@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import uk.gov.companieshouse.efs.web.configuration.SpringWebConfig;
 import uk.gov.companieshouse.efs.web.controller.StaticPageControllerImpl;
 import uk.gov.companieshouse.efs.web.util.IntegrationTestHelper;
 
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
-@Import({WebApplicationSecurity.class, StaticPageControllerImpl.class})
+@Import({WebApplicationSecurity.class, StaticPageControllerImpl.class, SpringWebConfig.class})
 class WebApplicationSecurityITest {
 
     private static Map<String, String> storedEnvironment;
@@ -34,7 +35,9 @@ class WebApplicationSecurityITest {
     static void setUpSpringEnvironment() {
         storedEnvironment = new HashMap<>(System.getenv());
         springEnvironment = IntegrationTestHelper.withSpringEnvironment()
-                .and("LOGGING_LEVEL", "DEBUG");
+                .and("LOGGING_LEVEL", "DEBUG")
+                .and("FILE_TRANSFER_API_KEY", "test")
+                .and("FILE_TRANSFER_API_URL", "test");
 
         ReflectionTestUtils.invokeMethod(springEnvironment, "setEnvironmentVariables");
     }
