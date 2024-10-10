@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.efs.web;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -52,11 +53,9 @@ class InterceptorTest {
     @Test
     void testInterceptorsArePresent() throws Exception {
         MvcResult result = mockMvc.perform(get("/new-submission")).andDo(print()).andReturn();
-        assertNotNull(Arrays.stream(Objects.requireNonNull(result.getInterceptors()))
-                .filter(handlerInterceptor -> handlerInterceptor instanceof LoggingInterceptor)
-                .findFirst());
-        assertNotNull(Arrays.stream(Objects.requireNonNull(result.getInterceptors()))
-                .filter(handlerInterceptor -> handlerInterceptor instanceof UserDetailsInterceptor)
-                .findFirst());
+        assertTrue(Arrays.stream(Objects.requireNonNull(result.getInterceptors()))
+                .anyMatch(handlerInterceptor -> handlerInterceptor instanceof LoggingInterceptor));
+        assertTrue(Arrays.stream(Objects.requireNonNull(result.getInterceptors()))
+                .anyMatch(handlerInterceptor -> handlerInterceptor instanceof UserDetailsInterceptor));
     }
 }
