@@ -86,8 +86,7 @@ public class WebApplicationSecurity {
 
         return http.securityMatcher("/efs-submission/*/company/*/details",
                                 "/efs-submission/*/company/*/category-selection",
-                                "/efs-submission/*/company/*/document-selection",
-                                "/efs-submission/*/company/*/document-upload")
+                                "/efs-submission/*/company/*/document-selection")
                 .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class).build();
@@ -106,7 +105,6 @@ public class WebApplicationSecurity {
                 .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(companyAuthFilter, BasicAuthenticationFilter.class).build();
     }
-
 
     /**
      * static nested class for resource level security.
