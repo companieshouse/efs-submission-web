@@ -52,7 +52,6 @@ class ConfigurationDumperIT {
     }
 
     @Test
-    @Disabled
     void handleContextRefresh() {
         // given
         when(event.getApplicationContext()).thenReturn(context);
