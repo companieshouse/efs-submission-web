@@ -72,8 +72,21 @@ public class WebApplicationSecurity {
                         .requestMatchers("/**").permitAll())
                 .build();
     }
-    
+
     @Order(2)
+    @Bean
+    public SecurityFilterChain withoutCompanyAuthFilterChain(HttpSecurity http) throws Exception {
+
+        return http.securityMatcher("/efs-submission/*/company/*/details",
+                                "/efs-submission/*/company/*/category-selection",
+                                "/efs-submission/*/company/*/document-selection",
+                                "/efs-submission/*/company/*/document-upload")
+                .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class).build();
+    }
+    
+    @Order(3)
     @Bean
     public SecurityFilterChain companyAuthFilterChain(HttpSecurity http) throws Exception {
 
@@ -88,7 +101,7 @@ public class WebApplicationSecurity {
     /**
      * static nested class for resource level security.
      */
-    @Order(3)
+    @Order(4)
     @Bean
     public SecurityFilterChain efsWebResourceFilterChain(HttpSecurity http) throws Exception {
 

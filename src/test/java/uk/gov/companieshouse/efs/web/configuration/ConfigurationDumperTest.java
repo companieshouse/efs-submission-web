@@ -60,18 +60,16 @@ class ConfigurationDumperTest {
     }
 
     @Test
-    @Disabled
     void handleContextRefreshWhenNoPropertySource() {
         testDumper.handleContextRefresh(event);
         
         verify(logger).trace("Active profiles: [test]");
-        //verify(logger).trace(eq("PROPERTIES"), captor.capture());
+        verify(logger).trace(eq("PROPERTIES"), captor.capture());
         
         assertThat(captor.getValue(), is(anEmptyMap()));
     }
     
     @Test
-    @Disabled
     void handleContextRefreshWhenNoMapPropertySource() {
         source = new PropertiesPropertySource("properties", new Properties());
         sources.addFirst(source);
@@ -79,13 +77,12 @@ class ConfigurationDumperTest {
         testDumper.handleContextRefresh(event);
         
         verify(logger).trace("Active profiles: [test]");
-        //verify(logger).trace(eq("PROPERTIES"), captor.capture());
+        verify(logger).trace(eq("PROPERTIES"), captor.capture());
         
         assertThat(captor.getValue(), is(anEmptyMap()));
     }
     
     @Test
-    @Disabled
     void handleContextRefreshWhenMapPropertySource() {
         Map<String, Object> propertyMap = Collections.singletonMap("key", "value");
         
@@ -95,7 +92,7 @@ class ConfigurationDumperTest {
         testDumper.handleContextRefresh(event);
         
         verify(logger).trace("Active profiles: [test]");
-        //verify(logger).trace(eq("PROPERTIES"), captor.capture());
+        verify(logger).trace(eq("PROPERTIES"), captor.capture());
         
         assertThat(captor.getValue(), hasEntry("key", "value"));
     }

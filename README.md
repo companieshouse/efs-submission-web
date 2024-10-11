@@ -9,7 +9,7 @@ The service integrates with a number of internal systems. This includes [company
 Requirements
 ------------
 * [Git](https://git-scm.com/downloads)
-* [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Java](https://www.oracle.com/java/technologies/downloads/#java21)
 * [Maven](https://maven.apache.org/download.cgi)
 * [efs-submission-api](https://github.com/companieshouse/efs-submission-api)
 * Internal Companies House core services
@@ -26,7 +26,7 @@ Requirements
 
 ## Building the docker image 
 
-    mvn -s settings.xml compile jib:dockerBuild -Dimage=169942020521.dkr.ecr.eu-west-1.amazonaws.com/local/efs-submission-api
+    mvn -s settings.xml compile jib:dockerBuild -Dimage=416670754337.dkr.ecr.eu-west-2.amazonaws.com/efs-submission-web:latest
 
 ## Running Locally using Docker
 
@@ -34,7 +34,7 @@ Requirements
 
 1. Enable the `efs` module
 
-1. Run `tilt up` and wait for all services to start
+1. Run `chs-dev up` and wait for all services to start
 
 ### To make local changes
 
