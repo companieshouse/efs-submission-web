@@ -63,6 +63,28 @@ class WebApplicationSecurityTest {
     }
 
     @Test
+    void withoutCompanyAuthFilterChainTest() throws Exception {
+
+        HttpSecurity httpSecurityMock = mock(HttpSecurity.class);
+        when(httpSecurity.securityMatcher(any(String[].class))).thenReturn(httpSecurityMock);
+        when(httpSecurityMock.addFilterBefore(any(), any())).thenReturn(httpSecurityMock);
+
+        withLoggingAuthFilterEnvironment(() -> webApplicationSecurity.withoutCompanyAuthFilterChain(httpSecurity));
+
+        verify(httpSecurity).securityMatcher("/efs-submission/*/company/*/details",
+                "/efs-submission/*/company/*/category-selection",
+                "/efs-submission/*/company/*/document-selection",
+                "/efs-submission/*/company/*/document-upload");
+        verify(httpSecurityMock).addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).addFilterBefore(any(UserAuthFilter.class), eq(BasicAuthenticationFilter.class
+        ));
+        verify(httpSecurityMock).build();
+    }
+
+    @Test
     void companyAuthFilterChainTest() throws Exception {
 
         HttpSecurity httpSecurityMock = mock(HttpSecurity.class);
