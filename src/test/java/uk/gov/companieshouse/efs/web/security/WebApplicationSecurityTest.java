@@ -72,8 +72,7 @@ class WebApplicationSecurityTest {
 
         verify(httpSecurity).securityMatcher("/efs-submission/*/company/*/details",
                 "/efs-submission/*/company/*/category-selection",
-                "/efs-submission/*/company/*/document-selection",
-                "/efs-submission/*/company/*/document-upload");
+                "/efs-submission/*/company/*/document-selection");
         verify(httpSecurityMock).addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class
         ));
         verify(httpSecurityMock).addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class
