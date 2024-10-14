@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import uk.gov.companieshouse.auth.filter.CompanyAuthFilter;
 import uk.gov.companieshouse.auth.filter.HijackFilter;
 import uk.gov.companieshouse.auth.filter.UserAuthFilter;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
@@ -31,6 +30,10 @@ public class WebApplicationSecurity {
     private final String guidancePageUrl;
     private final String insolvencyGuidancePageUrl;
     private final String serviceUnavailablePageUrl;
+    private ApiClientService apiClientService;
+    private FormTemplateService formTemplateService;
+    private CategoryTemplateService categoryTemplateService;
+    private EnvironmentReader environmentReader;
 
     /**
      * Constructor.
@@ -55,6 +58,10 @@ public class WebApplicationSecurity {
         this.guidancePageUrl = guidancePageUrl;
         this.insolvencyGuidancePageUrl = insolvencyGuidancePageUrl;
         this.serviceUnavailablePageUrl = serviceUnavailablePageUrl;
+        this.apiClientService = apiClientService;
+        this.formTemplateService = formTemplateService;
+        this.categoryTemplateService = categoryTemplateService;
+        this.environmentReader = environmentReader;
     }
 
     @Order(1)
@@ -79,8 +86,7 @@ public class WebApplicationSecurity {
 
         return http.securityMatcher("/efs-submission/*/company/*/details",
                                 "/efs-submission/*/company/*/category-selection",
-                                "/efs-submission/*/company/*/document-selection",
-                                "/efs-submission/*/company/*/document-upload")
+                                "/efs-submission/*/company/*/document-selection")
                 .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class).build();
@@ -90,13 +96,15 @@ public class WebApplicationSecurity {
     @Bean
     public SecurityFilterChain companyAuthFilterChain(HttpSecurity http) throws Exception {
 
+        final CompanyAuthFilter companyAuthFilter =
+                new CompanyAuthFilter(environmentReader, apiClientService, formTemplateService,
+                        categoryTemplateService);
         return http.securityMatcher("/efs-submission/*/company/**")
                 .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class)
-                .addFilterBefore(new CompanyAuthFilter(), BasicAuthenticationFilter.class).build();
+                .addFilterBefore(companyAuthFilter, BasicAuthenticationFilter.class).build();
     }
-
 
     /**
      * static nested class for resource level security.
