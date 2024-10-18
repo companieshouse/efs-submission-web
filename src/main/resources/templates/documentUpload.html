@@ -17,7 +17,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
-                <div th:replace="fragments/errorSummary :: errorSummary"></div>
+                <div th:replace="~{fragments/errorSummary :: errorSummary}"></div>
                 <span class="govuk-caption-xl"
                       th:text="#{documentUpload.companyNameLabel} + ' ' + *{#strings.replace(companyName,'&#10;','&lt;br&gt;')}"></span>
                 <h1 class="govuk-heading-xl govuk-!-margin-bottom-5"
@@ -25,7 +25,7 @@
 
                 <!-- Guidance text -->
                 <div th:each="textId : ${messageTextList.list}">
-                    <div th:replace="__${'fragments/documentUpload/guidance :: guidance' + textId}__"></div>
+                    <div th:replace="~{__${'fragments/documentUpload/guidance :: guidance' + textId}__}"></div>
                 </div>
 
                 <!-- File Uploader -->
