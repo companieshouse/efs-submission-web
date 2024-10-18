@@ -17,7 +17,7 @@
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
-                <div th:replace="fragments/errorSummary :: errorSummary"></div>
+                <div th:replace="~{fragments/errorSummary :: errorSummary}"></div>
                 <div id="content-wrapper" class="govuk-form-group" th:classappend="${#fields.hasErrors('*')} ? govuk-form-group--error : noerror">
                     <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset" aria-describedby="page-heading" data-required="data-required"

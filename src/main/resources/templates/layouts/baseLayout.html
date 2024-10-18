@@ -33,19 +33,19 @@
     <script th:src="@{{cdnUrl}/javascripts/app/body-js-enable.js(cdnUrl=${@environment.getProperty('cdn.url')})}"
             type="text/javascript"></script>
 
-    <div th:replace="fragments/piwikWithCookieCheck :: cookieBanner"></div>
+    <div th:replace="~{fragments/piwikWithCookieCheck :: cookieBanner}"></div>
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
     <div class="entire-wrapper">
-        <div th:replace="fragments/header :: header"></div>
+        <div th:replace="~{fragments/header :: header}"></div>
         <div class="govuk-width-container">
-            <div th:replace="fragments/alphaBanner :: alphaBanner"></div>
+            <div th:replace="~{fragments/alphaBanner :: alphaBanner}"></div>
             <div layout:fragment="content"></div>
             <div class="push"></div>
         </div>
     </div>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
     <script th:src="@{{cdnUrl}/javascripts/vendor/selection-buttons.js(cdnUrl=${@environment.getProperty('cdn.url')})}"
             type="text/javascript"></script>
     <script th:src="@{{cdnUrl}/javascripts/vendor/application.js(cdnUrl=${@environment.getProperty('cdn.url')})}"
