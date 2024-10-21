@@ -64,7 +64,7 @@ build:
 dist: test-unit
 
 .PHONY: sonar
-sonar:	security-check
+sonar:
 	mvn sonar:sonar
 
 .PHONY: sonar-pr-analysis

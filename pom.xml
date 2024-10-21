@@ -52,8 +52,9 @@
         <web-security-java.version>3.1.0</web-security-java.version>
 
         <!-- Spring -->
-        <spring-boot-dependencies.version>3.3.3</spring-boot-dependencies.version>
-        <spring-test.version>6.1.13</spring-test.version>
+        <spring-boot-dependencies.version>3.3.4</spring-boot-dependencies.version>
+        <spring-test.version>6.1.14</spring-test.version>
+        <spring-webmvc.version>6.1.14</spring-webmvc.version>
         <spring-boot-maven-plugin.version>${spring-boot-dependencies.version}</spring-boot-maven-plugin.version>
 
         <!-- Maven -->
@@ -121,6 +122,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring-webmvc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
