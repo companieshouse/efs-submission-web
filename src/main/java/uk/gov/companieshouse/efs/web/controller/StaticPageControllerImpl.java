@@ -9,12 +9,14 @@ import jakarta.servlet.ServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -50,10 +52,22 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
     public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
                         RedirectAttributes redirectAttributes, ServletRequest servletRequest,
                         SessionStatus sessionStatus) {
-        ApiResponse<MaintenanceCheckApi> response = apiClientService.getMaintenanceCheck();
+        final ApiResponse<MaintenanceCheckApi> response;
 
+        try {
+            response = apiClientService.getMaintenanceCheck();
+
+            final HttpStatus status = HttpStatus.valueOf(response.getStatusCode());
+
+            logger.debug(String.format("Maintenance check response status: %s", status));
+        } catch (ResponseStatusException e) {
+            logger.error(String.format("Maintenance check response status: %s", e.getStatus()), e);
+
+            throw e;
+        }
         if (response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
-            DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
+            final DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern(
+                "h:mm a 'on' EEEE d MMMM yyyy");
             final String maintenanceEnd = response.getData().getMaintenanceEnd();
             final Instant parsed = Instant.parse(maintenanceEnd);
             LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
