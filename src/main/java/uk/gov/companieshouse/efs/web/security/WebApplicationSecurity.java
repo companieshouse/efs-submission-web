@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 import uk.gov.companieshouse.auth.filter.HijackFilter;
 import uk.gov.companieshouse.auth.filter.UserAuthFilter;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
@@ -27,6 +28,7 @@ public class WebApplicationSecurity {
     private final String signoutRedirectPath;
     private final String startPageUrl;
     private final String accessibilityStatementPageUrl;
+    private final CorsConfigurationSource corsConfigurationSource;
     private final String guidancePageUrl;
     private final String insolvencyGuidancePageUrl;
     private final String serviceUnavailablePageUrl;
@@ -45,7 +47,7 @@ public class WebApplicationSecurity {
     @Autowired
     public WebApplicationSecurity(
             final ApiClientService apiClientService, FormTemplateService formTemplateService,
-            final CategoryTemplateService categoryTemplateService, final EnvironmentReader environmentReader,
+            final CategoryTemplateService categoryTemplateService, final CorsConfigurationSource corsConfigurationSource, final EnvironmentReader environmentReader,
             @Value("${chs.signout.redirect.path}") String signoutRedirectPath,
             @Value("${start.page.url}") String startPageUrl,
             @Value("${accessibility.statement.page.url}") String accessibilityStatementPageUrl,
@@ -55,6 +57,7 @@ public class WebApplicationSecurity {
         this.signoutRedirectPath = signoutRedirectPath;
         this.startPageUrl = startPageUrl;
         this.accessibilityStatementPageUrl = accessibilityStatementPageUrl;
+        this.corsConfigurationSource = corsConfigurationSource;
         this.guidancePageUrl = guidancePageUrl;
         this.insolvencyGuidancePageUrl = insolvencyGuidancePageUrl;
         this.serviceUnavailablePageUrl = serviceUnavailablePageUrl;
@@ -63,7 +66,7 @@ public class WebApplicationSecurity {
         this.categoryTemplateService = categoryTemplateService;
         this.environmentReader = environmentReader;
     }
-
+    
     @Order(1)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -75,6 +78,7 @@ public class WebApplicationSecurity {
                 guidancePageUrl,
                 insolvencyGuidancePageUrl,
                 serviceUnavailablePageUrl)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll())
                 .build();
@@ -87,11 +91,12 @@ public class WebApplicationSecurity {
         return http.securityMatcher("/efs-submission/*/company/*/details",
                                 "/efs-submission/*/company/*/category-selection",
                                 "/efs-submission/*/company/*/document-selection")
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class).build();
     }
-    
+
     @Order(3)
     @Bean
     public SecurityFilterChain companyAuthFilterChain(HttpSecurity http) throws Exception {
@@ -100,6 +105,7 @@ public class WebApplicationSecurity {
                 new CompanyAuthFilter(environmentReader, apiClientService, formTemplateService,
                         categoryTemplateService);
         return http.securityMatcher("/efs-submission/*/company/**")
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class)
@@ -114,6 +120,7 @@ public class WebApplicationSecurity {
     public SecurityFilterChain efsWebResourceFilterChain(HttpSecurity http) throws Exception {
 
         return http.securityMatcher("/efs-submission/**")
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class).build();
