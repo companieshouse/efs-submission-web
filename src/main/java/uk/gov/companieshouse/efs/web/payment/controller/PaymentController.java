@@ -2,10 +2,7 @@ package uk.gov.companieshouse.efs.web.payment.controller;
 
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.companieshouse.efs.web.controller.BaseControllerImpl;
 
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
@@ -19,6 +16,7 @@ public interface PaymentController {
      * @return the view url
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/payment"})
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String payment(@PathVariable String id, @PathVariable String companyNumber, HttpServletRequest request);
 
     /**
@@ -35,6 +33,7 @@ public interface PaymentController {
      * @return view name appropriate for the payment state
      */
     @GetMapping("{id}/company/{companyNumber}/payment-complete-callback")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String paymentCallback(final HttpServletRequest request, @PathVariable String id,
         @PathVariable String companyNumber, @RequestParam(name = "status") String status,
         @RequestParam(name = "ref") String ref, @RequestParam(name = "state") String state, ServletRequest servletRequest);

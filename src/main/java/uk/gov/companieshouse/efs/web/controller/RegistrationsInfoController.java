@@ -4,11 +4,7 @@ import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerIm
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 
@@ -31,6 +27,7 @@ public interface RegistrationsInfoController {
      * @return the view name
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/registrations-info"})
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String registrationsInfo(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME)
             CategoryTemplateModel categoryTemplateAttribute, Model model,

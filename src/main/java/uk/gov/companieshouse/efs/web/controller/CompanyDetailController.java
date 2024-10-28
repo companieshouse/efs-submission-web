@@ -4,11 +4,7 @@ import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerIm
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
@@ -25,6 +21,7 @@ public interface CompanyDetailController {
      * @return the next page view name or a URL
      */
     @GetMapping("{id}/company/{companyNumber}/details")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String getCompanyDetail(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
 
@@ -43,6 +40,7 @@ public interface CompanyDetailController {
         @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
 
     @GetMapping("{id}/company/{companyNumber}/restricted")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String restrictedCompanyType(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
 

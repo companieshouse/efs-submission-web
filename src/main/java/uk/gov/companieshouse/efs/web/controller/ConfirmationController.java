@@ -3,10 +3,7 @@ package uk.gov.companieshouse.efs.web.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 
@@ -25,6 +22,7 @@ public interface ConfirmationController {
      * @return view name
      */
     @GetMapping("{id}/company/{companyNumber}/confirmation")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String getConfirmation(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(CompanyDetailControllerImpl.ATTRIBUTE_NAME)
             CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request,

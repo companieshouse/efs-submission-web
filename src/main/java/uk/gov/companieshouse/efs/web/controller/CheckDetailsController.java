@@ -6,11 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import uk.gov.companieshouse.efs.web.model.CheckDetailsModel;
 
@@ -30,6 +26,7 @@ public interface CheckDetailsController {
      * @return view name
      */
     @GetMapping("{id}/company/{companyNumber}/check-your-details")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String checkDetails(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(ATTRIBUTE_NAME) final CheckDetailsModel checkDetailsAttribute, Model model, HttpServletRequest request,
         HttpSession session, SessionStatus sessionStatus);

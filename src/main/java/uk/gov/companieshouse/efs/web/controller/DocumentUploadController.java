@@ -6,11 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.companieshouse.efs.web.model.DocumentUploadModel;
 
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
@@ -28,6 +24,7 @@ public interface DocumentUploadController {
      * @return view name
      */
     @GetMapping("{id}/company/{companyNumber}/document-upload")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String prepare(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(ATTRIBUTE_NAME) DocumentUploadModel documentUploadAttribute,
        Model model, HttpServletRequest servletRequest, HttpSession session);

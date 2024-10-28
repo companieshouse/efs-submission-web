@@ -6,12 +6,7 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.controller.BaseControllerImpl;
 
@@ -19,6 +14,7 @@ import uk.gov.companieshouse.efs.web.controller.BaseControllerImpl;
 public interface CategoryTemplateController {
 
     @GetMapping(value = {"{id}/company/{companyNumber}/category-selection"})
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String categoryTemplate(@PathVariable String id, @PathVariable String companyNumber,
         @RequestParam(value = "category", required = false) List<String> categoryIdList,
         @ModelAttribute(ATTRIBUTE_NAME) CategoryTemplateModel categoryTemplateAttribute, Model model,

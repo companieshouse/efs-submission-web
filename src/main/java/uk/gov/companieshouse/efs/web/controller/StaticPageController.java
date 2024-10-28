@@ -2,6 +2,7 @@ package uk.gov.companieshouse.efs.web.controller;
 
 import jakarta.servlet.ServletRequest;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ public interface StaticPageController {
      * @return page to be displayed
      */
     @GetMapping("/start")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
                  RedirectAttributes redirectAttributes, ServletRequest servletRequest, SessionStatus sessionStatus);
 
@@ -34,6 +36,7 @@ public interface StaticPageController {
      * @return page to be displayed
      */
     @GetMapping("/guidance")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String guidance(Model model, ServletRequest request);
 
     /**
@@ -44,6 +47,7 @@ public interface StaticPageController {
      * @return page to be displayed
      */
     @GetMapping("/insolvency-guidance")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String insolvencyGuidance(Model model, ServletRequest request);
 
     /**
@@ -54,6 +58,7 @@ public interface StaticPageController {
      * @return page to be displayed
      */
     @GetMapping("/accessibility-statement")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String accessibilityStatement(Model model, ServletRequest request);
 
     /**
@@ -65,12 +70,14 @@ public interface StaticPageController {
      * @return page to be displayed
      */
     @GetMapping("/unavailable")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String serviceUnavailable(Model model, ServletRequest servletRequest, @ModelAttribute("date") String date);
 
     /**
      * Directs user to company lookup service and sets the return URL to COMPANY_DETAIL view.
      */
     @GetMapping("{id}/companyLookup")
+    @CrossOrigin(origins = {"http://chs.local", "http://account.chs.local"})
     String companyLookup(@PathVariable String id, Model model, ServletRequest servletRequest,
         RedirectAttributes attributes);
 }
