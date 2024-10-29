@@ -63,7 +63,12 @@
 
                     <h2 class="govuk-heading-l" th:text="#{accessibilityStatement.reportingProblems}">
                     </h2>
-                    <p class="govuk-body" th:text="#{accessibilityStatement.continuingToImprove}"></p>
+                    <p>
+                        <span class="govuk-body" th:text="#{accessibilityStatement.continuingToImprove}"></span>
+                        <a th:href="${@environment.getProperty('accessibility.support.url')}"
+                           th:text="#{accessibilityStatement.accessibilitySupportUrl}"></a>
+                        <span class="govuk-body" th:text="#{accessibilityStatement.usersPage}"></span>
+                    </p>
                     <h2 class="govuk-heading-l" th:text="#{accessibilityStatement.enforcement}"></h2>
                     <p class="govuk-body">
                         <span th:text="#{accessibilityStatement.EHRC}"></span>
@@ -74,7 +79,7 @@
                     <p class="govuk-body" th:text="#{accessibilityStatement.committedToAccessibility}">
                     </p>
                     <p class="govuk-body">
-                        <span th:text="#{accessibilityStatement.fullyCompliant}"></span>
+                        <span th:text="#{accessibilityStatement.partiallyCompliant}"></span>
                         <a th:href="${@environment.getProperty('accessibility.web.guide.url')}" th:text="#{accessibilityStatement.webContentGuide}"></a>
                         <span th:text="#{accessibilityStatement.AA}"></span>
                     </p>
