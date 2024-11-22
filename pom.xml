@@ -29,6 +29,7 @@
         <awaitility.version>4.2.2</awaitility.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <nimbus-jose-jwt.version>9.41.1</nimbus-jose-jwt.version>
+        <test-containers.version>1.20.4</test-containers.version>
 
         <!-- Logging -->
         <structured-logging.version>3.0.14</structured-logging.version>
@@ -93,6 +94,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${test-containers.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
