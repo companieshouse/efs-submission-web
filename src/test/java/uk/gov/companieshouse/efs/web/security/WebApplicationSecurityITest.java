@@ -43,6 +43,7 @@ class WebApplicationSecurityITest {
         storedEnvironment = new HashMap<>(System.getenv());
         springEnvironment = IntegrationTestHelper.withSpringEnvironment()
                 .and("LOGGING_LEVEL", "DEBUG")
+                .and("ACCESSIBILITY_SUPPORT_URL", "test")
                 .and("FILE_TRANSFER_API_KEY", "test")
                 .and("FILE_TRANSFER_API_URL", "test")
                 .and("CACHE_POOL_SIZE", "8")
