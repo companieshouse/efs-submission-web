@@ -16,6 +16,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.companieshouse.efs.web.configuration.SpringWebConfig;
 import uk.gov.companieshouse.efs.web.controller.StaticPageControllerImpl;
 import uk.gov.companieshouse.efs.web.util.IntegrationTestHelper;
@@ -26,10 +29,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 @Import({WebApplicationSecurity.class, StaticPageControllerImpl.class, SpringWebConfig.class})
+@Testcontainers
 class WebApplicationSecurityITest {
 
     private static Map<String, String> storedEnvironment;
     public static SystemLambda.WithEnvironmentVariables springEnvironment;
+
+    @Container
+    private static GenericContainer<?> redis = new GenericContainer<>("redis:6-alpine").withExposedPorts(6379);
 
     @BeforeAll
     static void setUpSpringEnvironment() {
@@ -37,9 +44,12 @@ class WebApplicationSecurityITest {
         springEnvironment = IntegrationTestHelper.withSpringEnvironment()
                 .and("LOGGING_LEVEL", "DEBUG")
                 .and("FILE_TRANSFER_API_KEY", "test")
-                .and("FILE_TRANSFER_API_URL", "test");
+                .and("FILE_TRANSFER_API_URL", "test")
+                .and("CACHE_POOL_SIZE", "8")
+                .and("CACHE_SERVER", "localhost:" + redis.getFirstMappedPort());
 
         ReflectionTestUtils.invokeMethod(springEnvironment, "setEnvironmentVariables");
+        redis.start();
     }
 
 
