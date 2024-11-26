@@ -89,7 +89,6 @@ public class WebApplicationSecurity {
                 http.securityMatcher("/efs-submission/*/company/*/details",
                                 "/efs-submission/*/company/*/category-selection",
                                 "/efs-submission/*/company/*/document-selection")
-                        .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                         .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                         .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class))
                 .build();
@@ -100,7 +99,6 @@ public class WebApplicationSecurity {
     public SecurityFilterChain companyAuthFilterChain(HttpSecurity http) throws Exception {
         return  ChsCsrfMitigationHttpSecurityBuilder.configureWebCsrfMitigations(
                 http.securityMatcher("/efs-submission/*/company/**")
-                        .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                         .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                         .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class)
                         .addFilterBefore(new CompanyAuthFilter(environmentReader, apiClientService,
@@ -117,7 +115,6 @@ public class WebApplicationSecurity {
     public SecurityFilterChain efsWebResourceFilterChain(HttpSecurity http) throws Exception {
         return  ChsCsrfMitigationHttpSecurityBuilder.configureWebCsrfMitigations(
                 http.securityMatcher("/efs-submission/**")
-                        .addFilterBefore(new SessionHandler(), BasicAuthenticationFilter.class)
                         .addFilterBefore(new HijackFilter(), BasicAuthenticationFilter.class)
                         .addFilterBefore(new UserAuthFilter(), BasicAuthenticationFilter.class))
                 .build();
