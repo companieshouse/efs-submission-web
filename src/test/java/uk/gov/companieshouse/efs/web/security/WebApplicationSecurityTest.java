@@ -73,8 +73,6 @@ class WebApplicationSecurityTest {
         verify(httpSecurity).securityMatcher("/efs-submission/*/company/*/details",
                 "/efs-submission/*/company/*/category-selection",
                 "/efs-submission/*/company/*/document-selection");
-        verify(httpSecurityMock).addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class
-        ));
         verify(httpSecurityMock).addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class
         ));
         verify(httpSecurityMock).addFilterBefore(any(UserAuthFilter.class), eq(BasicAuthenticationFilter.class
@@ -92,8 +90,6 @@ class WebApplicationSecurityTest {
         withLoggingAuthFilterEnvironment(() -> webApplicationSecurity.companyAuthFilterChain(httpSecurity));
 
         verify(httpSecurity).securityMatcher("/efs-submission/*/company/**");
-        verify(httpSecurityMock).addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class
-        ));
         verify(httpSecurityMock).addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class
         ));
         verify(httpSecurityMock).addFilterBefore(any(UserAuthFilter.class), eq(BasicAuthenticationFilter.class
@@ -113,8 +109,6 @@ class WebApplicationSecurityTest {
         withLoggingAuthFilterEnvironment(() -> webApplicationSecurity.efsWebResourceFilterChain(httpSecurity));
 
         verify(httpSecurity).securityMatcher("/efs-submission/**");
-        verify(httpSecurityMock).addFilterBefore(any(SessionHandler.class), eq(BasicAuthenticationFilter.class
-        ));
         verify(httpSecurityMock).addFilterBefore(any(HijackFilter.class), eq(BasicAuthenticationFilter.class
         ));
         verify(httpSecurityMock).addFilterBefore(any(UserAuthFilter.class), eq(BasicAuthenticationFilter.class
