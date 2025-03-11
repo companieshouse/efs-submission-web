@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,7 +41,6 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.efs.web.model.company.CompanyDetail;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class NewSubmissionControllerImplTest extends BaseControllerImplTest {
 
     private NewSubmissionController testController;
@@ -85,7 +85,7 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
                 .setControllerAdvice(new GlobalExceptionHandler(logger))
                 .build();
 
-        String newSubmissionUrl = "/efs-submission/new-submission/";
+        String newSubmissionUrl = "/efs-submission/new-submission";
         mockMvc.perform(get(newSubmissionUrl).flashAttr("companyDetail", companyDetail))
                 .andExpect(status().isInternalServerError())
                 .andExpect(view().name(ViewConstants.ERROR.asView()))
@@ -145,7 +145,7 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
         when(apiClientService.createSubmission(any()))
                 .thenThrow(new ResponseStatusException(status));
 
-        String newSubmissionUrl = "/efs-submission/new-submission/";
+        String newSubmissionUrl = "/efs-submission/new-submission";
         mockMvc.perform(get(newSubmissionUrl).flashAttr("companyDetail", companyDetail))
                 .andReturn();
 

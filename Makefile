@@ -58,12 +58,13 @@ dist: test-unit
 
 .PHONY: sonar
 sonar:
-	mvn sonar:sonar -Dsonar.dependencyCheck.htmlReportPath=./target/dependency-check-report.html
+	mvn sonar:sonar
 
 .PHONY: sonar-pr-analysis
-sonar-pr-analysis: dependency-check
-	mvn sonar:sonar -P sonar-pr-analysis -Dsonar.dependencyCheck.htmlReportPath=./target/dependency-check-report.html
+sonar-pr-analysis:
+	mvn sonar:sonar -P sonar-pr-analysis
 
+##### Start of dependency-check block to be put at bottom of Makefile
 .PHONY: dependency-check
 dependency-check:
 	@ if [ -d "$(DEPENDENCY_CHECK_SUPPRESSIONS_HOME)" ]; then \
@@ -87,7 +88,7 @@ dependency-check:
 	suppressions_path="$${suppressions_home}/suppressions/$(dependency_check_base_suppressions)"; \
 	if [  -f "$${suppressions_path}" ]; then \
 		cp -av "$${suppressions_path}" $(suppressions_file); \
-		mvn org.owasp:dependency-check-maven:check -Dformats="json,html" -DprettyPrint -DfailBuildOnCVSS=$(dependency_check_minimum_cvss) -DassemblyAnalyzerEnabled=$(dependency_check_assembly_analyzer_enabled) -DsuppressionFiles=$(suppressions_file); \
+		mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=$(dependency_check_minimum_cvss) -DassemblyAnalyzerEnabled=$(dependency_check_assembly_analyzer_enabled) -DsuppressionFiles=$(suppressions_file); \
 	else \
 		printf -- "\n ERROR Cannot find suppressions file at '%s'\n" "$${suppressions_path}" >&2; \
 		exit 1; \
@@ -95,4 +96,6 @@ dependency-check:
 
 .PHONY: security-check
 security-check: dependency-check
+
+##### End of dependency-check block
 
