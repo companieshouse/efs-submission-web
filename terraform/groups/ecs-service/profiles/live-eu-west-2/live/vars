@@ -7,4 +7,4 @@ min_task_count = 2
 
 
 required_cpus = 512
-required_memory = 1024
+required_memory = 2048
