@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.efs.web;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -12,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl;
@@ -31,23 +30,23 @@ import uk.gov.companieshouse.logging.Logger;
 @AutoConfigureMockMvc(addFilters = false)
 class InterceptorTest {
 
-    @MockBean
+    @MockitoBean
     private UserDetailsInterceptor userDetailsInterceptor;
-    @MockBean
+    @MockitoBean
     private LoggingInterceptor loggingInterceptor;
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @MockitoBean
     private CompanyService companyService;
-    @MockBean
+    @MockitoBean
     private SessionService sessionService;
-    @MockBean
+    @MockitoBean
     private ApiClientService apiClientService;
-    @MockBean
+    @MockitoBean
     private Logger logger;
-    @MockBean
+    @MockitoBean
     private CompanyDetail companyDetail;
-    @MockBean
+    @MockitoBean
     private SecureRandom secureRandom;
 
     @Test
