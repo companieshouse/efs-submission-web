@@ -2,9 +2,10 @@ environment = "live"
 aws_profile = "live-eu-west-2"
 
 # service configs
-desired_task_count = 2
-min_task_count = 2
-
+# DO NOT SCALE above 1 for the live environment
+desired_task_count = 1
+min_task_count = 1
+max_task_count = 1
 
 required_cpus = 512
 required_memory = 2048
