@@ -105,6 +105,9 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
     public String postCompanyDetail(final String id, final String companyNumber,
         final CompanyDetail companyDetailAttribute, final Model model, final HttpServletRequest request) {
 
+        //Temporary log for troubleshooting 2/4/2025
+        logger.info("Session CompanyDetail: " + companyDetailAttribute);
+
             final ApiResponse<SubmissionResponseApi> response = apiClientService.putCompany(id,
                 new CompanyApi(companyDetailAttribute.getCompanyNumber(), companyDetailAttribute.getCompanyName()));
 
