@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import static uk.gov.companieshouse.efs.web.controller.ResolutionsInfoControllerImpl.ATTRIBUTE_NAME;
+
 import java.util.Objects;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
@@ -17,8 +20,19 @@ import uk.gov.companieshouse.efs.web.service.session.SessionService;
 import uk.gov.companieshouse.logging.Logger;
 
 @Controller
+@SessionAttributes(ATTRIBUTE_NAME)
+@SuppressWarnings("squid:S3753")
+/* S3753: "@Controller" classes that use "@SessionAttributes" must call "setComplete" on their "SessionStatus" objects
+ *
+ * The nature of the web journey across several controllers means it's not appropriate to do this. However,
+ * setComplete() is properly called in ConfirmationControllerImpl at the end of the submission journey.
+ */
 public class ResolutionsInfoControllerImpl extends BaseControllerImpl implements ResolutionsInfoController {
 
+    /**
+     * Define the model name for this action.
+     */
+    public static final String ATTRIBUTE_NAME = "resolutionsInfo";
 
     /**
      * Constructor used by child controllers.
