@@ -36,7 +36,6 @@ import uk.gov.companieshouse.session.handler.SessionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.text.MessageFormat;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,14 +62,10 @@ public abstract class BaseControllerImplTest {
     protected static final String CHS_URL = "http://web.chs-dev:4000";
     protected static final String SUBMISSION_ID = "aaaaaaaaaaaaaaaaaaaaaaaa";
     protected static final String FILE_ID = "1234567890";
-    protected static final String CONFIRMATION_REF = "m6mo orcu mwgs c5pw";
     protected static final String COMPANY_NUMBER = "11111111";
     protected static final String COMPANY_NAME = "TEST COMPANY LTD";
     protected static final String USER_EMAIL = "tester@email.com";
     protected static final String SESSION_ID = "sess12345678";
-    protected static final Instant FIXED_NOW = Instant.parse("2020-03-15T09:44:08.108Z");
-    protected static final String NOT_FOUND_PAGE = ViewConstants.MISSING.asView();
-    protected static final String SERVICE_PROBLEM_PAGE = ViewConstants.ERROR.asView();
     protected static final String TEMPLATE_NAME = "templateName";
     protected static final String ORIGINAL_SUBMISSION_ID = "originalSubmissionId";
 
@@ -136,9 +131,9 @@ public abstract class BaseControllerImplTest {
     }
 
     protected void stubGetChsSession() {
-        Session session = new SessionImpl();
-        session.setCookieId(chsSessionId);
-        when(servletRequest.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY)).thenReturn(session);
+        Session chsSession = new SessionImpl();
+        chsSession.setCookieId(chsSessionId);
+        when(servletRequest.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY)).thenReturn(chsSession);
     }
 
     protected String getUrlWithId(final String template, final String id) {
@@ -159,18 +154,26 @@ public abstract class BaseControllerImplTest {
     }
 
     protected SubmissionApi createSubmission(final SubmissionStatus submitted) {
-        final SubmissionApi submission = new SubmissionApi();
 
-        submission.setId(SUBMISSION_ID);
-        submission.setStatus(submitted);
+        SubmissionApi submissionApi = new SubmissionApi();
 
-        submission.setPresenter(new PresenterApi("demo@ch"));
+        submissionApi.setId(SUBMISSION_ID);
+        submissionApi.setStatus(submitted);
+
+        submissionApi.setPresenter(new PresenterApi("demo@ch"));
 
         CompanyApi company = new CompanyApi();
         company.setCompanyNumber(COMPANY_NAME);
         company.setCompanyName(COMPANY_NUMBER);
 
-        submission.setCompany(company);
+        submissionApi.setCompany(company);
+
+        return submissionApi;
+    }
+
+    protected SubmissionApi createSubmissionNullCompany() {
+        submission.setId(SUBMISSION_ID);
+        submission.setPresenter(new PresenterApi("demo@ch"));
 
         return submission;
     }
@@ -298,11 +301,11 @@ public abstract class BaseControllerImplTest {
 
     @Test
     void testGetChsSessionId() {
-        Session session = mock(Session.class);
+        Session chsSession = mock(Session.class);
         when(request.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY))
-                .thenReturn(session);
+                .thenReturn(chsSession);
         baseController.getChsSessionId(request);
-        verify(session).getCookieId();
+        verify(chsSession).getCookieId();
 
         when(request.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY))
                 .thenReturn(null);
@@ -314,15 +317,15 @@ public abstract class BaseControllerImplTest {
         String fieldName = "testAnyErrorsFromResponse";
         String location = String.format("a.b.%s", fieldName);
 
-        BindingResult bindingResult = mock(BindingResult.class);
+        BindingResult mockResult = mock(BindingResult.class);
         ApiError apiError = mock(ApiError.class);
 
         when(apiResponse.getErrors()).thenReturn(Collections.singletonList(apiError));
         when(apiError.getLocation()).thenReturn(location);
         when(apiError.getErrorValues()).thenReturn(null);
 
-        baseController.addAnyErrorsFromResponse(bindingResult, apiResponse, x -> true);
+        baseController.addAnyErrorsFromResponse(mockResult, apiResponse, x -> true);
 
-        verify(bindingResult).rejectValue(eq(fieldName), isNull(), isNull(), anyString());
+        verify(mockResult).rejectValue(eq(fieldName), isNull(), isNull(), anyString());
     }
 }

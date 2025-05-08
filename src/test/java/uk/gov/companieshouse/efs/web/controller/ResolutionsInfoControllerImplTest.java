@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
@@ -23,7 +22,7 @@ class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
     private ResolutionsInfoController testController;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         setUpHeaders();
         testController = new ResolutionsInfoControllerImpl(logger, sessionService, apiClientService,
             formTemplateService, categoryTemplateService);
@@ -43,8 +42,8 @@ class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
             getSubmissionOkResponse(submission));
 
-        final String result = testController.resolutionsInfo(SUBMISSION_ID, COMPANY_NUMBER, categoryTemplateAttribute,
-            model, servletRequest);
+        final String result = testController.resolutionsInfo(SUBMISSION_ID, COMPANY_NUMBER, formTemplateAttribute,
+                model, servletRequest);
 
         assertThat(result, is(ViewConstants.RESOLUTIONS_INFO.asView()));
     }
@@ -56,23 +55,35 @@ class ResolutionsInfoControllerImplTest extends BaseControllerImplTest {
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
             getSubmissionOkResponse(submission));
 
-        final String result = testController.resolutionsInfo(SUBMISSION_ID, COMPANY_NUMBER, categoryTemplateAttribute,
-            model, servletRequest);
+        final String result = testController.resolutionsInfo(SUBMISSION_ID, COMPANY_NUMBER, formTemplateAttribute,
+                model, servletRequest);
+
+        assertThat(result, is(ViewConstants.GONE.asView()));
+    }
+
+    @Test
+    void getResolutionsInfoWhenSubmissionApiCompanyIsNull() {
+        final SubmissionApi submission = createSubmissionNullCompany();
+
+        when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
+                getSubmissionOkResponse(submission));
+        when(submission.getCompany()).thenReturn(null);
+
+        final String result = testController.resolutionsInfo(SUBMISSION_ID, COMPANY_NUMBER, formTemplateAttribute,
+                model, servletRequest);
 
         assertThat(result, is(ViewConstants.GONE.asView()));
     }
 
     @Test
     void postResolutionsInfo() {
-        final CategoryTemplateApi resolutions = new CategoryTemplateApi("RESOLUTIONS",
-            "Resolutions", "RESOLUTIONS", null, null);
         final FormTemplateApi formTemplateApi = new FormTemplateApi();
         final FormTemplateApi resolutionsForm = new FormTemplateApi(RESOLUTIONS_FORM);
 
         formTemplateApi.setFormType("RESOLUTIONS");
 
-        final String result = testController.postResolutionsInfo(SUBMISSION_ID, COMPANY_NUMBER, categoryTemplateAttribute,
-            bindingResult, model, servletRequest, session);
+        final String result = testController.postResolutionsInfo(SUBMISSION_ID, COMPANY_NUMBER, formTemplateAttribute,
+                bindingResult, model, servletRequest, session);
 
         assertThat(formTemplateApi.getFormType(), is(resolutionsForm.getFormType()));
         assertThat(result, is(ViewConstants.DOCUMENT_UPLOAD.asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER)));
