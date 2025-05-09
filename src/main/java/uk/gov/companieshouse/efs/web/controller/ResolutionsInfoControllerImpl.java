@@ -67,7 +67,7 @@ public class ResolutionsInfoControllerImpl extends BaseControllerImpl implements
 
     @Override
     public String postResolutionsInfo(@PathVariable String id, @PathVariable String companyNumber,
-        FormTemplateModel categoryTemplateAttribute, BindingResult binding, Model model, ServletRequest servletRequest, HttpSession session) {
+        FormTemplateModel formTemplateModel, BindingResult binding, Model model, ServletRequest servletRequest, HttpSession session) {
 
         return ViewConstants.DOCUMENT_UPLOAD.asRedirectUri(chsUrl, id, companyNumber);
     }
