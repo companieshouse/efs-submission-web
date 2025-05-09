@@ -21,6 +21,12 @@ import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerIm
 
 @Controller
 @SessionAttributes(ATTRIBUTE_NAME)
+@SuppressWarnings("squid:S3753")
+/* S3753: "@Controller" classes that use "@SessionAttributes" must call "setComplete" on their "SessionStatus" objects
+ *
+ * The nature of the web journey across several controllers means it's not appropriate to do this. However,
+ * setComplete() is properly called in ConfirmationControllerImpl at the end of the submission journey.
+ */
 public class ResolutionsInfoControllerImpl extends BaseControllerImpl implements ResolutionsInfoController {
 
 
