@@ -19,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -49,7 +47,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     public void setup() {
         setUpHeaders();
         testController = new CompanyDetailControllerImpl(companyService, sessionService, apiClientService, logger,
-                companyDetailAttribute);
+                companyDetailAttribute, prefixBlockList);
         ((CompanyDetailControllerImpl) testController).setChsUrl(CHS_URL);
 
         ReflectionTestUtils.setField(testController, "prefixBlockList", prefixBlockList);
@@ -153,7 +151,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void getCompanyDetailWhenOverseasEntityCompany() throws Exception {
+    void getCompanyDetailWhenOverseasEntityCompany() {
         final String viewName = testController
                 .getCompanyDetail(SUBMISSION_ID, OVERSEAS_ENTITY_COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
 
@@ -164,7 +162,7 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void getCompanyDetailWhenOverseasEntityNullBlockList()throws Exception {
+    void getCompanyDetailWhenOverseasEntityNullBlockList() {
         ReflectionTestUtils.setField(testController, "prefixBlockList", null);
         final String viewName = testController
                 .getCompanyDetail(SUBMISSION_ID, OVERSEAS_ENTITY_COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);

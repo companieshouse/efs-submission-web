@@ -4,8 +4,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.stefanbirkner.systemlambda.SystemLambda;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Testcontainers
 class WebApplicationSecurityITest {
 
-    private static Map<String, String> storedEnvironment;
     public static SystemLambda.WithEnvironmentVariables springEnvironment;
 
     @Container
@@ -40,7 +37,6 @@ class WebApplicationSecurityITest {
 
     @BeforeAll
     static void setUpSpringEnvironment() {
-        storedEnvironment = new HashMap<>(System.getenv());
         springEnvironment = IntegrationTestHelper.withSpringEnvironment()
                 .and("LOGGING_LEVEL", "DEBUG")
                 .and("ACCESSIBILITY_SUPPORT_URL", "test")

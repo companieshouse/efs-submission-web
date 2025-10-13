@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.efs.web.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
@@ -14,7 +15,8 @@ import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 @Qualifier("sh19Template")
 @SessionScope
 public class Sh19TemplateModel extends FormTemplateModel {
-    
+
+    @Autowired
     public Sh19TemplateModel() {
         this(new FormTemplateApi());
     }

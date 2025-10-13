@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,12 +36,9 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
     @Value("${registrations.enabled:false}")
     private boolean registrationsEnabled;
 
-    @Autowired
-    @Qualifier("prefix-block-list")
-    private List<String> prefixBlockList;
-
     private final CompanyService companyService;
     private final CompanyDetail companyDetailAttribute;
+    private final List<String> prefixBlockList;
 
     /**
      * Define the model name for this action.
@@ -60,10 +56,12 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
      */
     @Autowired
     public CompanyDetailControllerImpl(final CompanyService companyService, final SessionService sessionService,
-        final ApiClientService apiClientService, final Logger logger, final CompanyDetail companyDetailAttribute) {
+                                       final ApiClientService apiClientService, final Logger logger, final CompanyDetail companyDetailAttribute,
+                                       final List<String> prefixBlockList) {
         super(logger, sessionService, apiClientService);
         this.companyService = companyService;
         this.companyDetailAttribute = companyDetailAttribute;
+        this.prefixBlockList = prefixBlockList;
     }
 
     @ModelAttribute(ATTRIBUTE_NAME)

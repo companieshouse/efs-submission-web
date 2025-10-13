@@ -261,6 +261,12 @@ public abstract class BaseControllerImplTest {
 
     private void setUpApiResponse(HttpStatus status, List<ApiError> errors) {
         when(apiResponse.getStatusCode()).thenReturn(status.value());
+        if (!errors.isEmpty()) {
+            when(apiResponse.hasErrors()).thenReturn(true);
+            when(apiResponse.getErrors()).thenReturn(errors);
+        } else {
+            when(apiResponse.hasErrors()).thenReturn(false);
+        }
     }
 
     private void setUpApiResponse(HttpStatus status) {
@@ -269,12 +275,6 @@ public abstract class BaseControllerImplTest {
 
     private void setUpApiResponse(List<ApiError> errors) {
         setUpApiResponse(HttpStatus.OK, errors);
-        if (!errors.isEmpty()) {
-            when(apiResponse.hasErrors()).thenReturn(true);
-            when(apiResponse.getErrors()).thenReturn(errors);
-        } else {
-            when(apiResponse.hasErrors()).thenReturn(false);
-        }
     }
 
     @ParameterizedTest

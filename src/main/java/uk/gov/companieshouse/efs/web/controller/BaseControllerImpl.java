@@ -1,5 +1,8 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
+import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
+
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -150,19 +153,16 @@ public abstract class BaseControllerImpl implements BaseController {
             final HttpStatus status = HttpStatus.valueOf(response.getStatusCode());
             final HttpStatus.Series series = status.series();
 
-            switch (series) {
-                case CLIENT_ERROR:    // fall through
-                case SERVER_ERROR:
-                    logger.errorContext(applicationId,
-                            MessageFormat.format("API response: status={0}, message={1}",
-                                    status, message), null, null);
-                    break;
-                default:
-                    logger.infoContext(applicationId,
-                            MessageFormat.format("API response: status={0}, message={1}",
-                                    status, message) + status, null);
-                    break;
+            if (series.equals(CLIENT_ERROR) || series.equals(SERVER_ERROR)) {
+                logger.errorContext(applicationId,
+                    MessageFormat.format("API response: status={0}, message={1}",
+                        status, message), null, null);
+            } else {
+                logger.infoContext(applicationId,
+                        MessageFormat.format("API response: status={0}, message={1}",
+                                status, message) + status, null);
             }
+
             if (response.hasErrors()) {
                 response.getErrors().forEach(e -> logger.errorContext(applicationId, "error=" + e, null, null));
             }

@@ -21,7 +21,6 @@ import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTempl
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.environment.EnvironmentReader;
-import uk.gov.companieshouse.session.handler.SessionHandler;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -45,7 +44,7 @@ class WebApplicationSecurityTest {
     @InjectMocks
     private WebApplicationSecurity webApplicationSecurity;
 
-    static final String randomEncryptionKey = "3T3L6iAEFscijkJZnOK0bYu/pH9jZeJqC1j59ZROKu8=";
+    static final String RANDOM_ENCRYPTION_KEY = "3T3L6iAEFscijkJZnOK0bYu/pH9jZeJqC1j59ZROKu8=";
 
     @Test
     void securityFilterChainTest() throws Exception {
@@ -118,7 +117,7 @@ class WebApplicationSecurityTest {
 
     void withLoggingAuthFilterEnvironment(Statement callback) {
         try {
-            withEnvironmentVariable("OAUTH2_REQUEST_KEY", randomEncryptionKey)
+            withEnvironmentVariable("OAUTH2_REQUEST_KEY", RANDOM_ENCRYPTION_KEY)
                     .and("OAUTH2_AUTH_URI", "oauth2_auth_uri")
                     .and("OAUTH2_CLIENT_ID", "oauth_client_id")
                     .and("OAUTH2_REDIRECT_URI", "oauth2_redirect_uri")

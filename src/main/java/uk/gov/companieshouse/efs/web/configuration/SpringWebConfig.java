@@ -3,7 +3,6 @@ package uk.gov.companieshouse.efs.web.configuration;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -42,10 +41,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Value("${rng.provider}")
     private String provider;
 
-    @Autowired
     private UserDetailsInterceptor userDetailsInterceptor;
-
-    @Autowired
     private LoggingInterceptor loggingInterceptor;
 
     @Value("${start.page.url}")
@@ -66,6 +62,17 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Value("${company.number.prefix.blocked}")
     private List<String> prefixBlockList;
 
+    public SpringWebConfig() {
+
+    }
+
+    @Autowired
+    public SpringWebConfig(
+        UserDetailsInterceptor userDetailsInterceptor,
+        LoggingInterceptor loggingInterceptor) {
+        this.userDetailsInterceptor = userDetailsInterceptor;
+        this.loggingInterceptor = loggingInterceptor;
+    }
 
     /**
      * Adds interceptors for User Sign in.
@@ -174,11 +181,6 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Bean
     public LayoutDialect layoutDialect() {
         return new LayoutDialect();
-    }
-
-    @Bean("prefix-block-list")
-    List<String> prefixBlockList() {
-        return Collections.unmodifiableList(prefixBlockList);
     }
 
 }

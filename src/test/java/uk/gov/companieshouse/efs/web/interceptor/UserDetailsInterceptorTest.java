@@ -85,7 +85,7 @@ class UserDetailsInterceptorTest {
 
     @ParameterizedTest(name = "HTTP {0}: Verify the email is added to the session when a user is logged in")
     @ValueSource(strings = {"GET","POST"})
-    void testEmailAddedToSessionForGet(String httpMethod) throws Exception {
+    void testEmailAddedToSessionForGet(String httpMethod) {
         when(request.getMethod()).thenReturn(httpMethod);
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
 

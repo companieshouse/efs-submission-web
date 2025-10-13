@@ -16,7 +16,6 @@ import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTempl
 import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateService;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.environment.EnvironmentReader;
-import uk.gov.companieshouse.session.handler.SessionHandler;
 
 /**
  * Customises web security.

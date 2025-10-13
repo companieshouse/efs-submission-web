@@ -121,6 +121,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
         assertThat(result, is(ViewConstants.CHECK_DETAILS.asView()));
     }
 
+    @Override
     protected SubmissionApi createSubmission(final SubmissionStatus submitted) {
         final SubmissionApi submission = super.createSubmission(submitted);
         submission.setSubmissionForm(new SubmissionFormApi());

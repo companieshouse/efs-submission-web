@@ -4,6 +4,7 @@ import java.util.Objects;
 import jakarta.validation.constraints.NotBlank;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,7 @@ public class ReviewSelectionModel {
     /**
      * No argument Constructor.
      */
+    @Autowired
     public ReviewSelectionModel() {
         this.confirmed = "";
     }

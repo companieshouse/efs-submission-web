@@ -212,7 +212,7 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         // Files have been added previously, so map them to our required model.
         List<FileApi> uploadedFiles = submissionForm.get().getFileDetails().getList().stream()
             .map(file -> new FileApi(file.getFileId(), file.getFileName(), file.getFileSize()))
-            .collect(Collectors.toList());
+            .toList();
 
         return new FileListApi(uploadedFiles);
     }

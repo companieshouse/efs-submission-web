@@ -126,7 +126,7 @@ public class DocumentUploadModel {
         if (submissionForm != null && submissionForm.getFileDetails() != null) {
             files = submissionForm.getFileDetails().stream().map(
                     d -> new FileApi(d.getFileId(), d.getFileName(), d.getFileSize())
-            ).collect(Collectors.toList());
+            ).toList();
         }
 
         setDetails(new FileListApi(files));
@@ -160,7 +160,7 @@ public class DocumentUploadModel {
      * @return String with list separated by commas and 'or' at end
      */
     public String getAllowedFileExtensions() {
-        final List<String> extensions = config.getDistinctExtensions().stream().sorted().collect(Collectors.toList());
+        final List<String> extensions = config.getDistinctExtensions().stream().sorted().toList();
         return extensions.stream().collect(Collectors.collectingAndThen(Collectors.toList(),
             joiningLastDelimiter(", ", " or ")));
     }

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,8 +29,6 @@ import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateServi
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.session.Session;
-import uk.gov.companieshouse.session.SessionImpl;
-import uk.gov.companieshouse.session.SessionKeys;
 import uk.gov.companieshouse.session.handler.SessionHandler;
 import uk.gov.companieshouse.session.model.SignInInfo;
 import uk.gov.companieshouse.session.model.UserProfile;
@@ -52,8 +49,6 @@ class CompanyAuthFilterTest {
     private static final String SUBMISSION_ID = "5f8422b326e7b618e25684da";
 
     private static final String COMPANY_NUMBER = "12345678";
-
-    private static final String VALID_AUTH_SCOPE = "https://chs.companieshouse.gov.uk/company/" + COMPANY_NUMBER;
 
     public static final FormTemplateApi INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE =
             new FormTemplateApi("REC01", null, "REC", null, true, false, null, false, null);
@@ -378,42 +373,6 @@ class CompanyAuthFilterTest {
         SubmissionFormApi submissionForm = new SubmissionFormApi();
         submissionForm.setFormType(formTemplate.getFormType());
         return submissionForm;
-    }
-
-    private Session createSession(final String companyNumber) {
-        Session session = new SessionImpl();
-
-        Map<String, Object> userProfileData = createUserProfileData();
-
-        Map<String, Object> signInData = createSignInData(userProfileData, companyNumber);
-
-        Map<String, Object> sessionData = createSessionData(signInData);
-
-        session.setData(sessionData);
-
-        return session;
-    }
-
-    private Map<String, Object> createUserProfileData() {
-        Map<String, Object> userProfileData = new HashMap<>();
-        userProfileData.put(SessionKeys.EMAIL.getKey(), "demo@ch.gov.uk");
-        userProfileData.put(SessionKeys.SCOPE.getKey(), VALID_AUTH_SCOPE);
-        return userProfileData;
-    }
-
-    private Map<String, Object> createSignInData(final Map<String, Object> userProfileData,
-                                                 final String companyNumber) {
-        Map<String, Object> signInData = new HashMap<>();
-        signInData.put(SessionKeys.SIGNED_IN.getKey(), 1);
-        signInData.put(SessionKeys.COMPANY_NUMBER.getKey(), companyNumber);
-        signInData.put(SessionKeys.USER_PROFILE.getKey(), userProfileData);
-        return signInData;
-    }
-
-    private Map<String, Object> createSessionData(final Map<String, Object> signInData) {
-        Map<String, Object> sessionData = new HashMap<>();
-        sessionData.put(SessionKeys.SIGN_IN_INFO.getKey(), signInData);
-        return sessionData;
     }
 
     private void expectCategoryAndFormLookup(final SubmissionApi submission, final FormTemplateApi formTemplate) {

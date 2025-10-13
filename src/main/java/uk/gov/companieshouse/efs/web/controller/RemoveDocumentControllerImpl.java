@@ -5,7 +5,6 @@ import static uk.gov.companieshouse.efs.web.controller.RemoveDocumentControllerI
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -167,7 +166,7 @@ public class RemoveDocumentControllerImpl extends BaseControllerImpl implements 
                 List<FileApi> fileApiList = submissionFormApi.getFileDetails().getList().stream()
                         .filter(file -> !file.getFileId().equals(fileId))
                         .map(file -> new FileApi(file.getFileId(), file.getFileName(), file.getFileSize()))
-                        .collect(Collectors.toList());
+                        .toList();
 
                 ApiResponse<SubmissionResponseApi> response = apiClientService.putFileList(id, new FileListApi(fileApiList));
                 logApiResponse(response, id, "PUT /efs-submission-api/submission/" + id + "/files");
