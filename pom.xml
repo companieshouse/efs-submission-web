@@ -36,7 +36,7 @@
         <structured-logging.version>3.0.32</structured-logging.version>
 
         <thymeleaf-layout-dialect.version>3.4.0</thymeleaf-layout-dialect.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-lang3.version>3.19.0</commons-lang3.version>
         <equalsverifier.version>4.0.2</equalsverifier.version>
         <system-lambda.version>1.2.1</system-lambda.version>
 
