@@ -36,7 +36,6 @@ class RegistrationsInfoControllerImplTest extends BaseControllerImplTest {
 
     @Test
     void getRegistrationsInfoWhenFeatureDisabled() {
-        final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
 
         ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
 

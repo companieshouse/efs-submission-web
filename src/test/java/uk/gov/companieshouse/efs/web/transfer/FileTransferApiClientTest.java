@@ -67,7 +67,6 @@ class FileTransferApiClientTest {
 
     @Test
     void testUpload_ApiThrowsIOException() throws IOException {
-        final ResponseEntity<FileTransferApiResponse> apiErrorResponse = apiErrorResponse();
 
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.getBytes()).thenThrow(new IOException());

@@ -4,6 +4,7 @@ import java.util.Objects;
 import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
@@ -17,6 +18,7 @@ public class ProposedCompanyModel {
     private CompanyApi details;
 
     @SuppressWarnings("squid:S2637") // nameRequired initially null by design
+    @Autowired
     public ProposedCompanyModel() {
         this.details = new CompanyApi();
     }

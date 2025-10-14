@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
@@ -24,7 +25,7 @@ public class FormTemplateModel {
     private String companyNumber;
     private FormTemplateListApi formTemplateList;
 
-
+    @Autowired
     public FormTemplateModel() {
         this(new FormTemplateApi());
     }

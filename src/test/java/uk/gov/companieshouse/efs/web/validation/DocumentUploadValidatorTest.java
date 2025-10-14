@@ -66,12 +66,10 @@ class DocumentUploadValidatorTest {
     @BeforeEach
     public void start() {
         MockitoAnnotations.openMocks(this);
-
-        //ReflectionTestUtils.setField(toTest, "bundle", resourceBundle);
     }
 
     @AfterEach
-    public void finish() {
+    public void finish() {  // default implementation ignored
 
     }
 

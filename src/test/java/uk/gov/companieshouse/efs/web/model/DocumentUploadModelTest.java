@@ -14,7 +14,6 @@ class DocumentUploadModelTest {
 
     private DocumentUploadModel documentUploadModel;
     private FileUploadConfiguration fileUploadConfiguration;
-    private FileUploadConfiguration.FileType fileType;
 
     @Test
     void getAllowedFileExtensionsWhenSingular() {

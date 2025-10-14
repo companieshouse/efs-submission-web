@@ -63,10 +63,6 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
     public static final List<CategoryTemplateApi> ALL_CATEGORIES = Arrays.asList(CAT_TOP_LEVEL,
             INSOLVENCY, CAT1_SUB_LEVEL1, CAT2_SUB_LEVEL1, CAT1_SUB_LEVEL2, CAT2_SUB_LEVEL2);
 
-    private static final String RESOLUTIONS_ID = "RESOLUTIONS";
-    private static final String ARTICLES_ID = "MA";
-
-
     private CategoryTemplateController testController;
 
     @BeforeEach
@@ -160,8 +156,6 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
     @Test
     void categoryTemplateTopLevelWhenCategorySequenceListContainsInvalidCategoryAndEmailNotAllowed() {
         final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
-        final CategoryTemplateListApi expectedCategoryList = new CategoryTemplateListApi(
-                Arrays.asList(CAT_TOP_LEVEL, INSOLVENCY));
 
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(
                 getSubmissionOkResponse(submission));
@@ -339,6 +333,7 @@ public class CategoryTemplateControllerImplTest extends BaseControllerImplTest {
                 .asRedirectUri(CHS_URL, SUBMISSION_ID, COMPANY_NUMBER, "")));
     }
 
+    @Override
     protected SubmissionApi createSubmission(final SubmissionStatus submitted) {
         final SubmissionApi submission = super.createSubmission(submitted);
         submission.setPresenter(new PresenterApi(USER_EMAIL));

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +108,7 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
 
         final List<String> categoryTypesList = Optional.ofNullable(allCategoryTemplates.getList())
                 .orElseGet(ArrayList::new).stream().map(CategoryTemplateApi::getCategoryType)
-                .collect(Collectors.toList());
+                .toList();
         final boolean sequenceValid = categoryTypesList.containsAll(
                 categorySequenceList);
 
@@ -222,8 +221,7 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
         return listResponse.getData().getList().stream()
                 .filter(includeCategory)
                 .filter(notRootCategory)
-                .collect(
-                Collectors.toList());
+                .toList();
     }
 
     /**

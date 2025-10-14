@@ -31,7 +31,7 @@ class Sh19DeliveryControllerTest extends BaseControllerImplTest{
 
     private Sh19DeliveryController testController;
 
-    final static String PRESENTER_EMAIL = "test@email.com";
+    static final String PRESENTER_EMAIL = "test@email.com";
 
     public static final FormTemplateApi FORM_TEMPLATE_1 =
         new FormTemplateApi("SH19", "Test01", "SH", "100", true, true, null, false,

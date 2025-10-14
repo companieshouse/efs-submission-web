@@ -82,11 +82,11 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
     }
 
     @AfterEach
-    public void finish() {
+    public void finish() { // default implementation ignored
 
     }
 
-    private SubmissionApi createValidSubmissionApi(final Integer filesToCreate) {
+    private SubmissionApi createValidSubmissionApi() {
         PresenterApi presenterApi = new PresenterApi();
         presenterApi.setEmail(SIGNED_IN_USER);
 
@@ -118,7 +118,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testPrepareNonFesEnabledForm() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
@@ -153,7 +153,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testPrepareFesEnabledForm() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
@@ -168,7 +168,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
         when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
 
-        expectSignedInUser(submissionApi, SUBMISSION_ID, SIGNED_IN_USER);
+        expectSignedInUser(SUBMISSION_ID, SIGNED_IN_USER);
 
         when(documentUploadAttribute.getAttributes()).thenReturn(attributes);
 
@@ -181,7 +181,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testPrepareFesEnabledCcForm() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
@@ -197,7 +197,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
         when(formTemplateService.getFormTemplate(FORM_TYPE_CODE)).thenReturn(apiFormTypeResponse);
 
-        expectSignedInUser(submissionApi, SUBMISSION_ID, SIGNED_IN_USER);
+        expectSignedInUser(SUBMISSION_ID, SIGNED_IN_USER);
 
         when(documentUploadAttribute.getAttributes()).thenReturn(attributes);
 
@@ -211,13 +211,13 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testPrepareVerifySubmissionWithDifferentSubmissionID() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectSignedInUser(submissionApi, "wrong-submission-id", SIGNED_IN_USER);
+        expectSignedInUser("wrong-submission-id", SIGNED_IN_USER);
 
         String viewName = toTest.prepare(submissionID, companyNumber, documentUploadAttribute, model, servletRequest, httpSession);
 
@@ -226,13 +226,13 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testPrepareVerifySubmissionWithDifferentSignedInUser() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectSignedInUser(submissionApi, SUBMISSION_ID, "wrong.user@ch.gov.uk");
+        expectSignedInUser(SUBMISSION_ID, "wrong.user@ch.gov.uk");
 
         String viewName = toTest.prepare(submissionID, companyNumber, documentUploadAttribute, model, servletRequest, httpSession);
 
@@ -241,7 +241,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testPrepareWithIncorrectSubmissionStatus() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         // Modify the submission status.
         submissionApi.setStatus(SubmissionStatus.ACCEPTED);
@@ -250,7 +250,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectSignedInUser(submissionApi, SUBMISSION_ID, SIGNED_IN_USER);
+        expectSignedInUser(SUBMISSION_ID, SIGNED_IN_USER);
 
         String viewName = toTest.prepare(submissionID, companyNumber, documentUploadAttribute, model, servletRequest, httpSession);
 
@@ -259,13 +259,13 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testProcessVerifySubmissionWithDifferentSubmissionID() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectSignedInUser(submissionApi, "wrong-submission-id", SIGNED_IN_USER);
+        expectSignedInUser("wrong-submission-id", SIGNED_IN_USER);
 
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
@@ -281,13 +281,13 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testProcessVerifySubmissionWithDifferentSignedInUser() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectSignedInUser(submissionApi, SUBMISSION_ID, "wrong.user@ch.gov.uk");
+        expectSignedInUser(SUBMISSION_ID, "wrong.user@ch.gov.uk");
 
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
@@ -303,15 +303,15 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testProcessFormWithNoFileSelected() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectSignedInUser(submissionApi, SUBMISSION_ID, SIGNED_IN_USER);
+        expectSignedInUser(SUBMISSION_ID, SIGNED_IN_USER);
 
-        BindingResult binding = expectFileValidationError(submissionApi, Boolean.TRUE);
+        BindingResult binding = expectFileValidationError(Boolean.TRUE);
 
         when(documentUploadValidator.apply(documentUploadAttribute, binding)).thenReturn(new ArrayList<>());
 
@@ -323,15 +323,15 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testProcessFormWithSingleFileSelected() {
-        SubmissionApi submissionApi = createValidSubmissionApi(0);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectSignedInUser(submissionApi, SUBMISSION_ID, SIGNED_IN_USER);
+        expectSignedInUser(SUBMISSION_ID, SIGNED_IN_USER);
 
-        BindingResult binding = expectFileValidationError(submissionApi, Boolean.FALSE);
+        BindingResult binding = expectFileValidationError(Boolean.FALSE);
 
         List<MultipartFile> uploadedFiles = new ArrayList<>();
         uploadedFiles.add(new MockMultipartFile("data", "testfile.txt", "text/plain", "some text".getBytes()));
@@ -368,13 +368,13 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testFinishDocumentUploadSuccess() {
-        SubmissionApi submissionApi = createValidSubmissionApi(1);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectFormTypeSelection(submissionApi);
+        expectFormTypeSelection();
 
         List<FileApi> fileList = new ArrayList<>();
         fileList.add(new FileApi("my-file-upload-response-guid", "testfile.txt", 9L));
@@ -390,13 +390,13 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
 
     @Test
     void testFinishDocumentUploadFailure() {
-        SubmissionApi submissionApi = createValidSubmissionApi(1);
+        SubmissionApi submissionApi = createValidSubmissionApi();
 
         String submissionID = submissionApi.getId();
         String companyNumber = submissionApi.getCompany().getCompanyNumber();
 
         expectSubmissionID(submissionApi);
-        expectFormTypeSelection(submissionApi);
+        expectFormTypeSelection();
 
         when(documentUploadAttribute.getDetails()).thenReturn(new FileListApi());
 
@@ -428,7 +428,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         verify(model).addAttribute("messageTextList", formTemplateApi.getMessageTexts());
     }
 
-    private void expectFormTypeSelection(final SubmissionApi submissionApi) {
+    private void expectFormTypeSelection() {
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);
@@ -443,7 +443,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(apiSubmissionResponse);
     }
 
-    private void expectSignedInUser(final SubmissionApi submissionApi, final String s, final String signedInUser) {
+    private void expectSignedInUser(final String s, final String signedInUser) {
         Map<String, Object> sessionContextData = new HashMap<>();
         sessionContextData.put(ORIGINAL_SUBMISSION_ID, s);
 
@@ -451,7 +451,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         when(sessionService.getUserEmail()).thenReturn(signedInUser);
     }
 
-    private BindingResult expectFileValidationError(final SubmissionApi submissionApi, final Boolean expectBindingErrors) {
+    private BindingResult expectFileValidationError(final Boolean expectBindingErrors) {
         FormTemplateApi formTemplateApi = mock(FormTemplateApi.class);
         ApiResponse<FormTemplateApi> apiFormTypeResponse = mock(ApiResponse.class);
         when(apiFormTypeResponse.getData()).thenReturn(formTemplateApi);

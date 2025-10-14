@@ -28,7 +28,6 @@ import uk.gov.companieshouse.session.store.Store;
 
 @ExtendWith(MockitoExtension.class)
 class ApiClientServiceImplIT {
-    private static final String API_HOST_URL = "test://host:port";
 
     private ApiClientService testService;
 
@@ -88,8 +87,6 @@ class ApiClientServiceImplIT {
 
     private void assertOAuthClientAsExpected(HttpClient httpClient) {
         assertThat(httpClient, is(instanceOf(OAuthHttpClient.class)));
-
-        OAuthHttpClient oAuthHttpClient = (OAuthHttpClient) httpClient;
     }
 
 }

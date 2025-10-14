@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTypeConstants.ROOT;
 
 import java.util.Arrays;
 import java.util.List;
@@ -81,10 +80,10 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
 
     private FormTemplateController testController;
 
-    final static String PRESENTER_EMAIL = "test@email.com";
-    final static String SCOTTISH_COMPANY_NUMBER_1 = "SC000000";
-    final static String SCOTTISH_COMPANY_NUMBER_2 = "SF000000";
-    final static String SCOTTISH_COMPANY_NUMBER_3 = "SO000000";
+    static final String PRESENTER_EMAIL = "test@email.com";
+    static final String SCOTTISH_COMPANY_NUMBER_1 = "SC000000";
+    static final String SCOTTISH_COMPANY_NUMBER_2 = "SF000000";
+    static final String SCOTTISH_COMPANY_NUMBER_3 = "SO000000";
 
     @BeforeEach
     protected void setUp() {
@@ -122,12 +121,6 @@ class FormTemplateControllerTest extends BaseControllerImplTest {
 
         verifyNoInteractions(formTemplateService, formTemplateAttribute, model);
         assertThat(result, is(ViewConstants.GONE.asView()));
-    }
-
-    private void setupParentCategory() {
-        when(categoryTemplateAttribute.getParentCategory()).thenReturn(new CategoryTemplateApi());
-        when(categoryTemplateService.getCategoryTemplate(ROOT.getValue())).thenReturn(
-                new ApiResponse<>(200, getHeaders(), new CategoryTemplateApi()));
     }
 
     @Test
