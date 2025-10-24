@@ -142,9 +142,11 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         documentUploadAttribute.setDetails(new FileListApi());
         documentUploadAttribute.addDetails(submissionApi);
 
+        logger.debug("Method: process(), " + "SubmissionId " + submissionApi.getId());
+
         // Proceed to validate the request and upload the valid files to the server.
         final Map<String, MultipartFile> uploadedFiles = documentUploadValidator.apply(documentUploadAttribute, binding)
-            .stream().collect(Collectors.toMap(file -> fileTransferApiClient.upload(file).getFileId(), file -> file));
+            .stream().collect(Collectors.toMap(file -> fileTransferApiClient.upload(file, submissionApi.getId()).getFileId(), file -> file));
 
         if (binding.hasErrors()) {
             addDataToModel(documentUploadAttribute, model, formTemplate);
