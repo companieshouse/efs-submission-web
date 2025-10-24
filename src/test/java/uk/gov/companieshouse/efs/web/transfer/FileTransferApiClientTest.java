@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
 class FileTransferApiClientTest {
@@ -39,14 +39,17 @@ class FileTransferApiClientTest {
 
     @Mock
     private RestTemplate restTemplate;
+    @Mock
+    private Logger logger;
+    @Mock
+    private ResponseEntity<FileTransferApiResponse> fileTransferApiResponseResponseEntity;
 
-    @InjectMocks
     private FileTransferApiClient fileTransferApiClient;
-
     private MultipartFile file;
 
     @BeforeEach
     void setup() {
+        fileTransferApiClient = new FileTransferApiClient(restTemplate, logger);
         ReflectionTestUtils.setField(fileTransferApiClient, "fileTransferApiUrl", DUMMY_URL);
         file = new MockMultipartFile("testFile", new byte[10]);
     }
@@ -106,8 +109,7 @@ class FileTransferApiClientTest {
     @Test
     void testUpload_GenericExceptionResponse() {
 
-        when(restTemplate.postForEntity(eq(DUMMY_URL), any(), eq(FileTransferApiResponse.class))).thenReturn(null);
-
+        when(restTemplate.postForEntity(eq(DUMMY_URL), any(), eq(FileTransferApiResponse.class))).thenReturn(fileTransferApiResponseResponseEntity);
         FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file, null);
 
         assertTrue(fileTransferApiClientResponse.getHttpStatus().isError());
