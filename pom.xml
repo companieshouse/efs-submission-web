@@ -33,7 +33,7 @@
         <opentelemetry-instrumentation-bom.version>2.16.0</opentelemetry-instrumentation-bom.version>
 
         <!-- Logging -->
-        <structured-logging.version>3.0.32</structured-logging.version>
+        <structured-logging.version>3.0.38</structured-logging.version>
 
         <thymeleaf-layout-dialect.version>3.4.0</thymeleaf-layout-dialect.version>
         <commons-lang3.version>3.19.0</commons-lang3.version>
