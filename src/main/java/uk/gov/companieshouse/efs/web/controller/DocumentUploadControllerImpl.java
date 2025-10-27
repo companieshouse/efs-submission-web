@@ -128,15 +128,19 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         @ModelAttribute(ATTRIBUTE_NAME) DocumentUploadModel documentUploadAttribute, BindingResult binding, Model model,
         HttpServletRequest servletRequest, HttpSession session) {
 
+        logger.debug("Method: process(), getSubmissionId for id " + id);
         final SubmissionApi submissionApi = Objects.requireNonNull(getSubmission(id));
+        logger.debug("Method: process(), getFormType for submissionId  " + submissionApi.getId());
         final FormTemplateApi formTemplate = getFormTemplateApi(submissionApi.getSubmissionForm().getFormType());
 
+        logger.debug("Method: process(), mergeAttributes into model for submissionId " + submissionApi.getId());
         model.mergeAttributes(documentUploadAttribute.getAttributes());
+        logger.debug("Method: process(), Verify submission for submissionId " + submissionApi.getId());
         if (!verifySubmission(submissionApi)) {
             addDataToModel(documentUploadAttribute, model, formTemplate);
             return ViewConstants.ERROR.asView();
         }
-
+        logger.debug("Method: process(), Submission verified for submissionId " + submissionApi.getId());
         // Update the page model with the database document's id and details
         documentUploadAttribute.setSubmissionId(submissionApi.getId());
         documentUploadAttribute.setDetails(new FileListApi());
