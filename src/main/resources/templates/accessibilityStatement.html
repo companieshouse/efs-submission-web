@@ -16,7 +16,8 @@
                     </h1>
                     <p class="govuk-body">
                         <span th:text="#{accessibilityStatement.runBy}"></span>
-                        <a th:href="${@environment.getProperty('govuk.ch.url')}"
+                        <a class="govuk-link"
+                           th:href="${@environment.getProperty('govuk.ch.url')}"
                            th:text="#{accessibilityStatement.companiesHouse}"></a>
                         <span th:text="#{accessibilityStatement.asManyAsPossible}"></span>
                     </p>
@@ -27,9 +28,11 @@
                         <li th:text="#{accessibilityStatement.speechNavigate}"></li>
                         <li th:text="#{accessibilityStatement.screenReader}"></li>
                     </ul>
-                        <a th:href="${@environment.getProperty('abilitynet.url')}" th:text="#{accessibilityStatement.abilityNet}"></a>
                     <p class="govuk-body" th:text="#{accessibilityStatement.simpleToUnderstand}"></p>
                     <p class="govuk-body">
+                        <a class="govuk-link"
+                           th:href="${@environment.getProperty('abilitynet.url')}" 
+                           th:text="#{accessibilityStatement.abilityNet}"></a>
                     </p>
 
                     <h2 class="govuk-heading-l" th:text="#{accessibilityStatement.howAccessible.service}"></h2>
@@ -41,14 +44,18 @@
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
                             <span th:text="#{accessibilityStatement.emailAt}"></span>
-                            <a class="piwik-event" data-event-id="contact-us-email-link" th:href="${@environment.getProperty('enquiries.mailbox')}" th:text="#{accessibilityStatement.emailAddress}"></a>
+                            <a class="govuk-link piwik-event" data-event-id="contact-us-email-link" 
+                               th:href="${@environment.getProperty('enquiries.mailbox')}" 
+                               th:text="#{accessibilityStatement.emailAddress}"></a>
                         </li>
                         <li th:text="#{accessibilityStatement.telephone}"></li>
                         <li th:text="#{accessibilityStatement.telephoneWelsh}"></li>
                         <li th:text="#{accessibilityStatement.textphoneAndMinicom}"></li>
                     </ul>
                     <p class="govuk-body">
-                        <a th:href="${@environment.getProperty('govuk.call.charges.url')}" th:text="#{accessibilityStatement.callCharges}"></a>
+                        <a class="govuk-link" 
+                           th:href="${@environment.getProperty('govuk.call.charges.url')}" 
+                           th:text="#{accessibilityStatement.callCharges}"></a>
                     </p>
                     <p class="govuk-body" th:text="#{accessibilityStatement.writeToUs}"></p>
                     <p class="govuk-body">
@@ -63,16 +70,19 @@
 
                     <h2 class="govuk-heading-l" th:text="#{accessibilityStatement.reportingProblems}">
                     </h2>
-                        <a th:href="${@environment.getProperty('accessibility.support.url')}"
                     <p class="govuk-body">
                         <span th:text="#{accessibilityStatement.continuingToImprove}"></span>
+                        <a class="govuk-link"
+                           th:href="${@environment.getProperty('accessibility.support.url')}"
                            th:text="#{accessibilityStatement.accessibilitySupportUrl}"></a>
                         <span th:text="#{accessibilityStatement.usersPage}"></span>
                     </p>
                     <h2 class="govuk-heading-l" th:text="#{accessibilityStatement.enforcement}"></h2>
                     <p class="govuk-body">
                         <span th:text="#{accessibilityStatement.EHRC}"></span>
-                        <a th:href="${@environment.getProperty('accessibility.equality.service')}" th:text="#{accessibilityStatement.contactEHRC}"></a>
+                        <a class="govuk-link" 
+                           th:href="${@environment.getProperty('accessibility.equality.service')}" 
+                           th:text="#{accessibilityStatement.contactEHRC}"></a>
                     </p>
                     <h2 class="govuk-heading-l" th:text="#{accessibilityStatement.technicalInformation}">
                     </h2>
@@ -80,7 +90,9 @@
                     </p>
                     <p class="govuk-body">
                         <span th:text="#{accessibilityStatement.partiallyCompliant}"></span>
-                        <a th:href="${@environment.getProperty('accessibility.web.guide.url')}" th:text="#{accessibilityStatement.webContentGuide}"></a>
+                        <a class="govuk-link" 
+                           th:href="${@environment.getProperty('accessibility.web.guide.url')}" 
+                           th:text="#{accessibilityStatement.webContentGuide}"></a>
                         <span th:text="#{accessibilityStatement.AA}"></span>
                     </p>
 
@@ -105,13 +117,17 @@
                         <li th:text="#{accessibilityStatement.externalAgencies}">
                         </li>
                         <li>
-                            <a th:href="${@environment.getProperty('accessibility.improve.url')}" th:text="#{accessibilityStatement.userPanel}"></a>
                             <span class="govuk-body" th:text="#{accessibilityStatement.recruitCustomers}"></span>
+                            <a class="govuk-link" 
+                               th:href="${@environment.getProperty('accessibility.improve.url')}" 
+                               th:text="#{accessibilityStatement.userPanel}"></a>
                             <span class="govuk-body" th:text="#{accessibilityStatement.usabilityLab}"></span>
                         </li>
                         <li>
-                            <a th:href="${@environment.getProperty('accessibility.service.manual.url')}" th:text="#{accessibilityStatement.accessibilityRequirements}"></a>
                             <span class="govuk-body" th:text="#{accessibilityStatement.buildAndTest}"></span>
+                            <a class="govuk-link" 
+                               th:href="${@environment.getProperty('accessibility.service.manual.url')}" 
+                               th:text="#{accessibilityStatement.accessibilityRequirements}"></a>
                         </li>
                         <li th:text="#{accessibilityStatement.updatingPDFs}">
                         </li>

@@ -14,7 +14,7 @@
             <h1 class="govuk-heading-l" th:text="#{410.title}"></h1>
             <p class="govuk-body">
                 <span th:text="#{410.link.text1}"> </span>
-                <a th:href="${@environment.getProperty('start.page.url')}">
+                <a class="govuk-link" th:href="${@environment.getProperty('start.page.url')}">
                     <span th:text="#{410.link.text2}"></span>
                 </a>
             </p>
