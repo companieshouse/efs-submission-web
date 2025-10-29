@@ -72,7 +72,7 @@ class SpringWebConfigTest {
     void messageSource() {
         final ResourceBundleMessageSource messageSource = testConfig.messageSource();
 
-        assertThat(messageSource.getBasenameSet(), contains("messages"));
+        assertThat(messageSource.getBasenameSet(), contains("messages", "locales/common-messages"));
     }
 
     @Test
