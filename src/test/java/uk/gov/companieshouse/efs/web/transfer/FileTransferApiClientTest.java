@@ -26,7 +26,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
 class FileTransferApiClientTest {
@@ -40,8 +39,6 @@ class FileTransferApiClientTest {
     @Mock
     private RestTemplate restTemplate;
     @Mock
-    private Logger logger;
-    @Mock
     private ResponseEntity<FileTransferApiResponse> fileTransferApiResponseResponseEntity;
 
     private FileTransferApiClient fileTransferApiClient;
@@ -49,7 +46,7 @@ class FileTransferApiClientTest {
 
     @BeforeEach
     void setup() {
-        fileTransferApiClient = new FileTransferApiClient(restTemplate, logger);
+        fileTransferApiClient = new FileTransferApiClient(restTemplate);
         ReflectionTestUtils.setField(fileTransferApiClient, "fileTransferApiUrl", DUMMY_URL);
         file = new MockMultipartFile("testFile", new byte[10]);
     }
@@ -61,7 +58,7 @@ class FileTransferApiClientTest {
         when(restTemplate.postForEntity(eq(DUMMY_URL), any(), eq(FileTransferApiResponse.class)))
                 .thenReturn(apiResponse);
 
-        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file, null);
+        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file);
 
         assertEquals(FILE_ID, fileTransferApiClientResponse.getFileId());
         assertEquals(HttpStatus.OK, fileTransferApiClientResponse.getHttpStatus());
@@ -74,7 +71,7 @@ class FileTransferApiClientTest {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.getBytes()).thenThrow(new IOException());
 
-        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(mockFile, null);
+        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(mockFile);
 
         assertTrue(fileTransferApiClientResponse.getHttpStatus().isError());
         assertThat(fileTransferApiClientResponse.getHttpStatus(), is(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -86,7 +83,7 @@ class FileTransferApiClientTest {
 
         when(restTemplate.postForEntity(eq(DUMMY_URL), any(), eq(FileTransferApiResponse.class))).thenReturn(apiErrorResponse);
 
-        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file, null);
+        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file);
 
         assertTrue(fileTransferApiClientResponse.getHttpStatus().isError());
         assertEquals(apiErrorResponse.getStatusCode(), fileTransferApiClientResponse.getHttpStatus());
@@ -99,7 +96,7 @@ class FileTransferApiClientTest {
 
         when(restTemplate.postForEntity(eq(DUMMY_URL), any(), eq(FileTransferApiResponse.class)))
                 .thenReturn(apiResponse);
-        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file, null);
+        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file);
 
         assertTrue(fileTransferApiClientResponse.getHttpStatus().isError());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, fileTransferApiClientResponse.getHttpStatus());
@@ -110,7 +107,7 @@ class FileTransferApiClientTest {
     void testUpload_GenericExceptionResponse() {
 
         when(restTemplate.postForEntity(eq(DUMMY_URL), any(), eq(FileTransferApiResponse.class))).thenReturn(fileTransferApiResponseResponseEntity);
-        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file, null);
+        FileTransferApiClientResponse fileTransferApiClientResponse = fileTransferApiClient.upload(file);
 
         assertTrue(fileTransferApiClientResponse.getHttpStatus().isError());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, fileTransferApiClientResponse.getHttpStatus());

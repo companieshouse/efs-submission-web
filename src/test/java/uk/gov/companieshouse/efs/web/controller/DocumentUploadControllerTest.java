@@ -342,7 +342,7 @@ class DocumentUploadControllerTest extends BaseControllerImplTest {
         when(fileUploadResponse.getFileId()).thenReturn("my-file-upload-response-guid");
 
         when(documentUploadValidator.apply(documentUploadAttribute, binding)).thenReturn(uploadedFiles);
-        when(fileTransferApiClient.upload(any(), any())).thenReturn(fileUploadResponse);
+        when(fileTransferApiClient.upload(any())).thenReturn(fileUploadResponse);
 
         SubmissionResponseApi submissionResponseApi = mock(SubmissionResponseApi.class);
         when(submissionResponseApi.getId()).thenReturn("submission-response-id");
