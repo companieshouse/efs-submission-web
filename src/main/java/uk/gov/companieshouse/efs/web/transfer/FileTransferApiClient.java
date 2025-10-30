@@ -8,12 +8,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.companieshouse.logging.Logger;
 
 /**
  * Client for using the File-Transfer-Api for upload / download / delete of files.
@@ -27,7 +25,6 @@ public class FileTransferApiClient {
     private static final String CONTENT_DISPOSITION_VALUE = "form-data; name=%s; filename=%s";
 
     private RestTemplate restTemplate;
-    private Logger logger;
 
     @Value("${file.transfer.api.key}")
     private String fileTransferApiKey;
@@ -36,9 +33,8 @@ public class FileTransferApiClient {
     private String fileTransferApiUrl;
 
     @Autowired
-    public FileTransferApiClient(final RestTemplate restTemplate, final Logger logger) {
+    public FileTransferApiClient(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.logger = logger;
     }
 
     private <T> FileTransferApiClientResponse makeApiCall(FileTransferOperation<T> operation, FileTransferResponseBuilder<T> responseBuilder) {
@@ -63,8 +59,8 @@ public class FileTransferApiClient {
      * @param fileToUpload The file to upload
      * @return FileTransferApiClientResponse containing the file id if successful, and http status
      */
-    public FileTransferApiClientResponse upload(final MultipartFile fileToUpload, final String submissionId) {
-        logger.debug("Method: upload() :" + "SubmissionId " + submissionId);
+    public FileTransferApiClientResponse upload(final MultipartFile fileToUpload) {
+
         return makeApiCall(
                 // FileTransferOperation
                 () -> {
@@ -73,11 +69,7 @@ public class FileTransferApiClient {
                     HttpEntity<byte[]> fileHttpEntity = new HttpEntity<>(fileToUpload.getBytes(), fileHeaderMap);
                     LinkedMultiValueMap<String, Object> body = createUploadBody(fileHttpEntity);
                     HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-                    logger.debug("Method: upload(), call postForEntity, submissionId:" + submissionId +
-                    ", fileHttpEntity: " + fileHttpEntity);
-                    ResponseEntity<FileTransferApiResponse> fileTransferApiResponseResponseEntity = restTemplate.postForEntity(fileTransferApiUrl, requestEntity, FileTransferApiResponse.class);
-                    logger.debug("postForEntity response: " + fileTransferApiResponseResponseEntity.getStatusCode() + ", submissionId:" + submissionId);
-                    return fileTransferApiResponseResponseEntity;
+                    return restTemplate.postForEntity(fileTransferApiUrl, requestEntity, FileTransferApiResponse.class);
                 },
 
                 // FileTransferResponseBuilder - the output from FileTransferOperation is the
