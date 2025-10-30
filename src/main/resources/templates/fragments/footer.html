@@ -33,12 +33,6 @@
                 <h2 class="govuk-visually-hidden">Support links</h2>
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
-                        <a id="accessibility-statement-link" class="govuk-footer__link" target="_blank"
-                           data-event-id="accessibility-statement-footer-link"
-                           href="/efs-submission/accessibility-statement"
-                           data-th-text="#{footer.accessibilityStatement}"></a>
-                    </li>
-                    <li class="govuk-footer__inline-list-item">
                         <a id="policies-link" class="govuk-footer__link" target="_blank"
                            data-event-id="policies-footer-link"
                            th:href="${@environment.getProperty('policies.url')}"
@@ -55,6 +49,12 @@
                            data-event-id="contact-us-footer-link"
                            th:href="@{{chsUrl}/help/contact-us(chsUrl=${@environment.getProperty('chs.url')})}"
                            data-th-text="#{footer.contactUs}"></a>
+                    </li>
+                    <li class="govuk-footer__inline-list-item">
+                        <a id="accessibility-statement-link" class="govuk-footer__link" target="_blank"
+                           data-event-id="accessibility-statement-footer-link"
+                           href="/efs-submission/accessibility-statement"
+                           data-th-text="#{footer.accessibilityStatement}"></a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
                         <a id="developer-link" class="govuk-footer__link" target="_blank"
