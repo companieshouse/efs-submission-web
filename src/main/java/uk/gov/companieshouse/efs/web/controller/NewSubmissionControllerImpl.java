@@ -1,8 +1,9 @@
 package uk.gov.companieshouse.efs.web.controller;
 
 import java.text.MessageFormat;
+import java.util.Objects;
+
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -63,7 +64,7 @@ public class NewSubmissionControllerImpl extends BaseControllerImpl implements N
         final SessionStatus sessionStatus, final HttpServletRequest request, RedirectAttributes attributes) {
         String newSubmissionId;
 
-        if (!StringUtils.equals(companyDetailAttribute.getCompanyNumber(), companyNumber)) {
+        if (!Objects.equals(companyDetailAttribute.getCompanyNumber(), companyNumber)) {
             logger.errorRequest(request, "Company number in URL does not match companyDetailAttribute.companyNumber");
             return ViewConstants.ERROR.asView();
         }

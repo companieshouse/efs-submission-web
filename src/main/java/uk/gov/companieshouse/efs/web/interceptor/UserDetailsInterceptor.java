@@ -1,10 +1,10 @@
 package uk.gov.companieshouse.efs.web.interceptor;
 
 import java.util.Map;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -46,16 +46,16 @@ public class UserDetailsInterceptor implements HandlerInterceptor {
                 modelAndView.getViewName() != null &&
                 ("GET".equalsIgnoreCase(request.getMethod()) ||
                         ("POST".equalsIgnoreCase(request.getMethod()) &&
-                                !StringUtils.startsWith(modelAndView.getViewName(),
+                                !modelAndView.getViewName().startsWith(
                                         UrlBasedViewResolver.REDIRECT_URL_PREFIX)))) {
 
-            Map<String, Object> sessionData = sessionService.getSessionDataFromContext();
-            Map<String, Object> signInInfo = (Map<String, Object>) sessionData.get(SIGN_IN_KEY);
+                Map<String, Object> sessionData = sessionService.getSessionDataFromContext();
+                Map<String, Object> signInInfo = (Map<String, Object>) sessionData.get(SIGN_IN_KEY);
 
-            if (signInInfo != null) {
-                Map<String, Object> userProfile = (Map<String, Object>) signInInfo.get(USER_PROFILE_KEY);
-                modelAndView.addObject(USER_EMAIL, userProfile.get(EMAIL_KEY));
+                if (signInInfo != null) {
+                    Map<String, Object> userProfile = (Map<String, Object>) signInInfo.get(USER_PROFILE_KEY);
+                    modelAndView.addObject(USER_EMAIL, userProfile.get(EMAIL_KEY));
+                }
             }
-        }
     }
 }

@@ -5,10 +5,10 @@ import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerIm
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -78,7 +78,7 @@ public class CompanyDetailControllerImpl extends BaseControllerImpl implements C
     public String getCompanyDetail(final String id, final String companyNumber,
         final CompanyDetail companyDetailAttribute, final Model model, final HttpServletRequest request) {
 
-        if (StringUtils.equals(companyNumber, "noCompany")) {
+        if (Objects.equals(companyNumber, "noCompany")) {
             return registrationsEnabled ? ViewConstants.PROPOSED_COMPANY.asRedirectUri(chsUrl,
                 id, "noCompany") : ViewConstants.MISSING.asView();
         }

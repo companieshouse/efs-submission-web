@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import jakarta.servlet.ServletRequest;
 import jakarta.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -122,7 +121,7 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
         // selected form category must match the category otherwise the user hasn't selected
         // a form for the last selected category
         final boolean formNotSelected = !selectedForm.isPresent()
-                                        || !StringUtils.equals(selectedForm.get().getFormCategory(),
+                                        || !Objects.equals(selectedForm.get().getFormCategory(),
             categoryTemplateAttribute.getCategoryType());
         if (formNotSelected) {
             formTemplateAttribute.setDetails(new FormTemplateApi());
