@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,7 +78,7 @@ public class PaymentControllerImpl extends BaseControllerImpl implements Payment
         logger.debug(
             String.format("Payment callback status %s for submission with id [%s]", status, id));
         final Optional<SessionApi> maybeMatchedSession = paymentSessions.stream()
-            .filter(s -> StringUtils.equals(s.getSessionState(), state))
+            .filter(s -> Objects.equals(s.getSessionState(), state))
             .findFirst();
 
         return maybeMatchedSession.map(

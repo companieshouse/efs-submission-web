@@ -7,7 +7,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -104,7 +103,7 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
 
         String redirectUri = ViewConstants.DOCUMENT_UPLOAD.asRedirectUri(chsUrl, id, companyNumber);
 
-        if (StringUtils.equals(reviewSelectionAttribute.getConfirmed(), "N")) {
+        if (Objects.equals(reviewSelectionAttribute.getConfirmed(), "N")) {
             // Remove preselection of form type on Document selection screen
             formTemplateAttribute.setFormType("");
             return ViewConstants.DOCUMENT_SELECTION.asRedirectUri(chsUrl, id, companyNumber,

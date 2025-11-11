@@ -8,7 +8,6 @@ import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -88,7 +87,7 @@ public class RemoveDocumentControllerImpl extends BaseControllerImpl implements 
         FileDetailListApi fileDetailsListApi = Optional.ofNullable(submissionApi.getSubmissionForm().getFileDetails())
             .orElseGet(FileDetailListApi::new);
         Optional<FileDetailApi> fileDetailApi = fileDetailsListApi.getList().stream().filter(
-            file -> StringUtils.equals(file.getFileId(), fileId)).findFirst();
+            file -> Objects.equals(file.getFileId(), fileId)).findFirst();
 
         if (!fileDetailApi.isPresent()) {
             return ViewConstants.ERROR.asView();
@@ -120,7 +119,7 @@ public class RemoveDocumentControllerImpl extends BaseControllerImpl implements 
 
         String redirectUri = ViewConstants.DOCUMENT_UPLOAD.asRedirectUri(chsUrl, id, companyNumber);
 
-        if (StringUtils.equals(removeDocumentAttribute.getRequired(), "Y")) {
+        if (Objects.equals(removeDocumentAttribute.getRequired(), "Y")) {
             redirectUri = performRemoveDocument(submissionApi.getId(), fileId, binding,
                 submissionApi.getSubmissionForm());
 
@@ -145,7 +144,7 @@ public class RemoveDocumentControllerImpl extends BaseControllerImpl implements 
 
         // Locate the evidence that we want to remove.
         Optional<FileDetailApi> fileDetails = submissionFormApi.getFileDetails().getList().stream().filter(
-                e -> StringUtils.equals(e.getFileId(), fileId)
+                e -> Objects.equals(e.getFileId(), fileId)
         ).findFirst();
 
         String result = ViewConstants.REMOVE_DOCUMENT.asView();

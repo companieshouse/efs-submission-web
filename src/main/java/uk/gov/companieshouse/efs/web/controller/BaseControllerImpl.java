@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -16,7 +17,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import jakarta.servlet.ServletRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -256,8 +256,8 @@ public abstract class BaseControllerImpl implements BaseController {
         String sessionUserEmail = sessionService.getUserEmail();
         String requestUserEmail = submissionApi.getPresenter().getEmail();
 
-        boolean isSameForm = StringUtils.equals(originalSubmissionId, submissionID);
-        boolean isSameUser = StringUtils.equals(sessionUserEmail, requestUserEmail);
+        boolean isSameForm = Objects.equals(originalSubmissionId, submissionID);
+        boolean isSameUser = Objects.equals(sessionUserEmail, requestUserEmail);
 
         boolean isVerified = isSameForm && isSameUser;
 
