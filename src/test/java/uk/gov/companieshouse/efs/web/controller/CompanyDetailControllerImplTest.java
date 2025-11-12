@@ -171,4 +171,10 @@ class CompanyDetailControllerImplTest extends BaseControllerImplTest {
         assertThat(viewName, is(ViewConstants.COMPANY_DETAIL.asView()));
     }
 
+    @Test
+    void restrictedCompanyTypeReturnsRestrictedCompanyType() {
+        String viewName = testController.restrictedCompanyType(SUBMISSION_ID, COMPANY_NUMBER, companyDetailAttribute, model, servletRequest);
+
+        assertThat(viewName, is(ViewConstants.RESTRICTED_COMPANY_TYPE.asView()));
+    }
 }
