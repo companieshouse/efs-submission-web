@@ -57,7 +57,7 @@
                             <th class="govuk-table__cell" style="word-break: break-word" th:text="${#strings.replace(document.fileName, '-', '&#8209;')}" scope="row"></th>
                             <td class="govuk-table__cell" th:text="${T(uk.gov.companieshouse.efs.web.model.DocumentUploadModel).displayFileSizeAsHuman(document)}"></td>
                             <td class="govuk-table__cell">
-                                <a th:href="@{/efs-submission/{id}/company/{companyNumber}/remove-document/{fileId}(id=*{submissionId}, companyNumber=*{companyNumber}, fileId=${document.fileId})}">Remove<span
+                                <a class="govuk-link" th:href="@{/efs-submission/{id}/company/{companyNumber}/remove-document/{fileId}(id=*{submissionId}, companyNumber=*{companyNumber}, fileId=${document.fileId})}">Remove<span
                                         class="govuk-visually-hidden" th:text="${document.fileName}"></span></a>
                             </td>
                         </tr>

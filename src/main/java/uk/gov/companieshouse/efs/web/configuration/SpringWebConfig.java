@@ -98,7 +98,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasename("messages");
+        messageSource.setBasenames("messages", "locales/common-messages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setUseCodeAsDefaultMessage(false);
         messageSource.setFallbackToSystemLocale(true);

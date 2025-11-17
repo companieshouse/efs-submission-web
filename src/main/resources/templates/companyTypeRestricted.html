@@ -15,10 +15,10 @@
                     <h1 class="govuk-heading-l" th:text="#{companyTypeRestricted.heading}"></h1>
                     <p class="govuk-body-l"
                        th:text="#{companyTypeRestricted.description}"></p>
-                    <p>
+                    <p class="govuk-body">
                         <a class="govuk-link piwik-event" data-event-id="register-oe-link-" th:href="${@environment.getProperty('register.overseas.entity.url')}" th:text="#{companyTypeRestricted.register.overseas.entity.link}"></a>
                     </p>
-                    <p>
+                    <p class="govuk-body">
                         <a class="govuk-link piwik-event" data-event-id="file-oe-link" th:href="${@environment.getProperty('file.overseas.entity.url')}" th:text="#{companyTypeRestricted.file.overseas.entity.link}"></a>
                     </p>
                 </div>

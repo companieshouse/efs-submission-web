@@ -20,36 +20,36 @@
                             <div class="govuk-fieldset">
                                 <h1 class="govuk-heading-xl" id="company-details-heading"
                                     th:utext="#{companyDetails.title}"></h1>
-                                <dl class="app-check-your-answers app-check-your-answers--short">
-                                    <div class="app-check-your-answers__contents">
+                                <dl class="govuk-summary-list app-check-your-answers app-check-your-answers--short">
+                                    <div class="govuk-summary-list__row app-check-your-answers__contents">
                                         <dt th:text="#{companyDetails.companyName}"
-                                            class="app-check-your-answers__question">
+                                            class="govuk-summary-list__key app-check-your-answers__question">
                                         </dt>
-                                        <dd class="app-check-your-answers__answer"
+                                        <dd class="govuk-summary-list__value app-check-your-answers__answer"
                                             id="companyDetail-companyName"
                                             th:utext="*{#strings.replace(companyName,'&#10;','&lt;br&gt;')}">
                                         </dd>
                                     </div>
-                                    <div class="app-check-your-answers__contents">
+                                    <div class="govuk-summary-list__row app-check-your-answers__contents">
                                         <dt th:text="#{companyDetails.companyNumber}"
-                                            class="app-check-your-answers__question">
+                                            class="govuk-summary-list__key app-check-your-answers__question">
                                         </dt>
-                                        <dd class="app-check-your-answers__answer" id="companyDetail-companyNumber"
+                                        <dd class="govuk-summary-list__value app-check-your-answers__answer" id="companyDetail-companyNumber"
                                             th:utext="*{#strings.replace(companyNumber,'&#10;','&lt;br&gt;')}">
                                         </dd>
                                     </div>
-                                    <div class="app-check-your-answers__contents">
-                                        <dt th:text="#{companyDetails.incorporationDate}" class="app-check-your-answers__question">
+                                    <div class="govuk-summary-list__row app-check-your-answers__contents">
+                                        <dt th:text="#{companyDetails.incorporationDate}" class="govuk-summary-list__key app-check-your-answers__question">
                                         </dt>
-                                        <dd class="app-check-your-answers__answer" id="companyDetail-incorporationDate"
+                                        <dd class="govuk-summary-list__value app-check-your-answers__answer" id="companyDetail-incorporationDate"
                                             th:utext="*{#temporals.format(incorporationDate, 'dd MMMM yyyy')}">
                                         </dd>
                                     </div>
-                                    <div class="app-check-your-answers__contents">
+                                    <div class="govuk-summary-list__row app-check-your-answers__contents">
                                         <dt th:text="#{companyDetails.registeredOfficeAddress}"
-                                            class="app-check-your-answers__question">
+                                            class="govuk-summary-list__key app-check-your-answers__question">
                                         </dt>
-                                        <dd class="app-check-your-answers__answer" id="companyDetail-registeredOfficeAddress"
+                                        <dd class="govuk-summary-list__value app-check-your-answers__answer" id="companyDetail-registeredOfficeAddress"
                                             th:utext="*{#strings.replace(registeredOfficeAddress,'&#10;','&lt;br&gt;')}">
                                         </dd>
                                     </div>
