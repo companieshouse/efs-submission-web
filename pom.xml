@@ -19,21 +19,21 @@
         <skip.unit.tests>false</skip.unit.tests>
 
         <java.version>21</java.version>
-        <java-session-handler.version>4.1.7</java-session-handler.version>
-        <private-api-sdk-java.version>4.0.389</private-api-sdk-java.version>
-        <sdk-manager-java.version>3.0.10</sdk-manager-java.version>
-        <rest-service-common-library.version>2.0.4</rest-service-common-library.version>
-        <environment-reader-library.version>3.0.1</environment-reader-library.version>
+        <java-session-handler.version>4.1.12</java-session-handler.version>
+        <private-api-sdk-java.version>4.0.421</private-api-sdk-java.version>
+        <sdk-manager-java.version>3.0.14</sdk-manager-java.version>
+        <rest-service-common-library.version>2.0.9</rest-service-common-library.version>
+        <environment-reader-library.version>3.0.5</environment-reader-library.version>
         <common-web-java.version>4.1.0</common-web-java.version>
         <commons-fileupload2-jakarta-servlet6.version>2.0.0-M2</commons-fileupload2-jakarta-servlet6.version>
         <awaitility.version>4.3.0</awaitility.version>
         <hibernate-validator.version>9.0.0.Final</hibernate-validator.version>
         <nimbus-jose-jwt.version>10.3</nimbus-jose-jwt.version>
-        <test-containers.version>1.21.2</test-containers.version>
+        <test-containers.version>1.21.3</test-containers.version>
         <opentelemetry-instrumentation-bom.version>2.16.0</opentelemetry-instrumentation-bom.version>
 
         <!-- Logging -->
-        <structured-logging.version>3.0.38</structured-logging.version>
+        <structured-logging.version>3.0.43</structured-logging.version>
 
         <thymeleaf-layout-dialect.version>3.4.0</thymeleaf-layout-dialect.version>
         <commons-lang3.version>3.19.0</commons-lang3.version>
@@ -54,7 +54,7 @@
         <web-security-java.version>3.1.5</web-security-java.version>
 
         <!-- Spring -->
-        <spring-boot-dependencies.version>3.5.6</spring-boot-dependencies.version>
+        <spring-boot-dependencies.version>3.5.7</spring-boot-dependencies.version>
         <spring-test.version>6.2.8</spring-test.version>
         <spring-webmvc.version>6.2.10</spring-webmvc.version>
         <spring-boot-maven-plugin.version>${spring-boot-dependencies.version}</spring-boot-maven-plugin.version>
@@ -452,7 +452,16 @@
                 <configuration>
                     <!--suppress UnresolvedMavenProperty -->
                     <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
-
+                    <!-- Workaround for this error since Docker CLI 29.0:
+                     "client version 1.32 is too old. Minimum supported API version is 1.44, please upgrade your client to a newer version"
+                     see https://github.com/testcontainers/testcontainers-java/issues/11212#issuecomment-3518584924 -->
+                    <systemPropertyVariables>
+                        <api.version>1.44</api.version>
+                    </systemPropertyVariables>
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*ITest.java</include>
+                    </includes>
                     <!--This is a workaround for failsafe not running integration tests-->
                     <!-- https://stackoverflow.com/a/52532095 -->
                     <classesDirectory>${project.build.outputDirectory}</classesDirectory>

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,7 +87,7 @@ class FileTransferApiClientTest {
 
         assertTrue(fileTransferApiClientResponse.getHttpStatus().isError());
         assertEquals(apiErrorResponse.getStatusCode(), fileTransferApiClientResponse.getHttpStatus());
-        assertTrue(StringUtils.isBlank(fileTransferApiClientResponse.getFileId()));
+        assertTrue(Strings.isBlank(fileTransferApiClientResponse.getFileId()));
     }
 
     @Test
@@ -100,7 +100,7 @@ class FileTransferApiClientTest {
 
         assertTrue(fileTransferApiClientResponse.getHttpStatus().isError());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, fileTransferApiClientResponse.getHttpStatus());
-        assertTrue(StringUtils.isBlank(fileTransferApiClientResponse.getFileId()));
+        assertTrue(Strings.isBlank(fileTransferApiClientResponse.getFileId()));
     }
 
     @Test
