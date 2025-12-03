@@ -1,7 +1,11 @@
 package uk.gov.companieshouse.efs.web.controller;
 
+import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
+import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
+
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -12,8 +16,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import javax.servlet.ServletRequest;
-import org.apache.commons.lang3.StringUtils;
+import jakarta.servlet.ServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -150,19 +153,16 @@ public abstract class BaseControllerImpl implements BaseController {
             final HttpStatus status = HttpStatus.valueOf(response.getStatusCode());
             final HttpStatus.Series series = status.series();
 
-            switch (series) {
-                case CLIENT_ERROR:    // fall through
-                case SERVER_ERROR:
-                    logger.errorContext(applicationId,
-                            MessageFormat.format("API response: status={0}, message={1}",
-                                    status, message), null, null);
-                    break;
-                default:
-                    logger.infoContext(applicationId,
-                            MessageFormat.format("API response: status={0}, message={1}",
-                                    status, message) + status, null);
-                    break;
+            if (series.equals(CLIENT_ERROR) || series.equals(SERVER_ERROR)) {
+                logger.errorContext(applicationId,
+                    MessageFormat.format("API response: status={0}, message={1}",
+                        status, message), null, null);
+            } else {
+                logger.infoContext(applicationId,
+                        MessageFormat.format("API response: status={0}, message={1}",
+                                status, message) + status, null);
             }
+
             if (response.hasErrors()) {
                 response.getErrors().forEach(e -> logger.errorContext(applicationId, "error=" + e, null, null));
             }
@@ -256,8 +256,8 @@ public abstract class BaseControllerImpl implements BaseController {
         String sessionUserEmail = sessionService.getUserEmail();
         String requestUserEmail = submissionApi.getPresenter().getEmail();
 
-        boolean isSameForm = StringUtils.equals(originalSubmissionId, submissionID);
-        boolean isSameUser = StringUtils.equals(sessionUserEmail, requestUserEmail);
+        boolean isSameForm = Objects.equals(originalSubmissionId, submissionID);
+        boolean isSameUser = Objects.equals(sessionUserEmail, requestUserEmail);
 
         boolean isVerified = isSameForm && isSameUser;
 

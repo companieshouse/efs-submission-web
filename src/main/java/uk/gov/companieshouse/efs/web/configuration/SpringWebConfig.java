@@ -1,6 +1,14 @@
 package uk.gov.companieshouse.efs.web.configuration;
 
-import nz.net.ultraq.thymeleaf.LayoutDialect;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -13,18 +21,14 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import uk.gov.companieshouse.efs.web.interceptor.LoggingInterceptor;
+import uk.gov.companieshouse.efs.web.interceptor.UserDetailsInterceptor;
 import uk.gov.companieshouse.efs.web.payment.service.NonceService;
 import uk.gov.companieshouse.efs.web.payment.service.NonceServiceFactoryImpl;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * Provides configuration for the web application.
@@ -37,6 +41,54 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Value("${rng.provider}")
     private String provider;
 
+    private UserDetailsInterceptor userDetailsInterceptor;
+    private LoggingInterceptor loggingInterceptor;
+
+    @Value("${start.page.url}")
+    private  String startPageUrl;
+
+    @Value("${guidance.page.url}")
+    private  String guidancePageUrl;
+
+    @Value("${insolvency.guidance.page.url}")
+    private  String insolvencyGuidancePageUrl;
+
+    @Value("${accessibility.statement.page.url}")
+    private  String accessibilityStatementPageUrl;
+
+    @Value("${service.unavailable.page.url}")
+    private  String serviceUnavailablePageUrl;
+
+    @Value("${company.number.prefix.blocked}")
+    private List<String> prefixBlockList;
+
+    public SpringWebConfig() {
+
+    }
+
+    @Autowired
+    public SpringWebConfig(
+        UserDetailsInterceptor userDetailsInterceptor,
+        LoggingInterceptor loggingInterceptor) {
+        this.userDetailsInterceptor = userDetailsInterceptor;
+        this.loggingInterceptor = loggingInterceptor;
+    }
+
+    /**
+     * Adds interceptors for User Sign in.
+     * But exclude initial start / (insolvency) guidance / contact-us pages because they don't need to be and will
+     * get move out to gov.uk
+     *
+     * @param registry the Interceptor registry
+     */
+    @Override
+    public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(loggingInterceptor);
+        registry.addInterceptor(userDetailsInterceptor)
+                .excludePathPatterns(startPageUrl, guidancePageUrl, insolvencyGuidancePageUrl,
+                        accessibilityStatementPageUrl, serviceUnavailablePageUrl);
+    }
+
     /**
      * Manage the messages bundle required by models.
      *
@@ -46,7 +98,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasename("messages");
+        messageSource.setBasenames("messages", "locales/common-messages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setUseCodeAsDefaultMessage(false);
         messageSource.setFallbackToSystemLocale(true);

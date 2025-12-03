@@ -2,7 +2,7 @@ package uk.gov.companieshouse.efs.web.controller;
 
 import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl.ATTRIBUTE_NAME;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,4 +41,9 @@ public interface CompanyDetailController {
     @PostMapping(value = {"{id}/company/{companyNumber}/details"}, params = {"action=submit"})
     String postCompanyDetail(@PathVariable String id, @PathVariable String companyNumber,
         @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
+
+    @GetMapping("{id}/company/{companyNumber}/restricted")
+    String restrictedCompanyType(@PathVariable String id, @PathVariable String companyNumber,
+        @ModelAttribute(ATTRIBUTE_NAME) CompanyDetail companyDetailAttribute, Model model, HttpServletRequest request);
+
 }

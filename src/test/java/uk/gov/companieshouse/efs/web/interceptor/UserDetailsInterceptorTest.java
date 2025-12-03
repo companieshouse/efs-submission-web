@@ -2,14 +2,13 @@ package uk.gov.companieshouse.efs.web.interceptor;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -86,7 +85,7 @@ class UserDetailsInterceptorTest {
 
     @ParameterizedTest(name = "HTTP {0}: Verify the email is added to the session when a user is logged in")
     @ValueSource(strings = {"GET","POST"})
-    void testEmailAddedToSessionForGet(String httpMethod) throws Exception {
+    void testEmailAddedToSessionForGet(String httpMethod) {
         when(request.getMethod()).thenReturn(httpMethod);
         when(modelAndView.getViewName()).thenReturn(NON_REDIRECT_URL);
 

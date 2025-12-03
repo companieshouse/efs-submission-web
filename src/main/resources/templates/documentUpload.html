@@ -17,7 +17,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
-                <div th:replace="fragments/errorSummary :: errorSummary"></div>
+                <div th:replace="~{fragments/errorSummary :: errorSummary}"></div>
                 <span class="govuk-caption-xl"
                       th:text="#{documentUpload.companyNameLabel} + ' ' + *{#strings.replace(companyName,'&#10;','&lt;br&gt;')}"></span>
                 <h1 class="govuk-heading-xl govuk-!-margin-bottom-5"
@@ -25,7 +25,7 @@
 
                 <!-- Guidance text -->
                 <div th:each="textId : ${messageTextList.list}">
-                    <div th:replace="__${'fragments/documentUpload/guidance :: guidance' + textId}__"></div>
+                    <div th:replace="~{__${'fragments/documentUpload/guidance :: guidance' + textId}__}"></div>
                 </div>
 
                 <!-- File Uploader -->
@@ -57,7 +57,7 @@
                             <th class="govuk-table__cell" style="word-break: break-word" th:text="${#strings.replace(document.fileName, '-', '&#8209;')}" scope="row"></th>
                             <td class="govuk-table__cell" th:text="${T(uk.gov.companieshouse.efs.web.model.DocumentUploadModel).displayFileSizeAsHuman(document)}"></td>
                             <td class="govuk-table__cell">
-                                <a th:href="@{/efs-submission/{id}/company/{companyNumber}/remove-document/{fileId}(id=*{submissionId}, companyNumber=*{companyNumber}, fileId=${document.fileId})}">Remove<span
+                                <a class="govuk-link" th:href="@{/efs-submission/{id}/company/{companyNumber}/remove-document/{fileId}(id=*{submissionId}, companyNumber=*{companyNumber}, fileId=${document.fileId})}">Remove<span
                                         class="govuk-visually-hidden" th:text="${document.fileName}"></span></a>
                             </td>
                         </tr>

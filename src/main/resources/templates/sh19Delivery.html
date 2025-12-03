@@ -17,7 +17,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
-                <div th:replace="fragments/errorSummary :: errorSummary"></div>
+                <div th:replace="~{fragments/errorSummary :: errorSummary}"></div>
                 <fieldset class="govuk-fieldset" data-required="data-required"
                           th:attr="data-error=#{NotBlankFormTemplate.sh19Template.details}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">

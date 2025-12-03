@@ -14,7 +14,6 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -32,7 +31,6 @@ import uk.gov.companieshouse.api.model.payment.PaymentSessionApi;
 import uk.gov.companieshouse.efs.web.controller.BaseControllerImpl;
 import uk.gov.companieshouse.efs.web.exception.ServiceException;
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
-import uk.gov.companieshouse.efs.web.service.api.impl.BaseApiClientServiceImpl;
 import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)

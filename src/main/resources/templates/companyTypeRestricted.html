@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/baseLayout}"
+      lang="en">
+<head>
+    <title th:text="#{companyTypeRestricted.title}"></title>
+</head>
+<body class="govuk-template__body js-enabled" layout:fragment="content">
+    <div class="govuk-width-container" th:object="${companyDetail}">
+        <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds-from-desktop">
+                    <h1 class="govuk-heading-l" th:text="#{companyTypeRestricted.heading}"></h1>
+                    <p class="govuk-body-l"
+                       th:text="#{companyTypeRestricted.description}"></p>
+                    <p class="govuk-body">
+                        <a class="govuk-link piwik-event" data-event-id="register-oe-link-" th:href="${@environment.getProperty('register.overseas.entity.url')}" th:text="#{companyTypeRestricted.register.overseas.entity.link}"></a>
+                    </p>
+                    <p class="govuk-body">
+                        <a class="govuk-link piwik-event" data-event-id="file-oe-link" th:href="${@environment.getProperty('file.overseas.entity.url')}" th:text="#{companyTypeRestricted.file.overseas.entity.link}"></a>
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

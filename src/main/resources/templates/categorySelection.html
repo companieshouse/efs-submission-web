@@ -20,7 +20,7 @@
             <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-two-thirds-from-desktop">
-                        <div th:replace="fragments/errorSummary :: errorSummary"></div>
+                        <div th:replace="~{fragments/errorSummary :: errorSummary}"></div>
                         <fieldset class="govuk-fieldset" data-required="data-required"
                                   th:attr="data-error=#{NotBlankCategoryTemplate.categoryTemplate.details}">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
@@ -31,7 +31,7 @@
 
                                 <!-- Guidance text -->
                                 <div th:each="textId : ${guidance_fragment_ids}">
-                                    <div th:replace="__${'fragments/categorySelection/guidance :: guidance' + textId}__"></div>
+                                    <div th:replace="~{__${'fragments/categorySelection/guidance :: guidance' + textId}__}"></div>
                                 </div>
 
                             </legend>

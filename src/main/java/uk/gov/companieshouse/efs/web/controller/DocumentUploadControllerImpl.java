@@ -7,8 +7,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
@@ -136,7 +136,6 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
             addDataToModel(documentUploadAttribute, model, formTemplate);
             return ViewConstants.ERROR.asView();
         }
-
         // Update the page model with the database document's id and details
         documentUploadAttribute.setSubmissionId(submissionApi.getId());
         documentUploadAttribute.setDetails(new FileListApi());
@@ -212,7 +211,7 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         // Files have been added previously, so map them to our required model.
         List<FileApi> uploadedFiles = submissionForm.get().getFileDetails().getList().stream()
             .map(file -> new FileApi(file.getFileId(), file.getFileName(), file.getFileSize()))
-            .collect(Collectors.toList());
+            .toList();
 
         return new FileListApi(uploadedFiles);
     }

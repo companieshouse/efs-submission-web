@@ -19,7 +19,6 @@ import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionStatus;
 import uk.gov.companieshouse.api.model.paymentsession.SessionListApi;
 import uk.gov.companieshouse.efs.web.model.CheckDetailsModel;
-import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.efs.web.validation.ConfirmAuthorisedValidator;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -31,8 +30,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
 
     private CheckDetailsController testController;
     private static final String FORM_TYPE = "AM01";
-    @Mock
-    private ApiClientService apiClientService;
+
     @Mock
     private CheckDetailsModel checkDetailsAttribute;
     @Mock
@@ -123,6 +121,7 @@ class CheckDetailsControllerImplTest extends BaseControllerImplTest {
         assertThat(result, is(ViewConstants.CHECK_DETAILS.asView()));
     }
 
+    @Override
     protected SubmissionApi createSubmission(final SubmissionStatus submitted) {
         final SubmissionApi submission = super.createSubmission(submitted);
         submission.setSubmissionForm(new SubmissionFormApi());

@@ -18,7 +18,7 @@ class RegistrationsInfoControllerImplTest extends BaseControllerImplTest {
     private RegistrationsInfoController testController;
 
     @BeforeEach
-    private void setup() {
+    public void setup() {
         setUpHeaders();
         testController = new RegistrationsInfoControllerImpl(logger, sessionService, apiClientService,
             formTemplateService, categoryTemplateService);
@@ -36,7 +36,6 @@ class RegistrationsInfoControllerImplTest extends BaseControllerImplTest {
 
     @Test
     void getRegistrationsInfoWhenFeatureDisabled() {
-        final SubmissionApi submission = createSubmission(SubmissionStatus.OPEN);
 
         ReflectionTestUtils.setField(testController, "registrationsEnabled", false);
 

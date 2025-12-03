@@ -3,7 +3,7 @@ package uk.gov.companieshouse.efs.web.categorytemplates.controller;
 import static uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl.ATTRIBUTE_NAME;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,10 +1,8 @@
 package uk.gov.companieshouse.efs.web.controller;
 
-import static uk.gov.companieshouse.efs.web.controller.CompanyDetailControllerImpl.ATTRIBUTE_NAME;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +10,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
-import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
+import uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl;
+import uk.gov.companieshouse.efs.web.formtemplates.model.FormTemplateModel;
 
 @RequestMapping(BaseControllerImpl.SERVICE_URI)
-@SessionAttributes(ATTRIBUTE_NAME)
 @SuppressWarnings("squid:S3753")
 /* S3753: "@Controller" classes that use "@SessionAttributes" must call "setComplete" on their "SessionStatus" objects
  *
@@ -27,19 +23,19 @@ import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateMod
 public interface ResolutionsInfoController {
 
     /**
-     * Get request for the category template.
+     * Get request for the resolutions info page.
      *
-     * @param categoryTemplateAttribute the category template details see {@link CategoryTemplateModel}
-     * @param model                     the category model
+     * @param formTemplateAttribute the form template details see {@link FormTemplateModel}
+     * @param model                     the MVC model
      * @param servletRequest            contains the chs session id
      * @return the view name
      */
     @GetMapping(value = {"{id}/company/{companyNumber}/resolutions-info"})
     String resolutionsInfo(@PathVariable String id, @PathVariable String companyNumber,
-                               @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME) CategoryTemplateModel categoryTemplateAttribute, Model model, HttpServletRequest servletRequest);
+                           @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME) FormTemplateModel formTemplateAttribute, Model model, HttpServletRequest servletRequest);
 
     @PostMapping(value = {"{id}/company/{companyNumber}/resolutions-info"}, params = {"action=submit"})
     String postResolutionsInfo(@PathVariable String id, @PathVariable String companyNumber,
-                                   @ModelAttribute(CategoryTemplateControllerImpl.ATTRIBUTE_NAME) CategoryTemplateModel categoryTemplateAttribute,
+                                   @ModelAttribute(FormTemplateControllerImpl.ATTRIBUTE_NAME) FormTemplateModel formTemplateAttribute,
                                    BindingResult binding, Model model, ServletRequest servletRequest, final HttpSession session);
 }

@@ -32,6 +32,7 @@ public enum ViewConstants {
     ERROR("error", "error"),
     MISSING("error/404", "error/404"),
     GONE("/error/410", "error/410"),
+    RESTRICTED_COMPANY_TYPE("restricted", "companyTypeRestricted"),
     UNAVAILABLE("unavailable", "serviceUnavailable");
 
     private static final String SUBMISSION = "/efs-submission/";
@@ -114,7 +115,7 @@ public enum ViewConstants {
 
         final String url = MessageFormat.format(ID_PAGE_AUTH, chsUrl, id,
             MessageFormat.format(COMPANY, companyNumber), this.uri);
-        final UriComponents components = UriComponentsBuilder.fromHttpUrl(url).query(CATEGORY_TEMPLATE).buildAndExpand(
+        final UriComponents components = UriComponentsBuilder.fromUriString(url).query(CATEGORY_TEMPLATE).buildAndExpand(
             formCategory).encode();
 
         return components.toUriString();

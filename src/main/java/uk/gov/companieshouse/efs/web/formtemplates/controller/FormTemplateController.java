@@ -2,7 +2,7 @@ package uk.gov.companieshouse.efs.web.formtemplates.controller;
 
 import static uk.gov.companieshouse.efs.web.formtemplates.controller.FormTemplateControllerImpl.ATTRIBUTE_NAME;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;

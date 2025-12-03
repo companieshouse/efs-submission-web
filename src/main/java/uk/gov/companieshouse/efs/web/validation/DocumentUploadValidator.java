@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -136,9 +135,9 @@ public class DocumentUploadValidator implements BiFunction<DocumentUploadModel, 
     }
 
     private String getAllowedFileExtensions() {
-        final List<String> extensions = configuration.getDistinctExtensions().stream().sorted().collect(Collectors.toList());
+        final List<String> extensions = configuration.getDistinctExtensions().stream().sorted().toList();
         if (extensions.size() == 1) {
-            return extensions.get(0);
+            return extensions.getFirst();
         } else {
             return String.join(" or ", String.join(", ", extensions.subList(0, extensions.size() - 1)), extensions.get(extensions.size() - 1));
         }

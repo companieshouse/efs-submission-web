@@ -23,11 +23,12 @@
                         <li th:text="#{start.upload.certain.documents.sqp}"></li>
                         <li th:text="#{start.upload.certain.documents.insolvency}"></li>
                     </ul>
-                    <p>
+                    <p class="govuk-body" th:text="#{start.overseas.restriction.description}"></p>
+                    <p class="govuk-body">
                         <a class="govuk-link piwik-event" data-event-id="guidance-link-top" th:href="${@environment.getProperty('guidance.page.url')}" th:text="#{start.list.of.documents}"></a>
                         <span th:text="#{start.service.text}"></span>
                     </p>
-                    <p>
+                    <p class="govuk-body">
                         <span th:text="#{start.insolvency.guidance.text}"></span>
                         <a class="govuk-link piwik-event" data-event-id="insolvency-guidance-link-top" th:href="${@environment.getProperty('insolvency.guidance.page.url')}" th:text="#{start.insolvency.guidance.link}"></a>
                     </p>
@@ -37,7 +38,7 @@
                         <li th:text="#{start.list.item1}"></li>
                         <li>
                             <span th:text="#{start.list.item2}"></span>
-                            <a th:href="${@environment.getProperty('start.registration.form')}"><span th:text="#{start.companies.house.form}"></span></a>
+                            <a class="govuk-link" th:href="${@environment.getProperty('start.registration.form')}"><span th:text="#{start.companies.house.form}"></span></a>
                         </li>
                         <li th:text="#{start.list.item3}"></li>
                     </ul>
@@ -57,27 +58,27 @@
                     <p class="govuk-body" th:text="#{start.different.services.list}"></p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
-                            <a th:href="${@environment.getProperty('start.register.company')}">
+                            <a class="govuk-link" th:href="${@environment.getProperty('start.register.company')}">
                                 <span th:text="#{start.different.services.list.item1}"></span>
                             </a>
                         </li>
                         <li>
-                            <a th:href="${@environment.getProperty('start.file.accounts')}">
+                            <a class="govuk-link" th:href="${@environment.getProperty('start.file.accounts')}">
                                 <span th:text="#{start.different.services.list.item2}"></span>
                             </a>
                         </li>
                         <li>
-                            <a th:href="${@environment.getProperty('start.file.statement')}">
+                            <a class="govuk-link" th:href="${@environment.getProperty('start.file.statement')}">
                                 <span th:text="#{start.different.services.list.item3}"></span>
                             </a>
                         </li>
                         <li>
-                            <a th:href="${@environment.getProperty('start.make.change')}">
+                            <a class="govuk-link" th:href="${@environment.getProperty('start.make.change')}">
                                 <span th:text="#{start.different.services.list.item4}"></span>
                             </a>
                         </li>
                         <li>
-                            <a th:href="${@environment.getProperty('start.close.company')}">
+                            <a class="govuk-link" th:href="${@environment.getProperty('start.close.company')}">
                                 <span th:text="#{start.different.services.list.item5}"></span>
                             </a>
                         </li>

@@ -9,11 +9,10 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,8 +29,6 @@ import uk.gov.companieshouse.efs.web.formtemplates.service.api.FormTemplateServi
 import uk.gov.companieshouse.efs.web.service.api.ApiClientService;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.session.Session;
-import uk.gov.companieshouse.session.SessionImpl;
-import uk.gov.companieshouse.session.SessionKeys;
 import uk.gov.companieshouse.session.handler.SessionHandler;
 import uk.gov.companieshouse.session.model.SignInInfo;
 import uk.gov.companieshouse.session.model.UserProfile;
@@ -53,16 +50,14 @@ class CompanyAuthFilterTest {
 
     private static final String COMPANY_NUMBER = "12345678";
 
-    private static final String VALID_AUTH_SCOPE = "https://chs.companieshouse.gov.uk/company/" + COMPANY_NUMBER;
-
     public static final FormTemplateApi INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE =
-        new FormTemplateApi("REC01", null, "REC", null, true, false, null, false, null);
+            new FormTemplateApi("REC01", null, "REC", null, true, false, null, false, null);
 
     public static final FormTemplateApi AUTH_REQUIRED_FORM_TEMPLATE =
-        new FormTemplateApi("CC02", null, "CC", null, true, false, null, false, null);
+            new FormTemplateApi("CC02", null, "CC", null, true, false, null, false, null);
 
     public static final FormTemplateApi AUTH_NOT_REQUIRED_FORM_TEMPLATE =
-        new FormTemplateApi("CC01", null, "CC", null, false, false, null, false, null);
+            new FormTemplateApi("CC01", null, "CC", null, false, false, null, false, null);
     private static final String TEST_EMAIL = "testing@test.com";
 
     public static final String NON_MATCHING_SCOPE = " /company/12345678/admin.write-full";
@@ -73,7 +68,7 @@ class CompanyAuthFilterTest {
 
     private static class TestCompanyAuthFilter extends CompanyAuthFilter {
         public TestCompanyAuthFilter(final EnvironmentReader environmentReader, final ApiClientService apiClientService,
-            final FormTemplateService formTemplateService, final CategoryTemplateService categoryTemplateService) {
+                                     final FormTemplateService formTemplateService, final CategoryTemplateService categoryTemplateService) {
             super(environmentReader, apiClientService, formTemplateService, categoryTemplateService);
         }
 
@@ -163,10 +158,10 @@ class CompanyAuthFilterTest {
         SubmissionApi submission = createSubmission(null);
 
         ApiResponse<SubmissionApi> submissionApiResponse =
-            new ApiResponse<>(HttpStatus.OK.value(), new HashMap<>(), submission);
+                new ApiResponse<>(HttpStatus.OK.value(), new HashMap<>(), submission);
 
         when(request.getRequestURI())
-            .thenReturn(MessageFormat.format(EFS_SUBMISSION_WITH_COMPANY, SUBMISSION_ID, COMPANY_NUMBER));
+                .thenReturn(MessageFormat.format(EFS_SUBMISSION_WITH_COMPANY, SUBMISSION_ID, COMPANY_NUMBER));
         when(request.getMethod()).thenReturn("GET");
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(submissionApiResponse);
 
@@ -233,7 +228,7 @@ class CompanyAuthFilterTest {
         when(categoryTemplateService.getTopLevelCategory("REC")).thenReturn(CategoryTypeConstants.INSOLVENCY);
         when(request.getAttribute(SessionHandler.CHS_SESSION_REQUEST_ATT_KEY)).thenReturn(session);
         when(apiClientService.isOnAllowList(TEST_EMAIL)).thenReturn(new ApiResponse<>(HttpStatus.OK.value(),
-            Collections.emptyMap(), true));
+                Collections.emptyMap(), true));
 
         testCompanyAuthFilter.doFilter(request, response, chain);
 
@@ -277,7 +272,7 @@ class CompanyAuthFilterTest {
 
     @Test
     void doFilterWhenAuthIsRequiredForInsolvencyAndFineGrainedScopeMatches()
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         SubmissionFormApi submissionForm = createSubmissionForm(INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         SubmissionApi submission = createSubmission(submissionForm);
 
@@ -315,7 +310,7 @@ class CompanyAuthFilterTest {
 
     @Test
     void doFilterWhenAuthIsRequiredForInsolvencyAndScopeDoesntMatch()
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         SubmissionFormApi submissionForm = createSubmissionForm(INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         SubmissionApi submission = createSubmission(submissionForm);
 
@@ -360,7 +355,7 @@ class CompanyAuthFilterTest {
         expectCategoryAndFormLookup(submission, INSOLVENCY_WITH_AUTH_REQUIRED_FORM_TEMPLATE);
         when(categoryTemplateService.getTopLevelCategory(anyString())).thenReturn(CategoryTypeConstants.INSOLVENCY);
         when(apiClientService.isOnAllowList(TEST_EMAIL))
-            .thenReturn(new ApiResponse<>(HttpStatus.OK.value(), Collections.emptyMap(), true));
+                .thenReturn(new ApiResponse<>(HttpStatus.OK.value(), Collections.emptyMap(), true));
 
         testCompanyAuthFilter.doFilter(request, response, chain);
 
@@ -380,51 +375,15 @@ class CompanyAuthFilterTest {
         return submissionForm;
     }
 
-    private Session createSession(final String companyNumber) {
-        Session session = new SessionImpl();
-
-        Map<String, Object> userProfileData = createUserProfileData();
-
-        Map<String, Object> signInData = createSignInData(userProfileData, companyNumber);
-
-        Map<String, Object> sessionData = createSessionData(signInData);
-
-        session.setData(sessionData);
-
-        return session;
-    }
-
-    private Map<String, Object> createUserProfileData() {
-        Map<String, Object> userProfileData = new HashMap<>();
-        userProfileData.put(SessionKeys.EMAIL.getKey(), "demo@ch.gov.uk");
-        userProfileData.put(SessionKeys.SCOPE.getKey(), VALID_AUTH_SCOPE);
-        return userProfileData;
-    }
-
-    private Map<String, Object> createSignInData(final Map<String, Object> userProfileData,
-        final String companyNumber) {
-        Map<String, Object> signInData = new HashMap<>();
-        signInData.put(SessionKeys.SIGNED_IN.getKey(), 1);
-        signInData.put(SessionKeys.COMPANY_NUMBER.getKey(), companyNumber);
-        signInData.put(SessionKeys.USER_PROFILE.getKey(), userProfileData);
-        return signInData;
-    }
-
-    private Map<String, Object> createSessionData(final Map<String, Object> signInData) {
-        Map<String, Object> sessionData = new HashMap<>();
-        sessionData.put(SessionKeys.SIGN_IN_INFO.getKey(), signInData);
-        return sessionData;
-    }
-
     private void expectCategoryAndFormLookup(final SubmissionApi submission, final FormTemplateApi formTemplate) {
 
         when(request.getRequestURI()).thenReturn(MessageFormat.format(EFS_SUBMISSION_WITH_COMPANY,
-            SUBMISSION_ID, COMPANY_NUMBER));
+                SUBMISSION_ID, COMPANY_NUMBER));
         when(request.getMethod()).thenReturn("GET");
         when(apiClientService.getSubmission(SUBMISSION_ID)).thenReturn(new ApiResponse<>(HttpStatus.OK.value(),
-            Collections.emptyMap(), submission));
+                Collections.emptyMap(), submission));
         when(formTemplateService.getFormTemplate(formTemplate.getFormType())).thenReturn(
-            new ApiResponse<>(HttpStatus.OK.value(), Collections.emptyMap(), formTemplate));
+                new ApiResponse<>(HttpStatus.OK.value(), Collections.emptyMap(), formTemplate));
     }
 
     private void expectRequestUrlLookup() {

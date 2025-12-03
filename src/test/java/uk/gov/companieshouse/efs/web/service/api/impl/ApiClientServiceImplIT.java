@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,6 @@ import uk.gov.companieshouse.session.store.Store;
 
 @ExtendWith(MockitoExtension.class)
 class ApiClientServiceImplIT {
-    private static final String API_HOST_URL = "test://host:port";
 
     private ApiClientService testService;
 
@@ -88,8 +87,6 @@ class ApiClientServiceImplIT {
 
     private void assertOAuthClientAsExpected(HttpClient httpClient) {
         assertThat(httpClient, is(instanceOf(OAuthHttpClient.class)));
-
-        OAuthHttpClient oAuthHttpClient = (OAuthHttpClient) httpClient;
     }
 
 }

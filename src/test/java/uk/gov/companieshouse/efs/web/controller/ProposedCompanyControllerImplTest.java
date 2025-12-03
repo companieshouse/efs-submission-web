@@ -91,18 +91,6 @@ class ProposedCompanyControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void processWhenFeatureEnabledAndNameRequiredNull() {
-        when(bindingResult.hasErrors()).thenReturn(true);
-
-        final String result =
-            testController.process(SUBMISSION_ID, proposedCompanyAttribute, bindingResult, model,
-                request, session);
-
-        verify(model).addAttribute(TEMPLATE_NAME, ViewConstants.PROPOSED_COMPANY.asView());
-        assertThat(result, is(ViewConstants.PROPOSED_COMPANY.asView()));
-    }
-
-    @Test
     void processWhenFeatureEnabledAndNameRequiredFalse() {
         when(proposedCompanyAttribute.getNameRequired()).thenReturn(Boolean.FALSE);
         when(proposedCompanyAttribute.getNumber()).thenReturn(

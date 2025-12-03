@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -24,6 +25,7 @@ public class FileUploadConfiguration {
     private String maximumFileSize;
     private Integer maximumFilesAllowed;
 
+    @Autowired
     public FileUploadConfiguration() {
         this(null, new ArrayList<>(), null, null);
     }

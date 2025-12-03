@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -103,9 +103,9 @@ class ValidatorResourceProviderTest {
         verify(testResourceProvider).getRequestPathMatcher();
         verify(apiClientService).getSubmission(submissionId);
 
-        SubmissionApi submission = (SubmissionApi) ReflectionTestUtils.getField(
+        SubmissionApi submissionApi = (SubmissionApi) ReflectionTestUtils.getField(
                 testResourceProvider, "submission");
-        assertTrue(Objects.nonNull(submission));
+        assertTrue(Objects.nonNull(submissionApi));
     }
 
     @Test
@@ -250,8 +250,8 @@ class ValidatorResourceProviderTest {
         ReflectionTestUtils.setField(testResourceProvider, "signInInfo", new SignInInfo());
         testResourceProvider.setInput(null);
 
-        SignInInfo signInInfo = (SignInInfo) ReflectionTestUtils.getField(testResourceProvider,
+        SignInInfo setUpSignInInfo = (SignInInfo) ReflectionTestUtils.getField(testResourceProvider,
                 "signInInfo");
-        assertThat(signInInfo, is(nullValue()));
+        assertThat(setUpSignInInfo, is(nullValue()));
     }
 }

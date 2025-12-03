@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.gov.companieshouse</groupId>
         <artifactId>companies-house-parent</artifactId>
-        <version>1.3.1</version>
+        <version>2.1.12</version>
         <relativePath/>
     </parent>
     <artifactId>efs-submission-web</artifactId>
@@ -18,77 +18,90 @@
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
 
-        <java.version>1.8</java.version>
-        <java-session-handler.version>2.2.0</java-session-handler.version>
-        <private-api-sdk-java.version>2.0.325</private-api-sdk-java.version>
-        <sdk-manager-java.version>1.5.10</sdk-manager-java.version>
-        <rest-service-common-library.version>0.0.3</rest-service-common-library.version>
-        <environment-reader-library.version>1.3.2</environment-reader-library.version>
-        <common-web-java.version>1.5.2</common-web-java.version>
-        <commons-fileupload.version>1.4</commons-fileupload.version>
+        <java.version>21</java.version>
+        <java-session-handler.version>4.1.7</java-session-handler.version>
+        <private-api-sdk-java.version>4.0.389</private-api-sdk-java.version>
+        <sdk-manager-java.version>3.0.10</sdk-manager-java.version>
+        <rest-service-common-library.version>2.0.4</rest-service-common-library.version>
+        <environment-reader-library.version>3.0.1</environment-reader-library.version>
+        <common-web-java.version>4.1.0</common-web-java.version>
+        <commons-fileupload2-jakarta-servlet6.version>2.0.0-M2</commons-fileupload2-jakarta-servlet6.version>
+        <awaitility.version>4.3.0</awaitility.version>
+        <hibernate-validator.version>9.0.0.Final</hibernate-validator.version>
+        <nimbus-jose-jwt.version>10.3</nimbus-jose-jwt.version>
+        <test-containers.version>1.21.2</test-containers.version>
+        <opentelemetry-instrumentation-bom.version>2.16.0</opentelemetry-instrumentation-bom.version>
 
         <!-- Logging -->
-        <log4j-bom.version>2.17.0</log4j-bom.version>
-        <structured-logging.version>1.9.12</structured-logging.version>
+        <structured-logging.version>3.0.38</structured-logging.version>
 
-        <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
-        <commons-lang3.version>3.10</commons-lang3.version>
-        <equalsverifier.version>3.1.6</equalsverifier.version>
-        <system-lambda.version>1.2.0</system-lambda.version>
+        <thymeleaf-layout-dialect.version>3.4.0</thymeleaf-layout-dialect.version>
+        <commons-lang3.version>3.19.0</commons-lang3.version>
+        <equalsverifier.version>4.0.2</equalsverifier.version>
+        <system-lambda.version>1.2.1</system-lambda.version>
 
-        <mock-server.version>5.5.4</mock-server.version>
+        <!-- Mockito -->
+        <mockito-core.version>5.18.0</mockito-core.version>
+        <mockito-junit-jupiter.version>5.18.0</mockito-junit-jupiter.version>
+
+        <junit-jupiter-params.version>5.13.1</junit-jupiter-params.version>
+        <junit-platform-engine.version>1.13.1</junit-platform-engine.version>
+        <junit-platform-launcher.version>1.13.1</junit-platform-launcher.version>
+        <junit-platform-commons.version>1.13.1</junit-platform-commons.version>
+        <mock-server.version>5.15.0</mock-server.version>
 
         <!-- Security -->
-        <web-security-java.version>1.3.10</web-security-java.version>
+        <web-security-java.version>3.1.5</web-security-java.version>
 
         <!-- Spring -->
-        <spring-boot-dependencies.version>2.7.17</spring-boot-dependencies.version>
-        <spring-test.version>5.2.0.RELEASE</spring-test.version>
+        <spring-boot-dependencies.version>3.5.6</spring-boot-dependencies.version>
+        <spring-test.version>6.2.8</spring-test.version>
+        <spring-webmvc.version>6.2.10</spring-webmvc.version>
         <spring-boot-maven-plugin.version>${spring-boot-dependencies.version}</spring-boot-maven-plugin.version>
 
         <!-- Maven -->
-        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.2.2</maven-failsafe-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+        <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
 
-        <junit-jupiter-params.version>5.5.2</junit-jupiter-params.version>
-        <!-- Sonar dependency -->
-        <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
+
+        <!--sonar configuration-->
+        <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
+        <sonar.java.binaries>${project.basedir}/target,${project.basedir}/target/*</sonar.java.binaries>
+        <sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
+        <sonar.login></sonar.login>
+        <sonar.password></sonar.password>
         <sonar.projectKey>uk.gov.companieshouse:efs-submission-web</sonar.projectKey>
-        <sonar.sources>src/main</sonar.sources>
-        <sonar.tests>src/test</sonar.tests>
-        <sonar.verbose>true</sonar.verbose>
-        <sonar.coverage.jacoco.xmlReportPaths>
-            ${project.basedir}/target/site/jacoco/jacoco.xml,
-            ${project.basedir}/target/site/jacoco-it/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
-        <sonar.dependencyCheck.htmlReportPath>
-            ${project.basedir}/target/dependency-check-report.html
-        </sonar.dependencyCheck.htmlReportPath>
-        <sonar.java.binaries>${project.basedir}/target</sonar.java.binaries>
-        <!-- OWASP dependency-->
-        <dependency-check-plugin.version>8.4.0</dependency-check-plugin.version>
+        <sonar.projectName>efs-submission-web</sonar.projectName>
+
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Fix for CVE-2021-44228 -->
-            <!-- Fix for CVE-2021-45105 -->
-            <!-- Required until v2.5.8 springframework & v2.6.2 springboot -->
             <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-bom</artifactId>
-                <version>${log4j-bom.version}</version>
-                <scope>import</scope>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-bom</artifactId>
+                <version>${opentelemetry-instrumentation-bom.version}</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${test-containers.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -100,6 +113,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -108,6 +131,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring-webmvc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -127,14 +155,41 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.ethlo.time</groupId>
+                    <artifactId>itu</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito-junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>java-session-handler</artifactId>
             <version>${java-session-handler.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${commons-fileupload.version}</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
+            <version>${commons-fileupload2-jakarta-servlet6.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -142,12 +197,32 @@
             <artifactId>mockserver-netty</artifactId>
             <version>${mock-server.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.ethlo.time</groupId>
+                    <artifactId>itu</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-client-java</artifactId>
             <version>${mock-server.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.ethlo.time</groupId>
+                    <artifactId>itu</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>nz.net.ultraq.thymeleaf</groupId>
@@ -165,10 +240,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-        </dependency>
 
         <!-- SDKs -->
         <dependency>
@@ -185,13 +256,31 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>structured-logging</artifactId>
             <version>${structured-logging.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Security dependencies -->
+        <!-- pinned version due to security vulnerability in web-security-java -->
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.5.2</version>
+        </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>web-security-java</artifactId>
             <version>${web-security-java.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.minidev</groupId>
+                    <artifactId>json-smart</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- test -->
@@ -212,11 +301,22 @@
             <version>${system-lambda.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- for JUnit 5 -->
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>testcontainers</artifactId>
+          <scope>test</scope>
+        </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- for JUnit 5 -->
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>3.1.6</version>
+            <version>${awaitility.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -231,8 +331,38 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter-params.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter-params.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <version>${junit-jupiter-params.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+            <version>${junit-platform-commons.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>${junit-platform-engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform-launcher.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -246,13 +376,13 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.2.5.Final</version>
+            <version>${hibernate-validator.version}</version>
         </dependency>
         <!-- Latest compatible com.nimbus-jose-jwt version -->
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>8.20.1</version>
+            <version>${nimbus-jose-jwt.version}</version>
         </dependency>
     </dependencies>
 
@@ -295,8 +425,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -309,6 +440,9 @@
                     </excludes>
                     <skipTests>${skip.unit.tests}</skipTests>
                     <trimStackTrace>false</trimStackTrace>
+                    <environmentVariables>
+                        <DOCUMENT_API_LOCAL_URL>chs.local</DOCUMENT_API_LOCAL_URL>
+                    </environmentVariables>
                 </configuration>
             </plugin>
             <plugin>
@@ -317,11 +451,14 @@
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
                     <!--suppress UnresolvedMavenProperty -->
-                    <argLine>${failsafeArgLine}</argLine>
+                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
 
                     <!--This is a workaround for failsafe not running integration tests-->
                     <!-- https://stackoverflow.com/a/52532095 -->
                     <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                    <environmentVariables>
+                        <DOCUMENT_API_LOCAL_URL>chs.local</DOCUMENT_API_LOCAL_URL>
+                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -335,7 +472,7 @@
             <!-- See Workaround Note above for Tilt infinite rebuild loop -->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
+                <version>${maven-antrun-plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>
@@ -360,58 +497,22 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>pre-integration-test</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <destFile>${sonar.jacoco.reports}/jacoco-it.exec</destFile>
-                            <propertyName>failsafeArgLine</propertyName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>post-integration-test</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
-                            <dataFile>${sonar.jacoco.reports}/jacoco-it.exec</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${sonar.jacoco.reports}/jacoco-it</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.1.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>${dependency-check-plugin.version}</version>
+                <version>${jib-maven-plugin.version}</version>
                 <configuration>
-                    <formats>
-                        <format>html</format>
-                    </formats>
-                    <suppressionFiles>
-                        <suppressionFile>suppress.xml</suppressionFile>
-                    </suppressionFiles>
+                    <from>
+                        <image>416670754337.dkr.ecr.eu-west-2.amazonaws.com/ci-corretto-build-21:latest</image>
+                    </from>
+                    <to>
+                        <image>416670754337.dkr.ecr.eu-west-2.amazonaws.com/efs-submission-web:latest</image>
+                    </to>
+                    <container>
+                        <expandClasspathDependencies>true</expandClasspathDependencies>
+                    </container>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

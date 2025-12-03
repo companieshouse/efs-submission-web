@@ -82,7 +82,7 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
                 .setControllerAdvice(new GlobalExceptionHandler(logger))
                 .build();
 
-        String newSubmissionUrl = "/efs-submission/new-submission/";
+        String newSubmissionUrl = "/efs-submission/new-submission";
         mockMvc.perform(get(newSubmissionUrl).flashAttr("companyDetail", companyDetail))
                 .andExpect(status().isInternalServerError())
                 .andExpect(view().name(ViewConstants.ERROR.asView()))
@@ -142,7 +142,7 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
         when(apiClientService.createSubmission(any()))
                 .thenThrow(new ResponseStatusException(status));
 
-        String newSubmissionUrl = "/efs-submission/new-submission/";
+        String newSubmissionUrl = "/efs-submission/new-submission";
         mockMvc.perform(get(newSubmissionUrl).flashAttr("companyDetail", companyDetail))
                 .andReturn();
 
