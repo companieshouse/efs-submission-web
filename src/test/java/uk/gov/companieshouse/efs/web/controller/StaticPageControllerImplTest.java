@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -43,8 +45,9 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void startPageWhenApiServiceUp() {
+    void startPageWhenApiServiceUpAndNoMaintenanceOngoing() {
         when(apiClientService.getMaintenanceCheck()).thenReturn(maintenanceCheckApiApiResponse);
+        when(maintenanceCheckApiApiResponse.getStatusCode()).thenReturn(HttpStatus.OK.value());
         when(maintenanceCheckApiApiResponse.getData()).thenReturn(maintenanceCheckApi);
         when(maintenanceCheckApi.getStatus()).thenReturn(ServiceStatus.UP);
         assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
@@ -52,13 +55,31 @@ class StaticPageControllerImplTest extends BaseControllerImplTest {
     }
 
     @Test
-    void startPageWhenApiServiceNotAvailable() {
+    void startPageWhenMaintenanceOngoing() {
         when(apiClientService.getMaintenanceCheck()).thenReturn(maintenanceCheckApiApiResponse);
+        when(maintenanceCheckApiApiResponse.getStatusCode()).thenReturn(HttpStatus.OK.value());
         when(maintenanceCheckApiApiResponse.getData()).thenReturn(maintenanceCheckApi);
         when(maintenanceCheckApi.getStatus()).thenReturn(ServiceStatus.OUT_OF_SERVICE);
         when(maintenanceCheckApi.getMaintenanceEnd()).thenReturn("2023-11-14T17:04:00Z");
         assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
                 is(ViewConstants.UNAVAILABLE.asRedirectUri(CHS_URL)));
+    }
+
+    @Test
+    void startPageWhenMaintenanceCheckFailsWithException() {
+        when(apiClientService.getMaintenanceCheck()).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
+        assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
+            is(ViewConstants.START.asView()));
+    }
+
+    @Test
+    void startPageWhenMaintenanceCheckFailsWithStatusCode() {
+        when(apiClientService.getMaintenanceCheck()).thenReturn(maintenanceCheckApiApiResponse);
+        when(maintenanceCheckApiApiResponse.getStatusCode()).thenReturn(HttpStatus.NOT_FOUND.value());
+        when(maintenanceCheckApiApiResponse.getData()).thenReturn(maintenanceCheckApi);
+        when(maintenanceCheckApi.getStatus()).thenReturn(ServiceStatus.DOWN);
+        assertThat(testController.start(categoryTemplateAttribute, model, attributes, servletRequest, sessionStatus),
+            is(ViewConstants.START.asView()));
     }
 
     @Test

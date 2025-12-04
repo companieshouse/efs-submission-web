@@ -9,12 +9,14 @@ import jakarta.servlet.ServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -46,44 +48,73 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
         super(logger, apiClientService);
     }
 
+    /**
+     * Handles the start page request. Checks for service maintenance and renders the start view.
+     *
+     * @param categoryTemplateAttribute the model attribute
+     * @param model the UI model
+     * @param redirectAttributes redirect attributes for flash scope
+     * @param servletRequest the servlet request
+     * @param sessionStatus the session status
+     * @return the view name
+     */
     @Override
-    public String start(@ModelAttribute CategoryTemplateModel categoryTemplateAttribute, Model model,
-                        RedirectAttributes redirectAttributes, ServletRequest servletRequest,
-                        SessionStatus sessionStatus) {
-        ApiResponse<MaintenanceCheckApi> response = apiClientService.getMaintenanceCheck();
-
-        if (response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
-            DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
-            final String maintenanceEnd = response.getData().getMaintenanceEnd();
-            final Instant parsed = Instant.parse(maintenanceEnd);
-            LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
-            redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
-
+    public String start(@ModelAttribute final CategoryTemplateModel categoryTemplateAttribute, final Model model,
+                        final RedirectAttributes redirectAttributes, final ServletRequest servletRequest,
+                        final SessionStatus sessionStatus) {
+        if (!isServiceAvailable(redirectAttributes)) {
             return ViewConstants.UNAVAILABLE.asRedirectUri(chsUrl);
         }
-
-        sessionStatus.setComplete(); // invalidate the user's previous session if they have signed out
+        // Clear any previous session attributes to ensure a fresh start page
+        sessionStatus.setComplete();
         model.addAttribute(TEMPLATE_NAME, ViewConstants.START.asView());
-
         return ViewConstants.START.asView();
     }
 
+    /**
+     * Checks if the service is available (i.e. not under planned maintenance).
+     * If unavailable, adds the maintenance end date to redirect attributes to inform the visitor when they may retry.
+     *
+     * @param redirectAttributes redirect attributes for flash scope
+     * @return true if service is available, false otherwise
+     */
+    private boolean isServiceAvailable(final RedirectAttributes redirectAttributes) {
+        try {
+            final ApiResponse<MaintenanceCheckApi> response = apiClientService.getMaintenanceCheck();
+            final HttpStatus status = HttpStatus.valueOf(response.getStatusCode());
+
+            logger.debug(String.format("Maintenance check response status: %s", status));
+            if (response.getData().getStatus().equals(ServiceStatus.OUT_OF_SERVICE)) {
+                final DateTimeFormatter displayDateFormat = DateTimeFormatter.ofPattern("h:mm a 'on' EEEE d MMMM yyyy");
+                final Instant parsed = Instant.parse(response.getData().getMaintenanceEnd());
+                final LocalDateTime localEndTime = LocalDateTime.ofInstant(parsed, ZoneId.systemDefault());
+                redirectAttributes.addFlashAttribute("date", displayDateFormat.format(localEndTime));
+
+                return false;
+            }
+        } catch (final ResponseStatusException e) {
+            // Log the error but do not block the visitor from accessing the start page if maintenance check fails
+            logger.error(String.format("Maintenance check response status: %s", e.getStatusCode()), e);
+        }
+        return true;
+    }
+
     @Override
-    public String guidance(Model model, ServletRequest servletRequest) {
+    public String guidance(final Model model, final ServletRequest servletRequest) {
         model.addAttribute(TEMPLATE_NAME, ViewConstants.GUIDANCE.asView());
 
         return ViewConstants.GUIDANCE.asView();
     }
 
     @Override
-    public String insolvencyGuidance(Model model, ServletRequest servletRequest) {
+    public String insolvencyGuidance(final Model model, final ServletRequest servletRequest) {
         model.addAttribute(TEMPLATE_NAME, ViewConstants.INSOLVENCY_GUIDANCE.asView());
 
         return ViewConstants.INSOLVENCY_GUIDANCE.asView();
     }
 
     @Override
-    public String accessibilityStatement(Model model, ServletRequest servletRequest) {
+    public String accessibilityStatement(final Model model, final ServletRequest servletRequest) {
 
         model.addAttribute(TEMPLATE_NAME, ViewConstants.ACCESSIBILITY.asView());
 
@@ -91,7 +122,7 @@ public class StaticPageControllerImpl extends BaseControllerImpl implements Stat
     }
 
     @Override
-    public String serviceUnavailable(Model model, ServletRequest servletRequest,
+    public String serviceUnavailable(final Model model, final ServletRequest servletRequest,
                                      @ModelAttribute("date") final String date) {
 
         if (StringUtils.isBlank(date)) {
