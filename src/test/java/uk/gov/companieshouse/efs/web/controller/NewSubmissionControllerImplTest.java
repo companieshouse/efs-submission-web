@@ -2,8 +2,8 @@ package uk.gov.companieshouse.efs.web.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasEntry;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -146,12 +145,12 @@ class NewSubmissionControllerImplTest extends BaseControllerImplTest {
         mockMvc.perform(get(newSubmissionUrl).flashAttr("companyDetail", companyDetail))
                 .andReturn();
 
-        ArgumentCaptor<Map<String, Object>> logDetailsCapture = ArgumentCaptor.forClass(Map.class);
-        verify(logger).errorContext(eq(""),
-                contains("Received non 200 series response from API"),
-                any(ResponseStatusException.class), logDetailsCapture.capture());
-
-        assertThat(logDetailsCapture.getValue(), hasEntry("statusCode", status.value()));
+        verify(logger).errorContext(eq("") ,
+            contains("Received non 200 series response from API"),
+            any(ResponseStatusException.class),
+            argThat((Map<String, Object> details) -> details != null
+                && status.toString().equals(details.get("message"))
+                && Integer.valueOf(status.value()).equals(details.get("code"))));
     }
 
 
