@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileListApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
@@ -138,6 +139,9 @@ public class DocumentUploadControllerImpl extends BaseControllerImpl implements 
         }
         // Update the page model with the database document's id and details
         documentUploadAttribute.setSubmissionId(submissionApi.getId());
+        Optional.ofNullable(submissionApi.getCompany())
+            .map(CompanyApi::getCompanyNumber)
+            .ifPresent(documentUploadAttribute::setCompanyNumber);
         documentUploadAttribute.setDetails(new FileListApi());
         documentUploadAttribute.addDetails(submissionApi);
 

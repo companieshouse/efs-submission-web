@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateApi;
 import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateListApi;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
 import uk.gov.companieshouse.efs.web.categorytemplates.service.api.CategoryTemplateService;
@@ -125,6 +126,9 @@ public class CategoryTemplateControllerImpl extends BaseControllerImpl implement
                 parentCategoryId);
 
         categoryTemplateAttribute.setSubmissionId(submissionApi.getId());
+        Optional.ofNullable(submissionApi.getCompany())
+            .map(CompanyApi::getCompanyNumber)
+            .ifPresent(categoryTemplateAttribute::setCompanyNumber);
         categoryTemplateAttribute.setDetails(childTemplate == null
                 ? new CategoryTemplateApi(CategoryTemplateModel.ROOT_CATEGORY)
                 : childTemplate);

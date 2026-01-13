@@ -23,6 +23,7 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.categorytemplates.CategoryTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateListApi;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FormTypeApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
@@ -114,6 +115,9 @@ public class FormTemplateControllerImpl extends BaseControllerImpl implements Fo
 
         formTemplateAttribute.setFormTemplateList(formList);
         formTemplateAttribute.setSubmissionId(submissionApi.getId());
+        Optional.ofNullable(submissionApi.getCompany())
+                .map(CompanyApi::getCompanyNumber)
+                .ifPresent(formTemplateAttribute::setCompanyNumber);
 
         final Optional<FormTemplateApi> selectedForm = formTemplateAttribute.getFormTemplateList().stream()
             .filter(f -> f.getFormType().equals(formTemplateAttribute.getFormType()))

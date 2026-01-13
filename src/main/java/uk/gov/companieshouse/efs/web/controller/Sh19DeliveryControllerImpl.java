@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateListApi;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FormTypeApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
@@ -93,8 +94,11 @@ public class Sh19DeliveryControllerImpl extends BaseControllerImpl implements Sh
         sh19FormList.add(formResponse.getData());
 
         sh19TemplateAttribute.setFormTemplateList(sh19FormList);
-
         sh19TemplateAttribute.setSubmissionId(submissionApi.getId());
+        Optional.ofNullable(submissionApi.getCompany())
+            .map(CompanyApi::getCompanyNumber)
+            .ifPresent(sh19TemplateAttribute::setCompanyNumber);
+
 
         final Optional<FormTemplateApi> selectedForm = sh19TemplateAttribute.getFormTemplateList().stream()
             .filter(f -> f.getFormType().equals(sh19TemplateAttribute.getFormType()))

@@ -2,6 +2,7 @@ package uk.gov.companieshouse.efs.web.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.efs.formtemplates.FormTemplateApi;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.ConfirmAuthorisedApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionResponseApi;
@@ -86,6 +88,9 @@ public class CheckDetailsControllerImpl extends BaseControllerImpl implements Ch
             return ViewConstants.GONE.asView();
         }
 
+        Optional.ofNullable(submission.getCompany())
+            .map(CompanyApi::getCompanyNumber)
+            .ifPresent(checkDetailsAttribute::setCompanyNumber);
         addDataToModel(checkDetailsAttribute, model, submission);
         return ViewConstants.CHECK_DETAILS.asView();
     }

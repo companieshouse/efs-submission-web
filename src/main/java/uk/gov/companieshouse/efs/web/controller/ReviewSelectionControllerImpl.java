@@ -7,6 +7,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.SubmissionApi;
 import uk.gov.companieshouse.efs.web.categorytemplates.controller.CategoryTemplateControllerImpl;
 import uk.gov.companieshouse.efs.web.categorytemplates.model.CategoryTemplateModel;
@@ -75,6 +77,9 @@ public class ReviewSelectionControllerImpl extends BaseControllerImpl implements
         }
 
         reviewSelectionAttribute.setSubmissionId(submissionApi.getId());
+        Optional.ofNullable(submissionApi.getCompany())
+            .map(CompanyApi::getCompanyNumber)
+            .ifPresent(reviewSelectionAttribute::setCompanyNumber);
         reviewSelectionAttribute.setConfirmed("");
         addTrackingAttributeToModel(model);
 

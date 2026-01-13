@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.api.model.efs.submissions.CompanyApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileDetailApi;
 import uk.gov.companieshouse.api.model.efs.submissions.FileDetailListApi;
@@ -94,6 +95,9 @@ public class RemoveDocumentControllerImpl extends BaseControllerImpl implements 
         }
 
         removeDocumentAttribute.setSubmissionId(submissionApi.getId());
+        Optional.ofNullable(submissionApi.getCompany())
+            .map(CompanyApi::getCompanyNumber)
+            .ifPresent(removeDocumentAttribute::setCompanyNumber);
         removeDocumentAttribute.setFileName(fileDetailApi.get().getFileName());
         removeDocumentAttribute.setRequired("");    // reset as unanswered
 

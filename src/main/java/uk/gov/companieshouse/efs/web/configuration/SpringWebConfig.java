@@ -23,6 +23,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import uk.gov.companieshouse.efs.web.interceptor.CompanyNumberInterceptor;
 import uk.gov.companieshouse.efs.web.interceptor.LoggingInterceptor;
 import uk.gov.companieshouse.efs.web.interceptor.UserDetailsInterceptor;
 import uk.gov.companieshouse.efs.web.payment.service.NonceService;
@@ -43,12 +44,22 @@ public class SpringWebConfig implements WebMvcConfigurer {
 
     private UserDetailsInterceptor userDetailsInterceptor;
     private LoggingInterceptor loggingInterceptor;
+    private CompanyNumberInterceptor companyNumberInterceptor;
 
     @Value("${start.page.url}")
     private  String startPageUrl;
 
     @Value("${guidance.page.url}")
     private  String guidancePageUrl;
+
+    @Value("${new-submission.page.url}")
+    private  String newSubmissionPageUrl;
+
+    @Value("${company.lookup.page.url}")
+    private  String companyLookupPageUrl;
+
+    @Value("${company.details.page.url}")
+    private  String companyDetailsPageUrl;
 
     @Value("${insolvency.guidance.page.url}")
     private  String insolvencyGuidancePageUrl;
@@ -59,25 +70,29 @@ public class SpringWebConfig implements WebMvcConfigurer {
     @Value("${service.unavailable.page.url}")
     private  String serviceUnavailablePageUrl;
 
+    @SuppressWarnings("unused")
     @Value("${company.number.prefix.blocked}")
     private List<String> prefixBlockList;
 
     public SpringWebConfig() {
-
+        // Default constructor for use by SpringWebConfigTest
     }
 
     @Autowired
     public SpringWebConfig(
         UserDetailsInterceptor userDetailsInterceptor,
-        LoggingInterceptor loggingInterceptor) {
+        LoggingInterceptor loggingInterceptor,
+        CompanyNumberInterceptor companyNumberInterceptor) {
         this.userDetailsInterceptor = userDetailsInterceptor;
         this.loggingInterceptor = loggingInterceptor;
+        this.companyNumberInterceptor = companyNumberInterceptor;
     }
 
     /**
-     * Adds interceptors for User Sign in.
+     * Adds interceptors for Request Logging, User Sign in, and URL Company Number validation.
      * But exclude initial start / (insolvency) guidance / contact-us pages because they don't need to be and will
      * get move out to gov.uk
+     * Exclude new submission and company lookup pages for Company Number checks as the submission does not yet exist at these points.
      *
      * @param registry the Interceptor registry
      */
@@ -87,6 +102,9 @@ public class SpringWebConfig implements WebMvcConfigurer {
         registry.addInterceptor(userDetailsInterceptor)
                 .excludePathPatterns(startPageUrl, guidancePageUrl, insolvencyGuidancePageUrl,
                         accessibilityStatementPageUrl, serviceUnavailablePageUrl);
+        registry.addInterceptor(companyNumberInterceptor).excludePathPatterns(startPageUrl, newSubmissionPageUrl,
+            companyLookupPageUrl, companyDetailsPageUrl, insolvencyGuidancePageUrl, accessibilityStatementPageUrl,
+            serviceUnavailablePageUrl);
     }
 
     /**
