@@ -105,6 +105,18 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- Prevents CVE-2025-68161 due to spring starter logging using log4j 2.24.3 -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>2.25.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.25.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
